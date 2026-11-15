@@ -1,0 +1,3286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0b1120" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MedSpire" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='128' height='128' rx='28' fill='url(%23g)'/%3E%3Cpath d='M64 26v76M26 64h76' stroke='white' stroke-width='14' stroke-linecap='round'/%3E%3Ccircle cx='64' cy='64' r='44' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='4'/%3E%3C/svg%3E" />
+  <script>
+    (function() {
+      try {
+        var iconSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230ea5e9'/%3E%3Cpath d='M256 104v304M104 256h304' stroke='white' stroke-width='56' stroke-linecap='round'/%3E%3C/svg%3E";
+        var manifest = {
+          name: "医学尖塔 MedSpire",
+          short_name: "MedSpire",
+          start_url: ".",
+          display: "standalone",
+          background_color: "#0b1120",
+          theme_color: "#0b1120",
+          icons: [{ src: iconSvg, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }]
+        };
+        var blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+        var link = document.createElement("link");
+        link.rel = "manifest";
+        link.href = URL.createObjectURL(blob);
+        document.head.appendChild(link);
+      } catch (e) {}
+    })();
+  </script>
+  <title>医学尖塔 MedSpire — 临床决策卡牌 Roguelike</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b1120;
+      color: #f8fafc;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-serif-clinical {
+      font-family: 'Merriweather', Georgia, Cambria, "Times New Roman", Times, serif;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(0.9); }
+      30% { opacity: 1; transform: translateY(-18px) scale(1.15); }
+      100% { opacity: 0; transform: translateY(-56px) scale(0.95); }
+    }
+    @keyframes shakeHit {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px) rotate(-2deg); }
+      40% { transform: translateX(10px) rotate(2deg); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    @keyframes critFlash {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); }
+      50% { box-shadow: 0 0 40px 14px rgba(16, 185, 129, 0.45); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    @keyframes pulseOrb {
+      0%, 100% { box-shadow: 0 0 18px rgba(56, 189, 248, 0.45); }
+      50% { box-shadow: 0 0 32px rgba(56, 189, 248, 0.85); }
+    }
+    .animate-float-up {
+      animation: floatUp 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .animate-shake {
+      animation: shakeHit 0.42s ease-in-out;
+    }
+    .animate-crit {
+      animation: critFlash 0.7s ease-out;
+    }
+    .animate-orb {
+      animation: pulseOrb 2.4s infinite ease-in-out;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-sky-500/30">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+    // =========================================================================
+    // 1. INLINE SVG ICONS (Zero external icon failure risk)
+    // =========================================================================
+    const Icon = ({ name, className = "w-5 h-5" }) => {
+      const paths = {
+        heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />,
+        shield: <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />,
+        zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
+        sword: <><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" /><line x1="13" y1="19" x2="19" y2="13" /><line x1="16" y1="16" x2="20" y2="20" /><line x1="19" y1="21" x2="21" y2="19" /></>,
+        activity: <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />,
+        book: <><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" /></>,
+        database: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></>,
+        volume2: <><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></>,
+        volumeX: <><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></>,
+        sparkles: <><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></>,
+        alert: <><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></>,
+        check: <polyline points="20 6 9 17 4 12" />,
+        x: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
+        chevronDown: <polyline points="6 9 12 15 18 9" />,
+        chevronRight: <polyline points="9 18 15 12 9 6" />,
+        stethoscope: <><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" /><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" /><circle cx="20" cy="10" r="2" /></>,
+        rotateCcw: <><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></>,
+        trophy: <><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></>,
+        coins: <><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></>,
+        plus: <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>,
+        trash: <><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></>,
+        brain: <><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" /><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" /></>,
+        user: <><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>,
+        cloud: <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />,
+        download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></>,
+        upload: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></>,
+        clock: <><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></>,
+        monitor: <><rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></>,
+        coffee: <><path d="M10 2v2" /><path d="M14 2v2" /><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" /><path d="M6 2v2" /></>
+      };
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          {paths[name] || null}
+        </svg>
+      );
+    };
+
+    // =========================================================================
+    // 2. WEB AUDIO API SYNTHESIZER (Zero external audio files)
+    // =========================================================================
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+      init() {
+        if (!this.ctx && typeof window !== 'undefined') {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      playTone(freq, type = 'sine', duration = 0.15, volume = 0.12, delay = 0) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + delay);
+          gain.gain.setValueAtTime(volume, this.ctx.currentTime + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + delay);
+          osc.stop(this.ctx.currentTime + delay + duration);
+        } catch (e) {}
+      }
+      cardPlay() { this.playTone(320, 'triangle', 0.1, 0.1); this.playTone(480, 'sine', 0.12, 0.08, 0.04); }
+      attack() { this.playTone(160, 'sawtooth', 0.14, 0.14); this.playTone(95, 'square', 0.18, 0.12, 0.05); }
+      defend() { this.playTone(280, 'sine', 0.15, 0.12); this.playTone(420, 'triangle', 0.18, 0.1, 0.06); }
+      critSuccess() {
+        this.playTone(523.25, 'triangle', 0.14, 0.14, 0);
+        this.playTone(659.25, 'triangle', 0.14, 0.14, 0.08);
+        this.playTone(783.99, 'sine', 0.25, 0.16, 0.16);
+        this.playTone(1046.5, 'sine', 0.32, 0.14, 0.24);
+      }
+      alarmFail() {
+        this.playTone(220, 'sawtooth', 0.18, 0.14, 0);
+        this.playTone(185, 'sawtooth', 0.28, 0.16, 0.15);
+      }
+      victory() {
+        [523, 659, 784, 1046].forEach((f, i) => this.playTone(f, 'triangle', 0.25, 0.14, i * 0.1));
+      }
+      shuffle() {
+        [240, 300, 360].forEach((f, i) => this.playTone(f, 'sine', 0.06, 0.06, i * 0.04));
+      }
+    }
+    const sfx = new SoundEngine();
+
+    // =========================================================================
+    // 3. STATIC DATA & SCHEMAS (Replaceable Mock Question Bank, Cards, Enemies)
+    // =========================================================================
+    const SYSTEMS = [
+      { id: "Cardiovascular", label: "心血管内科", en: "Cardiovascular Ward", color: "from-rose-600 to-red-700", badge: "bg-rose-500/20 text-rose-300 border-rose-500/40", icon: "heart", desc: "急性冠脉综合征、心律失常与心力衰竭抗栓/血流动力学博弈" },
+      { id: "Pulmonology", label: "呼吸与危重症", en: "Pulmonology ICU", color: "from-sky-600 to-cyan-700", badge: "bg-sky-500/20 text-sky-300 border-sky-500/40", icon: "activity", desc: "支气管哮喘阶梯治疗、COPD 急性加重与肺栓塞急诊处置" },
+      { id: "Gastroenterology", label: "消化内科", en: "Gastroenterology Unit", color: "from-amber-600 to-orange-700", badge: "bg-amber-500/20 text-amber-300 border-amber-500/40", icon: "stethoscope", desc: "急性胰腺炎液体复苏、上消化道大出血与肝硬化并发症" },
+      { id: "Neurology", label: "神经内科", en: "Neurology Stroke Center", color: "from-violet-600 to-purple-700", badge: "bg-violet-500/20 text-violet-300 border-violet-500/40", icon: "brain", desc: "急性缺血性卒中溶栓时间窗、癫痫持续状态与颅高压控制" },
+      { id: "Pathology", label: "病理学总论", en: "Pathology (General Principles)", color: "from-fuchsia-600 to-pink-700", badge: "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40", icon: "stethoscope", desc: "细胞损伤与适应、炎症介质、肿瘤遗传学（原癌/抑癌基因）与病理学标志物" }
+    ];
+
+    const INITIAL_QUESTIONS = [
+      {
+        id: "q-cv-1",
+        system: "Cardiovascular",
+        difficulty: "Medium",
+        stem: "A 64-year-old man presents to the emergency department 90 minutes after the onset of substernal chest pain radiating to his left jaw, accompanied by diaphoresis and nausea. Blood pressure is 138/84 mm Hg, pulse is 92/min. ECG shows 3-mm ST-segment elevations in leads V1–V4. A cardiac catheterization lab is available on-site with an anticipated door-to-balloon time of 45 minutes. In addition to aspirin and a P2Y12 inhibitor, which of the following is the most appropriate anticoagulation strategy prior to primary percutaneous coronary intervention (PCI)?",
+        options: {
+          A: "Unfractionated heparin (UFH) IV bolus",
+          B: "Low-molecular-weight heparin (enoxaparin) subcutaneous",
+          C: "Oral dabigatran",
+          D: "Warfarin with bridging",
+          E: "Alteplase (tPA) intravenous infusion"
+        },
+        answer: "A",
+        explanations: {
+          A: "正确！STEMI 患者拟行直接 PCI（Primary PCI）前，应立即给予双联抗血小板（阿司匹林 + P2Y12 抑制剂）联合肠外抗凝，首选静脉普通肝素（UFH）或比伐卢定，因其半衰期短、术中可通过 ACT 监测且易于用鱼精蛋白拮抗。",
+          B: "错误。依诺肝素多用于保守治疗或溶栓后辅助抗凝，直接 PCI 术前若无特殊指征通常首选 UFH。",
+          C: "错误。达比加群为口服直接凝血酶抑制剂，起效不够可控，不用于急性 STEMI 直接 PCI 的围术期抗凝。",
+          D: "错误。华法林起效缓慢（需数天），且早期有短暂高凝风险，绝对不用于急性心肌梗死急诊抗凝。",
+          E: "错误。阿替普酶（tPA）是溶栓药物，仅在无法于 120 分钟内完成直接 PCI 时考虑；本例 45 分钟内即可行 PCI，溶栓反而增加出血风险。"
+        },
+        educationalObjective: "STEMI 患者若能在 120 分钟内行直接 PCI，应首选双联抗血小板治疗联合静脉普通肝素（UFH）抗凝，而非溶栓或口服抗凝药。"
+      },
+      {
+        id: "q-cv-2",
+        system: "Cardiovascular",
+        difficulty: "Hard",
+        stem: "A 71-year-old woman with a history of hypertension and diabetes mellitus is diagnosed with persistent atrial fibrillation. Her resting heart rate is 78/min, blood pressure is 128/76 mm Hg, and she is asymptomatic. Laboratory studies show serum creatinine of 1.0 mg/dL (eGFR 62 mL/min/1.73 m²) and normal liver enzymes. Which of the following is the most appropriate long-term stroke prevention therapy?",
+        options: {
+          A: "Aspirin 81 mg daily",
+          B: "Aspirin plus clopidogrel",
+          C: "Apixaban",
+          D: "No antithrombotic therapy needed",
+          E: "Digoxin monotherapy"
+        },
+        answer: "C",
+        explanations: {
+          A: "错误。单用阿司匹林对房颤卒中预防效果显著劣于口服抗凝药，指南已不再推荐。",
+          B: "错误。双抗（阿司匹林+氯吡格雷）预防房颤卒中疗效仍不如口服抗凝药，且出血风险并不更低。",
+          C: "正确！该患者 CHA2DS2-VASc 评分为：年龄65-74(+1)、女性(+1)、高血压(+1)、糖尿病(+1) = 4分（≥2分）。在无机械瓣或中重度二尖瓣狭窄时，直接口服抗凝药（DOAC，如阿哌沙班）优于华法林。",
+          D: "错误。CHA2DS2-VASc ≥2 分（男性）或 ≥3 分（女性）具有明确抗凝指征。",
+          E: "错误。地高辛仅用于控制心室率，无任何抗凝或预防卒中作用。"
+        },
+        educationalObjective: "非瓣膜性房颤患者 CHA2DS2-VASc 评分达标时，首选直接口服抗凝药（DOAC，如 Apixaban）进行长期卒中预防。"
+      },
+      {
+        id: "q-pulm-1",
+        system: "Pulmonology",
+        difficulty: "Medium",
+        stem: "A 26-year-old woman with a history of mild intermittent asthma presents for routine follow-up. Over the past 2 months, she has experienced daytime wheezing and chest tightness 4 days per week and awakens from sleep with dyspnea 3 times per month. She currently uses an albuterol metered-dose inhaler as needed. Physical examination is unremarkable. Which of the following is the most appropriate next step in pharmacotherapy?",
+        options: {
+          A: "Continue albuterol as needed only",
+          B: "Add low-dose inhaled corticosteroid (budesonide) daily",
+          C: "Switch to oral montelukast monotherapy",
+          D: "Add tiotropium (LAMA) monotherapy",
+          E: "Start oral prednisone 40 mg daily"
+        },
+        answer: "B",
+        explanations: {
+          A: "错误。患者每周日间症状 >2 天（4天/周）且每月夜间憋醒 >2 次（3次/月），已属于轻度持续性哮喘（Mild Persistent Asthma），单用 SABA 不足以控制气道慢性炎症。",
+          B: "正确！轻度持续性哮喘的标准控制治疗为每日规律吸入低剂量糖皮质激素（Low-dose ICS，如布地奈德），或按 GINA 指南使用 ICS-福莫特罗按需/维持治疗。",
+          C: "错误。白三烯受体拮抗剂（孟鲁司特）疗效不如低剂量 ICS，仅作为无法耐受 ICS 时的二线替代。",
+          D: "错误。LAMA（噻托溴铵）用于中重度哮喘的附加治疗，不作为轻度持续性哮喘的首选单药。",
+          E: "错误。全身口服糖皮质激素仅用于急性加重期短期冲击，长期每日使用副作用极大。"
+        },
+        educationalObjective: "日间症状 >2 天/周或夜间憋醒 3–4 次/月属于轻度持续性哮喘，应启动低剂量吸入糖皮质激素（ICS）以抑制气道慢性炎症。"
+      },
+      {
+        id: "q-pulm-2",
+        system: "Pulmonology",
+        difficulty: "Hard",
+        stem: "A 68-year-old man with severe COPD is brought to the emergency department with worsening dyspnea and productive cough for 2 days. On arrival, he is confused and lethargic. Vital signs: temp 37.9°C, BP 135/82 mm Hg, HR 108/min, RR 28/min, SpO2 84% on room air. ABG on 4L/min nasal cannula shows pH 7.24, PaCO2 68 mm Hg, PaO2 58 mm Hg. In addition to bronchodilators and systemic corticosteroids, which of the following is the most appropriate immediate intervention?",
+        options: {
+          A: "Increase FiO2 to 100% via non-rebreather mask",
+          B: "Noninvasive positive-pressure ventilation (BiPAP)",
+          C: "Immediate endotracheal intubation without trial of NIV",
+          D: "IV sodium bicarbonate infusion",
+          E: "Wait 2 hours and repeat ABG"
+        },
+        answer: "B",
+        explanations: {
+          A: "错误。高浓度吸氧会抑制低氧驱动并加重 V/Q 失调与 Haldane 效应，导致高碳酸血症进一步恶化（目标 SpO2 维持在 88%–92% 即可）。",
+          B: "正确！COPD 急性加重合并急性高碳酸血症呼吸性酸中毒（pH < 7.35, PaCO2 > 45 mm Hg）且神志尚可配合保护气道时，首选无创正压通气（BiPAP/NIV），可显著降低气管插管率与死亡率。",
+          C: "错误。仅当无创通气禁忌（如昏迷、呼吸骤停、气道无法保护、严重血流动力学不稳定）或 NIV 失败时才行有创气管插管。",
+          D: "错误。呼吸性酸中毒的核心治疗是改善通气排出 CO2，盲目补碱会加重高碳酸血症和细胞内酸中毒。",
+          E: "错误。患者已出现严重呼吸性酸中毒（pH 7.24）及意识改变，延迟通气支持将危及生命。"
+        },
+        educationalObjective: "COPD 急性加重伴急性呼吸性酸中毒（pH 7.25–7.35 或轻度意识模糊但仍能配合）首选无创正压通气（BiPAP），氧疗目标 SpO2 88%–92%。"
+      },
+      {
+        id: "q-gi-1",
+        system: "Gastroenterology",
+        difficulty: "Medium",
+        stem: "A 46-year-old man presents with severe epigastric pain radiating to the back, nausea, and vomiting for 8 hours. He drinks 6–8 beers daily. Vital signs: BP 94/60 mm Hg, HR 116/min. Serum lipase is 1,450 U/L. Abdominal ultrasound shows no gallstones or biliary dilation. Which of the following is the most important initial management step in the first 24 hours?",
+        options: {
+          A: "Urgent ERCP",
+          B: "Prophylactic broad-spectrum IV antibiotics",
+          C: "Aggressive isotonic crystalloid resuscitation (Lactated Ringer's)",
+          D: "Strict NPO for 7 days regardless of pain",
+          E: "Exploratory laparotomy"
+        },
+        answer: "C",
+        explanations: {
+          A: "错误。急诊 ERCP 仅适用于合并急性胆管炎或持续胆道梗阻的胆源性胰腺炎，本例为酒精性且无胆管扩张。",
+          B: "错误。无菌性胰腺炎不推荐使用预防性抗生素，仅在证实存在感染性坏死或胰外感染时使用。",
+          C: "正确！急性胰腺炎早期因大量炎性渗出导致第三间隙液体丢失和低血容量休克，早期目标导向的等张晶体液复苏（首选乳酸林格氏液）是降低胰腺坏死和器官衰竭的关键。",
+          D: "错误。一旦腹痛缓解、恶心呕吐消失且有饥饿感，应尽早恢复经口进食或肠内营养，以保护肠黏膜屏障。",
+          E: "错误。无穿孔或腹腔间隔室综合征等指征时，急性胰腺炎严禁早期盲目剖腹探查。"
+        },
+        educationalObjective: "急性胰腺炎前 24 小时的核心治疗是适度积极的等张晶体液复苏（首选乳酸林格氏液）及镇痛支持，无需常规预防性使用抗生素。"
+      },
+      {
+        id: "q-neuro-1",
+        system: "Neurology",
+        difficulty: "Medium",
+        stem: "A 69-year-old man is brought to the ED 1.5 hours after the sudden onset of right-sided weakness and slurred speech. BP is 172/94 mm Hg, HR is 82/min. Non-contrast head CT shows no hemorrhage or mass effect. Blood glucose is 118 mg/dL, and platelet count is 210,000/mm³. He has no history of recent surgery, trauma, or anticoagulant use. Which of the following is the most appropriate immediate management?",
+        options: {
+          A: "Administer IV labetalol to lower BP below 140/90 mm Hg first",
+          B: "Administer IV alteplase (tPA) immediately",
+          C: "Administer oral aspirin 325 mg and observe",
+          D: "Perform immediate carotid endarterectomy",
+          E: "Order brain MRI before any treatment"
+        },
+        answer: "B",
+        explanations: {
+          A: "错误。拟行静脉溶栓时，仅需将血压控制在 < 185/110 mm Hg；当前血压 172/94 mm Hg 已达标，过度降压反而减少缺血半暗带灌注。",
+          B: "正确！患者在发病 4.5 小时时间窗内（1.5小时），头颅平扫 CT 已排除颅内出血，血糖、血小板正常且无溶栓禁忌证，应立即给予静脉阿替普酶（tPA）溶栓。",
+          C: "错误。在未排除溶栓指征或溶栓后 24 小时内不可急于单用阿司匹林替代溶栓治疗。",
+          D: "错误。颈动脉内膜剥脱术用于二级预防，非超急性期脑梗死的首选急诊干预。",
+          E: "错误。时间就是大脑，非增强 CT 排除出血后即可启动溶栓，无需等待耗时的 MRI。"
+        },
+        educationalObjective: "急性缺血性卒中发病 ≤4.5 小时、头颅 CT 排除出血、血压 <185/110 mm Hg 且无禁忌证时，应立即行静脉阿替普酶（tPA）溶栓。"
+      },
+      {
+        id: "q-gen-1",
+        system: "General",
+        difficulty: "Easy",
+        stem: "A 55-year-old woman with a urinary tract infection develops fever (39.2°C), BP 82/48 mm Hg, HR 122/min, and serum lactate of 4.4 mmol/L. After obtaining blood and urine cultures and initiating broad-spectrum IV antibiotics, what is the recommended initial IV fluid resuscitation volume?",
+        options: {
+          A: "500 mL normal saline over 6 hours",
+          B: "30 mL/kg IV crystalloid within the first 3 hours",
+          C: "Immediate packed red blood cell transfusion",
+          D: "5% dextrose in water (D5W) at 100 mL/hr",
+          E: "Albumin 25% 100 mL bolus"
+        },
+        answer: "B",
+        explanations: {
+          A: "错误。500 mL 液体量远远不足以纠正脓毒症休克的血管扩张与有效循环血量不足。",
+          B: "正确！根据拯救脓毒症运动（SSC）指南，脓毒症诱导的低灌注或脓毒性休克应在最初 3 小时内给予至少 30 mL/kg 的静脉晶体液复苏。",
+          C: "错误。除非合并严重贫血（如 Hb < 7 g/dL）或活动性失血，否则脓毒性休克不首选输血。",
+          D: "错误。D5W 会迅速分布到细胞内，无法有效扩充血管内容量。",
+          E: "错误。晶体液是脓毒症休克复苏的一线首选；白蛋白仅在大量晶体液复苏后仍需补液时考虑。"
+        },
+        educationalObjective: "脓毒性休克或乳酸 ≥4 mmol/L 引起的低灌注，应在最初 3 小时内给予 30 mL/kg 静脉晶体液复苏。"
+      }
+,
+      {
+            "id": "q-path-1611",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 4-year-old boy is brought to the emergency department for difficulty breathing and a productive cough. He has a past medical history of recurrent episodes of sinusitis and otitis media. The respiratory infections typically have a protracted course but respond to high-dose antibiotic therapy. Pulmonary auscultation shows crackles and wheezing. Cardiovascular examination shows a cardiac point of maximal impulse that is palpated at the right 5th intercostal space. Which of the following is most likely to be dysfunctional in this patient?",
+            "options": {
+                  "A": "C1 complement component",
+                  "B": "Chloride channels",
+                  "C": "Dynein arms",
+                  "D": "IL-2 receptors",
+                  "E": "Immunoglobulin gene rearrangement",
+                  "F": "NADPH oxidase"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。C1 补体成分缺乏会导致对荚膜菌（肺炎链球菌、流感嗜血杆菌、脑膜炎奈瑟菌）易感，并易患系统性红斑狼疮。",
+                  "B": "错误。囊性纤维化（CF）存在上皮细胞氯离子通道（CFTR）缺陷，虽有反复呼吸道感染与不育，但不会出现右位心/内脏反位。",
+                  "C": "正确！反复鼻窦炎、中耳炎、支气管扩张伴右位心（Kartagener 综合征，原发性纤毛运动障碍 PCD），由纤毛轴丝动力蛋白臂（Dynein arms）ATPase 缺陷引起。",
+                  "D": "错误。T 细胞 IL-2 受体缺陷导致重症联合免疫缺陷病（SCID）。",
+                  "E": "错误。免疫球蛋白基因重排或类别转换障碍见于高 IgM 综合征。",
+                  "F": "错误。NADPH 氧化酶缺乏导致慢性肉芽肿病（CGD）。"
+            },
+            "educationalObjective": "Kartagener 综合征（原发性纤毛运动障碍）典型三联征为内脏反位、慢性鼻窦炎与支气管扩张，由纤毛动力蛋白臂（Dynein arms）结构或功能突变所致。"
+      },
+      {
+            "id": "q-path-15645",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "An 18-year-old man is evaluated due to 3 months of lower extremity pain. The pain is persistent and present both day and night. He has no fever, chills, or history of leg trauma. Imaging shows an expansile lesion of the distal femur. Surgical resection is performed, and the specimen shows an expansile metaphyseal tumor. Mutations involving which of the following genes are most likely present in this patient?",
+            "options": {
+                  "A": "BRAF",
+                  "B": "HER2",
+                  "C": "KRAS",
+                  "D": "RB1",
+                  "E": "RET"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。BRAF 激活突变见于毛细胞白血病、恶性黑色素瘤及甲状腺乳头状癌。",
+                  "B": "错误。HER2（ERBB2）原癌基因扩增/过表达见于乳腺癌。",
+                  "C": "错误。KRAS 原癌基因激活突变常见于结直肠癌、胰腺癌及非小细胞肺癌。",
+                  "D": "正确！青少年股骨远端干骺端膨胀性骨肿瘤提示骨肉瘤（Osteosarcoma），常与抑癌基因 RB1 或 TP53（Li-Fraumeni 综合征）失活突变相关。",
+                  "E": "错误。RET 原癌基因胚系突变导致多发性内分泌腺瘤病 2 型（MEN2）。"
+            },
+            "educationalObjective": "骨肉瘤是儿童和青少年最常见的原发性恶性骨肿瘤，好发于长骨干骺端，常与 RB1（遗传性视网膜母细胞瘤）及 TP53 突变相关。"
+      },
+      {
+            "id": "q-path-20879",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 32-year-old chef accidentally slices into the tip of her thumb while hurriedly trimming ribeye steaks with a knife. The laceration extends through the skin into the subcutaneous pulp. Which of the following sequences is most likely to occur in the subsequent wound healing process?",
+            "options": {
+                  "A": "Angiogenesis -> cellular infiltration -> fibrin clot formation",
+                  "B": "Angiogenesis -> fibrin clot formation -> cellular infiltration",
+                  "C": "Cellular infiltration -> angiogenesis -> fibrin clot formation",
+                  "D": "Cellular infiltration -> fibrin clot formation -> angiogenesis",
+                  "E": "Fibrin clot formation -> angiogenesis -> cellular infiltration",
+                  "F": "Fibrin clot formation -> cellular infiltration -> angiogenesis"
+            },
+            "answer": "F",
+            "explanations": {
+                  "A": "错误。血管生成属于增殖期，不可能早于止血与炎症浸润。",
+                  "B": "错误。止血（纤维蛋白凝块形成）是最早发生的阶段。",
+                  "C": "错误。细胞浸润需在血小板聚集与纤维蛋白凝块支架形成之后。",
+                  "D": "错误。纤维蛋白凝块形成（止血期）先于中性粒细胞/巨噬细胞浸润（炎症期）。",
+                  "E": "错误。炎症期细胞浸润（数小时内）早于增殖期血管生成（数天）。",
+                  "F": "正确！急性创伤愈合依次经历：止血期（纤维蛋白凝块形成）-> 炎症期（中性粒细胞与单核巨噬细胞浸润）-> 增殖期（上皮化、纤维增生与血管生成）-> 成熟重塑期。"
+            },
+            "educationalObjective": "伤口愈合按顺序经历 4 个阶段：止血（纤维蛋白凝块）-> 炎症（细胞浸润）-> 增殖（再上皮化、纤维增生与血管生成）-> 成熟（胶原重塑）。"
+      },
+      {
+            "id": "q-path-14772",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 62-year-old man is evaluated for worsening cough, shortness of breath, and episodic hemoptysis over the past 6 months. The patient has also had a 15-kg (33-lb) weight loss over the same period without any change in his diet or activity level. He has a 50-pack-year smoking history and does not use alcohol or illicit drugs. BMI is 18 kg/m2. The patient appears cachectic with temporal wasting and generalized loss of muscle mass. Chest x-ray reveals a large lung mass with mediastinal lymphadenopathy and pleural effusion. Which of the following cellular processes is most likely responsible for this patient's muscle loss?",
+            "options": {
+                  "A": "Covalent attachment of ubiquitin to muscle proteins",
+                  "B": "Plasma membrane rupture with leakage of cellular contents",
+                  "C": "Plasma membrane instability due to defective dystrophin",
+                  "D": "Progressive shortening of chromosomal telomeres",
+                  "E": "Reprogramming of undifferentiated mesenchymal cells"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！肺癌相关的恶病质（Cachexia）由高水平促炎因子（如 TNF-α、IL-6）驱动，激活泛素-蛋白酶体通路（Ubiquitin-proteasome pathway），使肌动蛋白和肌球蛋白泛素化并快速降解。",
+                  "B": "错误。质膜破裂与胞内容物漏出是细胞坏死（Necrosis）的特征。",
+                  "C": "错误。肌营养不良蛋白（Dystrophin）缺陷导致 Duchenne/Becker 肌营养不良。",
+                  "D": "错误。端粒进行性缩短导致细胞衰老或凋亡。",
+                  "E": "错误。未分化间充质细胞重编程属于化生（Metaplasia）。"
+            },
+            "educationalObjective": "泛素-蛋白酶体通路介导靶向蛋白降解；肿瘤恶病质中促炎细胞因子升高，促进骨骼肌蛋白泛素化降解导致严重肌萎缩。"
+      },
+      {
+            "id": "q-path-1873",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 34-year-old woman comes to the office due to vague abdominal pain over the past several months. She has no significant past medical history. The patient does not use tobacco or alcohol. Temperature is 36.7 C (98.1 F). On physical examination, right upper quadrant fullness is present. Abdominal imaging reveals a dense liver mass. Angiography shows a well-demarcated, highly vascularized tumor surrounded by normal liver parenchyma. Which of the following substances most likely contributed the most to blood vessel development in this patient's tumor?",
+            "options": {
+                  "A": "Epidermal growth factor",
+                  "B": "Fibroblast growth factor",
+                  "C": "Insulin-like growth factor 1",
+                  "D": "Interferon-gamma",
+                  "E": "Interleukin-1"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。表皮生长因子（EGF）主要促进上皮细胞、肝细胞和成纤维细胞有丝分裂，而非血管生成主力。",
+                  "B": "正确！肿瘤与肉芽组织血管生成（Angiogenesis）主要由血管内皮生长因子（VEGF）和成纤维细胞生长因子（FGF，尤其是 FGF-2）直接驱动。",
+                  "C": "错误。IGF-1 主要促进细胞生长与增殖，不直接刺激血管生成。",
+                  "D": "错误。IFN-γ 仅通过激活巨噬细胞释放 VEGF 间接促进新生血管。",
+                  "E": "错误。IL-1 通过诱导其他促炎因子间接增加 VEGF 表达，非直接血管生成因子。"
+            },
+            "educationalObjective": "促进肿瘤与肉芽组织血管生成的核心生长因子是 VEGF 与成纤维细胞生长因子（FGF）。"
+      },
+      {
+            "id": "q-path-420",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 65-year-old woman is being evaluated following an episode of syncope that occurred after prolonged standing. She has had occasional dark stools and lost 5 kg in the past few weeks due to poor appetite. Stool is positive for occult blood. Colonoscopy reveals 2 polyps. The pathology report shows advanced adenomatous changes in one polyp and adenocarcinoma in the other. A mutation in which of the following genes is most likely responsible for the transformation from advanced adenoma to adenocarcinoma in this patient?",
+            "options": {
+                  "A": "BRCA1",
+                  "B": "CCND1",
+                  "C": "KRAS",
+                  "D": "NMYC",
+                  "E": "TP53",
+                  "F": "WT1"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。BRCA1 突变经典相关肿瘤为乳腺癌与卵巢癌。",
+                  "B": "错误。CCND1（Cyclin D1）过表达见于乳腺癌、食管癌及套细胞淋巴瘤。",
+                  "C": "错误。KRAS 突变负责腺瘤体积增大（早期腺瘤 -> 晚期腺瘤），发生于 TP53 突变之前。",
+                  "D": "错误。NMYC 扩增见于神经母细胞瘤。",
+                  "E": "正确！结肠癌经典腺瘤-癌序列（APC -> KRAS -> TP53）中，TP53（分子警察）失活突变是晚期腺瘤恶变为浸润性腺癌的最后一步。",
+                  "F": "错误。WT1 突变导致肾母细胞瘤（Wilms tumor）。"
+            },
+            "educationalObjective": "结肠腺瘤-癌序列中，APC 突变起始息肉形成，KRAS 促进腺瘤增大，TP53 抑癌基因突变是晚期腺瘤恶变为腺癌的关键最后一步。"
+      },
+      {
+            "id": "q-path-20932",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 13-year-old boy is admitted to the hospital due to fever and fatigue for the past week. The patient recently received a cadaveric renal transplant for glomerulonephritis, and his immunosuppressive medication regimen was increased a month ago due to early evidence of rejection. Temperature is 37.7 C (99.9 F). The liver is mildly enlarged, and the spleen tip is palpable. There is notable adenopathy of the bilateral inguinal and axillary regions. A complete blood count shows mild leukopenia. Histopathology from lymph node biopsy shows sheets of large atypical lymphocytes. Which of the following is the most likely cause of this patient's presentation?",
+            "options": {
+                  "A": "Aspergillus fumigatus",
+                  "B": "Bartonella henselae",
+                  "C": "Cryptococcus neoformans",
+                  "D": "Epstein-Barr virus",
+                  "E": "Parvovirus B19"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。侵袭性曲霉病主要累及肺部，病理可见有隔菌丝呈锐角分支。",
+                  "B": "错误。汉赛巴尔通体引起猫抓病，表现为局部淋巴结坏死性肉芽肿。",
+                  "C": "错误。新型隐球菌多引起脑膜脑炎或肺炎，可见厚荚膜窄基出芽酵母。",
+                  "D": "正确！器官移植后大剂量免疫抑制剂削弱了细胞毒性 T 细胞监视，导致 EB 病毒（EBV）再激活并驱动 B 细胞无限增殖，引发移植后淋巴增殖性疾病（PTLD）。",
+                  "E": "错误。细小病毒 B19 主要引起纯红细胞再生障碍性贫血。"
+            },
+            "educationalObjective": "移植后淋巴增殖性疾病（PTLD）发生于高剂量免疫抑制患者，主要由 EB 病毒再激活驱动 B 细胞增殖所致，常表现为传染性单核细胞增多症样症状。"
+      },
+      {
+            "id": "q-path-1083",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 28-year-old woman comes to the physician after finding a lump in her right breast. Her mother died from ovarian cancer at age 34 and her aunt died from breast cancer at age 32. After the appropriate workup, she is diagnosed with breast cancer. This patient most likely inherited a mutation in a gene normally responsible for which of the following processes?",
+            "options": {
+                  "A": "Angiogenesis",
+                  "B": "DNA repair",
+                  "C": "Intercellular adhesion",
+                  "D": "Protein degradation",
+                  "E": "Signal transduction"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。血管生成在肿瘤生长中重要，但非遗传性乳腺癌/卵巢癌综合征的胚系突变机制。",
+                  "B": "正确！年轻发病且伴乳腺癌/卵巢癌家族史提示遗传性乳腺癌-卵巢癌综合征，最常见于 BRCA1/BRCA2 抑癌基因突变，其正常功能是修复双链 DNA 断裂。",
+                  "C": "错误。细胞间黏附（如 E-cadherin）受损见于浸润性小叶癌或弥漫性胃癌。",
+                  "D": "错误。蛋白酶体降解异常非 BRCA1/2 的核心功能。",
+                  "E": "错误。HER2 等信号转导异常多为获得性突变而非胚系遗传。"
+            },
+            "educationalObjective": "遗传性乳腺癌最常由 BRCA1/BRCA2 抑癌基因突变引起，二者负责双链 DNA 断裂修复，突变显著增加乳腺癌与卵巢癌风险。"
+      },
+      {
+            "id": "q-path-11754",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 68-year-old man comes to the office due to persistent back pain for the past several months. He has smoked a pack of cigarettes daily for 36 years. There is focal tenderness over the 10th rib and L1-L2 vertebral region. Radionuclide bone imaging reveals increased activity in multiple vertebrae and ribs. Routine radiographs show sclerotic lesions matching the bone scan areas of increased uptake, which are highly suspicious for metastatic cancer. Which of the following additional findings is most likely to be seen in this patient?",
+            "options": {
+                  "A": "Hematuria and polycythemia",
+                  "B": "Monoclonal immunoglobulin spike",
+                  "C": "Lung mass and elevated parathyroid hormone-related peptide",
+                  "D": "Lymphadenopathy and BCL-2 overexpression",
+                  "E": "Nodular prostate and elevated prostate-specific antigen level",
+                  "F": "Rapidly enlarging, large, irregular mole"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。血尿与红细胞增多提示肾细胞癌，其骨转移通常为溶骨性（Osteolytic）。",
+                  "B": "错误。单克隆免疫球蛋白峰见于多发性骨髓瘤，典型表现为穿凿样溶骨性病变。",
+                  "C": "错误。肺鳞癌伴 PTHrP 升高引起高钙血症，骨转移多为溶骨性。",
+                  "D": "错误。淋巴结肿大与 BCL-2 过表达见于滤泡性淋巴瘤。",
+                  "E": "正确！老年男性骨痛伴 X 线硬化性（成骨性 Osteoblastic）骨转移灶，高度提示前列腺癌转移，直肠指检可触及结节状前列腺且 PSA 升高。",
+                  "F": "错误。黑色素瘤骨转移多呈溶骨性。"
+            },
+            "educationalObjective": "老年男性骨痛伴成骨性（硬化性）骨转移灶高度提示前列腺癌；肾癌、骨髓瘤、非小细胞肺癌与黑色素瘤多为溶骨性转移。"
+      },
+      {
+            "id": "q-path-18628",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 48-year-old woman comes to the office due to a sore throat for the past 3 months. On examination, she is found to have an enlarged, ulcerated left tonsil and a firm, nontender, nonmobile left neck mass. Biopsy of the tonsil is consistent with squamous cell carcinoma, and further analysis shows expression of viral genome proteins. Which of the following most likely predisposed the patient to the development of this malignancy?",
+            "options": {
+                  "A": "Decreased activity of BRAF-associated protein",
+                  "B": "Decreased activity of RB-associated protein",
+                  "C": "Decreased activity of RET-associated protein",
+                  "D": "Overexpression of BRCA1- or BRCA2-associated protein",
+                  "E": "Overexpression of MEN1-associated protein"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。BRAF 是原癌基因，其活性降低反而抑制增殖。",
+                  "B": "正确！高危型 HPV 导致的头颈部（扁桃体/口咽）鳞状细胞癌中，病毒癌蛋白 E6 降解 p53，E7 结合并灭活视网膜母细胞瘤蛋白（Rb），释放 E2F 促进细胞周期失控。",
+                  "C": "错误。RET 是原癌基因，需激活突变才致癌。",
+                  "D": "错误。BRCA1/2 是抑癌基因，失活（而非过表达）导致肿瘤。",
+                  "E": "错误。MEN1 是抑癌基因，失活导致 MEN1 综合征。"
+            },
+            "educationalObjective": "HPV 病毒蛋白 E7 结合并灭活 Rb 抑癌蛋白（E6 降解 p53），导致头颈部鳞状细胞癌及宫颈癌发生。"
+      },
+      {
+            "id": "q-path-1762",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 47-year-old woman comes to the office after noticing a pea-sized lump in her right breast. Clinical examination confirms a firm, fixed nodule with overlying puckered skin. Needle biopsy reveals infiltrating ductal carcinoma. A right mastectomy and axillary lymph node dissection are scheduled. Overexpression of which of the following markers is most likely to be associated with aggressive disease in this patient?",
+            "options": {
+                  "A": "BCL-2",
+                  "B": "Estrogen receptor",
+                  "C": "HER2",
+                  "D": "Mutated p53",
+                  "E": "Progesterone receptor"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。与淋巴瘤不同，乳腺癌中 BCL-2 表达升高通常提示预后较好。",
+                  "B": "错误。雌激素受体（ER）阳性提示分化较好且对他莫昔芬/芳香化酶抑制剂敏感，预后较佳。",
+                  "C": "正确！20%–30% 的乳腺癌存在 HER2（ERBB2）酪氨酸激酶受体过表达，与低分化、快速生长、高侵袭性及不良预后相关，但对曲妥珠单抗有效。",
+                  "D": "错误。p53 蛋白表达程度与乳腺癌临床预后相关性不如 HER2 明确。",
+                  "E": "错误。孕激素受体（PR）阳性同样提示内分泌治疗敏感及较好预后。"
+            },
+            "educationalObjective": "乳腺癌 ER/PR 阳性提示内分泌治疗敏感及较好预后；HER2 过表达提示肿瘤更具侵袭性，适用抗 HER2 单抗（曲妥珠单抗）。"
+      },
+      {
+            "id": "q-path-12049",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 61-year-old man comes to the office due to 4 months of easy fatigability, anorexia, and a 4.5-kg unintentional weight loss. Stool occult blood is positive and laboratory studies show microcytic hypochromic anemia. Colonoscopy reveals a 6-cm mass in the descending colon (adenocarcinoma), and CT shows multiple liver metastases. Therapy with monoclonal antibodies that bind to epidermal growth factor receptors (EGFR) on the malignant cells is considered. An activating mutation in which of the following will most likely make this therapy ineffective?",
+            "options": {
+                  "A": "Adenomatous polyposis coli protein",
+                  "B": "KRAS protein",
+                  "C": "p53 protein",
+                  "D": "Platelet-derived growth factor",
+                  "E": "Vascular endothelial growth factor"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。APC 蛋白调控 β-catenin 降解，与抗 EGFR 耐药机制无关。",
+                  "B": "正确！KRAS 位于 EGFR 下游信号通路，若肿瘤存在 KRAS 激活突变，即使使用西妥昔单抗/帕尼单抗阻断 EGFR，下游信号仍持续激活，导致抗 EGFR 治疗耐药。",
+                  "C": "错误。p53 调控 DNA 修复与凋亡，非 EGFR 下游直接耐药靶点。",
+                  "D": "错误。PDGF 主要促进血管生成与成纤维细胞增殖。",
+                  "E": "错误。VEGF 主导肿瘤血管生成（贝伐珠单抗靶点）。"
+            },
+            "educationalObjective": "KRAS 激活突变导致 EGFR 下游通路持续激活，使转移性结直肠癌对抗 EGFR 单抗（西妥昔单抗、帕尼单抗）耐药。"
+      },
+      {
+            "id": "q-path-429",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 38-year-old man is evaluated for bloody stools, weight loss, and anemia. His father died of colon cancer at age 40, and his younger sister suffers from endometrial cancer. Colonoscopy shows a right-sided ulcerative colon mass without polyps, and biopsy reveals adenocarcinoma. A mutation in which of the following genes is most likely responsible for this patient's condition?",
+            "options": {
+                  "A": "APC",
+                  "B": "BRCA1",
+                  "C": "MEN1",
+                  "D": "MSH2",
+                  "E": "VHL"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。APC 突变导致家族性腺瘤性息肉病（FAP），结肠内可见数百至数千枚息肉，而非无息肉右半结肠癌。",
+                  "B": "错误。BRCA1 主要相关乳腺癌与卵巢癌。",
+                  "C": "错误。MEN1 相关甲状旁腺、垂体和胰腺肿瘤。",
+                  "D": "正确！早发右半结肠癌（<50 岁）、无广泛息肉且伴家族性子宫内膜癌，典型符合 Lynch 综合征（HNPCC），由 DNA 错配修复基因（MSH2、MLH1、MSH6、PMS2）胚系突变所致。",
+                  "E": "错误。VHL 突变导致血管母细胞瘤、透明细胞肾癌与嗜铬细胞瘤。"
+            },
+            "educationalObjective": "遗传性非息肉病性结直肠癌（Lynch 综合征）由 DNA 错配修复基因（如 MSH2、MLH1）突变引起，表现为早发结直肠癌及肠外肿瘤（子宫内膜癌、卵巢癌）。"
+      },
+      {
+            "id": "q-path-345",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 32-year-old woman comes to the office for evaluation of a 5-cm firm immobile breast mass. She has a history of right lower limb amputation at age 17 due to osteosarcoma. Her mother died of an adrenal tumor, and her younger sister died of leukemia. Which of the following gene mutations is the most likely etiology for this patient's condition?",
+            "options": {
+                  "A": "APC",
+                  "B": "BRCA1",
+                  "C": "NF2",
+                  "D": "TP53",
+                  "E": "RB1"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。APC 突变引起 FAP。",
+                  "B": "错误。BRCA1 不伴有肉瘤、白血病或肾上腺皮质癌聚集。",
+                  "C": "错误。NF2 突变引起 2 型神经纤维瘤病（双侧听神经鞘瘤）。",
+                  "D": "正确！肉瘤（骨肉瘤）、乳腺癌、白血病与肾上腺皮质癌（SBLA 谱）家族聚集是 Li-Fraumeni 综合征的经典表现，由 TP53 抑癌基因常染色体显性胚系突变引起。",
+                  "E": "错误。RB1 突变主要引起视网膜母细胞瘤与骨肉瘤，不伴乳腺癌或白血病。"
+            },
+            "educationalObjective": "Li-Fraumeni 综合征由抑癌基因 TP53 常染色体显性突变引起，好发肉瘤、乳腺癌、白血病、脑肿瘤及肾上腺皮质癌。"
+      },
+      {
+            "id": "q-path-15021",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 21-year-old woman is hospitalized for elective subtotal colectomy due to numerous colonic polyps found on screening colonoscopy. Her maternal grandfather died of metastatic colon cancer, and her mother was recently diagnosed with colon cancer. Histopathology shows multiple colonic tubular adenomas with dysplastic epithelium. Genetic testing is most likely to reveal a germline mutation resulting in which of the following effects?",
+            "options": {
+                  "A": "Abnormality of RAS signaling protein",
+                  "B": "Absence of regulatory TP53 protein",
+                  "C": "Defective repair of DNA mismatches",
+                  "D": "Increase in cellular telomerase activity",
+                  "E": "Loss of functional APC protein"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。KRAS 突变常见于散发性结肠癌，非 FAP 起始胚系突变。",
+                  "B": "错误。TP53 胚系突变引起 Li-Fraumeni 综合征。",
+                  "C": "错误。DNA 错配修复缺陷引起 Lynch 综合征（无广泛息肉）。",
+                  "D": "错误。端粒酶活性升高可见于多种肿瘤，非 FAP 病因。",
+                  "E": "正确！青年期全结肠弥漫性腺瘤性息肉提示家族性腺瘤性息肉病（FAP），由 APC 抑癌基因胚系突变导致 APC 蛋白功能丧失、β-catenin 蓄积与隐窝过度增生，终生癌变率近 100%。"
+            },
+            "educationalObjective": "家族性腺瘤性息肉病（FAP）为常染色体显性遗传病，由 APC 抑癌基因胚系突变引起，表现为大量结肠息肉及近 100% 结直肠癌风险。"
+      },
+      {
+            "id": "q-path-428",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 50-year-old man undergoes a routine screening colonoscopy and is found to have a 1-cm mucosal lesion in his sigmoid colon. Histology reveals a tubulovillous adenomatous polyp lined by dysplastic columnar epithelial cells. The pathogenesis of this patient's lesion most likely began with a mutation involving which of the following genes?",
+            "options": {
+                  "A": "APC",
+                  "B": "DCC",
+                  "C": "K-RAS",
+                  "D": "MSH2",
+                  "E": "p53"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！散发性结直肠癌及腺瘤性息肉（管状绒毛状腺瘤）遵循经典 APC/β-catenin 途径，第一步突变通常是 APC 抑癌基因失活。",
+                  "B": "错误。DCC（结肠癌缺失基因）突变发生于腺瘤-癌序列的较晚阶段。",
+                  "C": "错误。K-RAS 突变促进腺瘤增大（>1 cm），发生于 APC 之后。",
+                  "D": "错误。MSH2 属于微卫星不稳定（Lynch 综合征）途径。",
+                  "E": "错误。p53 失活是腺瘤恶变为癌的后期事件。"
+            },
+            "educationalObjective": "APC 抑癌基因突变是经典腺瘤-癌序列的第一步，见于绝大多数散发性结肠癌及全部 FAP 患者。"
+      },
+      {
+            "id": "q-path-1753",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 27-year-old woman undergoes a routine Pap test, which reveals a squamous intraepithelial lesion positive for human papillomavirus. A cervical biopsy reveals low-grade dysplasia. Which of the following features distinguishes this patient's lesion from cervical malignancy?",
+            "options": {
+                  "A": "Abundant mitoses",
+                  "B": "Disordered maturation",
+                  "C": "Loss of cell polarity",
+                  "D": "Nuclear abnormalities",
+                  "E": "Pleomorphism",
+                  "F": "Reversibility of changes"
+            },
+            "answer": "F",
+            "explanations": {
+                  "A": "错误。核分裂象增多在非典型增生与浸润癌中均可见。",
+                  "B": "错误。成熟障碍在非典型增生与浸润癌中均存在。",
+                  "C": "错误。细胞极性丧失在两者中均可见。",
+                  "D": "错误。核大深染等核异型性在两者中均可见。",
+                  "E": "错误。细胞多形性（Pleomorphism）在两者中均可见。",
+                  "F": "正确！低级别上皮内瘤变/非典型增生（累及上皮下 <1/3 且未突破基底膜）具有可逆性，常可自行消退；一旦突破基底膜即为不可逆的浸润性癌。"
+            },
+            "educationalObjective": "非典型增生（尤其是低级别）具有可逆性且未突破基底膜，而浸润性癌突破基底膜且不可逆；核异型、多形性与核分裂增多在两者中均可见。"
+      },
+      {
+            "id": "q-path-313",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "Rats subjected to chronic inhalation exposure of formaldehyde develop nasal squamous cell carcinomas. Decreased activity of which of the following genes is likely to be found on cytogenetic studies of the tumor cells?",
+            "options": {
+                  "A": "bcr-abl",
+                  "B": "Ras",
+                  "C": "Erb-B2",
+                  "D": "p53",
+                  "E": "N-myc"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。bcr-abl [t(9;22)] 为融合原癌基因，活性增强导致 CML。",
+                  "B": "错误。Ras 为原癌基因，过表达/激活增强有丝分裂信号。",
+                  "C": "错误。Erb-B2（HER2）为原癌基因，过表达见于乳腺癌。",
+                  "D": "正确！题干问“活性降低”的基因，即抑癌基因失活。五个选项中只有 p53 是抑癌基因（G1 期阻滞与凋亡调控）。",
+                  "E": "错误。N-myc 为原癌基因，在神经母细胞瘤中扩增。"
+            },
+            "educationalObjective": "p53 是调控细胞周期 G1 阻滞与凋亡的关键抑癌基因，其活性降低（失活）广泛见于各类恶性肿瘤。"
+      },
+      {
+            "id": "q-path-178",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 65-year-old man with prostate cancer and membranous nephropathy develops acute-onset severe right flank pain and hematuria. Contrast-enhanced CT scan reveals a wedge-shaped perfusion defect in the right kidney. The affected renal tissue is most likely to develop which of the following histologic changes over the next several days?",
+            "options": {
+                  "A": "Caseous necrosis",
+                  "B": "Coagulative necrosis",
+                  "C": "Fat necrosis",
+                  "D": "Fibrinoid necrosis",
+                  "E": "Liquefactive necrosis",
+                  "F": "Tissue calcification"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。干酪样坏死见于结核分枝杆菌及某些真菌感染（肉芽肿）。",
+                  "B": "正确！高凝状态（肿瘤+膜性肾病）导致右肾楔形梗死，除中枢神经系统外，绝大多数实质器官（肾、心、脾）的不可逆缺血性坏死均表现为凝固性坏死（Coagulative necrosis），细胞轮廓保留而胞核消失。",
+                  "C": "错误。脂肪坏死见于急性胰腺炎或乳腺/皮下脂肪创伤（皂化斑）。",
+                  "D": "错误。纤维素样坏死见于血管炎及恶性高血压的血管壁。",
+                  "E": "错误。液化性坏死见于脑梗死及化脓性细菌感染。",
+                  "F": "错误。营养不良性钙化通常在损伤后数月至数年缓慢形成。"
+            },
+            "educationalObjective": "除中枢神经系统（液化性坏死）外，大多数器官（如肾脏、心肌）的不可逆缺血性损伤均表现为凝固性坏死。"
+      },
+      {
+            "id": "q-path-2092",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 36-year-old woman notices nontender left axillary lymphadenopathy. Ultrasound-guided biopsy of the tissue specimen shows clumps of cells that have positive immunohistochemical staining for cytokeratin. These cells most likely belong to which of the following lineages?",
+            "options": {
+                  "A": "Epithelial",
+                  "B": "Lymphoid",
+                  "C": "Mesenchymal",
+                  "D": "Myeloid",
+                  "E": "Neuroendocrine"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！细胞角蛋白（Cytokeratin）是几乎所有上皮细胞的中间丝骨架蛋白，免疫组化阳性提示上皮来源肿瘤（如转移性乳腺癌）。",
+                  "B": "错误。淋巴细胞标记物为 CD20（B 细胞）和 CD3（T 细胞）。",
+                  "C": "错误。间叶组织标记物为波形蛋白（Vimentin）。",
+                  "D": "错误。髓系细胞标记物为髓过氧化物酶（MPO）。",
+                  "E": "错误。神经内分泌肿瘤标记物为嗜铬粒蛋白 A（Chromogranin A）和突触素（Synaptophysin）。"
+            },
+            "educationalObjective": "细胞角蛋白（Cytokeratin）是上皮源性肿瘤（癌）的经典免疫组化标志物。"
+      },
+      {
+            "id": "q-path-2093",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "Following the biopsy showing cytokeratin-positive cells in an axillary lymph node, special immunohistochemical staining reveals overexpression of a 185 kD glycoprotein that spans the cell membrane and has tyrosine kinase activity in the intracellular domain. Which of the following is the most likely function of this protein?",
+            "options": {
+                  "A": "Accelerates cell proliferation",
+                  "B": "Acts as a sex hormone receptor",
+                  "C": "Governs intercellular binding",
+                  "D": "Induces cytokine release",
+                  "E": "Mediates endocytosis"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！该 185 kD 跨膜酪氨酸激酶糖蛋白即 HER2（p185），激活下游信号通路加速细胞增殖并抑制凋亡，提示预后较差。",
+                  "B": "错误。雌/孕激素受体为胞内受体，非跨膜酪氨酸激酶。",
+                  "C": "错误。细胞间黏附由 ICAM、选择素及钙黏蛋白介导。",
+                  "D": "错误。Toll 样受体等模式识别受体诱导细胞因子释放。",
+                  "E": "错误。网格蛋白（Clathrin）介导内吞作用。"
+            },
+            "educationalObjective": "HER2 癌基因编码具有内在酪氨酸激酶活性的跨膜糖蛋白，其过表达可加速细胞增殖并导致乳腺癌复发风险增加与预后不良。"
+      },
+      {
+            "id": "q-path-285",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 53-year-old man with several years of heartburn and dysphagia undergoes upper GI endoscopy. Esophageal biopsy shows columnar epithelium with interspersed goblet cells. A similar adaptive response can be seen in which of the following scenarios?",
+            "options": {
+                  "A": "Bronchial epithelial cells in a chronic cigarette smoker",
+                  "B": "Epidermal cells in a patient with psoriasis",
+                  "C": "Melanocytes in a large, irregular mole",
+                  "D": "Myocardial cells in a patient with aortic stenosis",
+                  "E": "Skeletal myocytes after prolonged immobility"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！胃食管反流导致食管鳞状上皮化生为含杯状细胞的肠型柱状上皮（Barrett 食管）；同理，长期吸烟者的支气管假复层纤毛柱状上皮会化生（Metaplasia）为耐受性更强的复层鳞状上皮。",
+                  "B": "错误。银屑病表皮表现为细胞数量增多的增生（Hyperplasia）。",
+                  "C": "错误。不规则痣中的黑色素细胞表现为异型增生（Dysplasia）。",
+                  "D": "错误。主动脉瓣狭窄引起心肌细胞肥大（Hypertrophy）。",
+                  "E": "错误。长期制动引起骨骼肌细胞萎缩（Atrophy）。"
+            },
+            "educationalObjective": "化生（Metaplasia）是一种成熟分化细胞被另一种成熟分化细胞替代的适应性反应，常见于 Barrett 食管及慢性吸烟者的支气管鳞状化生。"
+      },
+      {
+            "id": "q-path-57",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "\"Moldy\" grains in some regions of China contain a substance that causes a specific G-to-T mutation in gene p53. The population in these regions is expected to be at an increased risk of which of the following diseases?",
+            "options": {
+                  "A": "Lung cancer",
+                  "B": "Infectious diarrhea",
+                  "C": "Dilated cardiomyopathy",
+                  "D": "Liver cancer",
+                  "E": "Congenital heart defects",
+                  "F": "Hypothyroidism",
+                  "G": "Osteoporosis",
+                  "H": "Pancreatic cancer"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。黄曲霉毒素 B1 诱导的 p53 第 249 位密码子 G->T 颠换特异性与肝细胞癌相关。",
+                  "B": "错误。黄曲霉毒素不以感染性腹泻为主要长期风险。",
+                  "C": "错误。扩张型心肌病与该基因突变无关。",
+                  "D": "正确！霉变谷物中的黄曲霉（Aspergillus flavus）产生黄曲霉毒素 B1，可诱导 p53 基因第 249 位密码子发生经典 G:C -> T:A 颠换，显著增加肝细胞癌（HCC）风险（与乙肝协同作用更强）。",
+                  "E": "错误。与先天性心脏病无关。",
+                  "F": "错误。与甲状腺功能减退无关。",
+                  "G": "错误。与骨质疏松无关。",
+                  "H": "错误。与胰腺癌无此特征性关联。"
+            },
+            "educationalObjective": "膳食黄曲霉毒素 B1 暴露可引起 p53 基因第 249 位密码子 G:C -> T:A 颠换，极大增加肝细胞癌（HCC）的发病风险。"
+      },
+      {
+            "id": "q-path-177",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 73-year-old man with non-adherent paroxysmal atrial fibrillation presents with right-sided hemiplegia, hemisensory loss, and aphasia. Despite appropriate treatment, his symptoms fail to improve. Over the next week, which of the following processes is most likely to occur in the affected brain region?",
+            "options": {
+                  "A": "Accumulation of fibrin-like material in vessel walls",
+                  "B": "Formation of a necrotic focus surrounded by epithelioid macrophages",
+                  "C": "Deposition of fatty acid and calcium complexes",
+                  "D": "Hydrolytic enzyme-induced tissue digestion",
+                  "E": "Tissue necrosis with preservation of cellular architecture"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。血管壁纤维素样坏死见于血管炎或恶性高血压。",
+                  "B": "错误。上皮样巨噬细胞包绕坏死灶为干酪样坏死肉芽肿（结核）。",
+                  "C": "错误。脂肪酸与钙结合形成钙皂为脂肪坏死。",
+                  "D": "正确！房颤栓子导致急性缺血性脑卒中，由于脑组织缺乏支持性间质架构，缺血坏死后迅速被小胶质细胞及水解酶消化，形成液化性坏死（Liquefactive necrosis）并最终遗留含脑脊液的囊腔。",
+                  "E": "错误。保留细胞轮廓的凝固性坏死见于脑以外的实体器官缺血。"
+            },
+            "educationalObjective": "脑组织不可逆缺血损伤（脑梗死）发生水解酶介导的液化性坏死，最终形成胶质瘢痕包绕的囊腔；其他器官缺血则表现为凝固性坏死。"
+      },
+      {
+            "id": "q-path-11955",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 61-year-old man presents with fever, hypotension, and blood/sputum cultures growing Klebsiella pneumoniae. Bacterial lipopolysaccharide stimulates toll-like receptors in inflammatory cells, leading to degradation of the IκB inhibitor protein, which normally binds to a latent transcription factor found in the cytoplasm. Which of the following factors is most likely to be directly activated by the removal of this inhibitor protein?",
+            "options": {
+                  "A": "Granulocyte colony-stimulating factor",
+                  "B": "Janus kinase 2",
+                  "C": "Nuclear factor-kappa B",
+                  "D": "Transforming growth factor-beta",
+                  "E": "Tumor necrosis factor-alpha"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。G-CSF 由激活后的 NF-κB 转录上调，非 IκB 降解直接释放的因子。",
+                  "B": "错误。JAK2 参与骨髓增殖信号通路，不直接受 IκB 抑制。",
+                  "C": "正确！正常状态下转录因子 NF-κB 在胞质中与抑制蛋白 IκB 结合处于失活态；TLR 激活 IκB 激酶后使 IκB 泛素化降解，直接释放游离 NF-κB 入核启动炎症基因转录。",
+                  "D": "错误。TGF-β 与潜在相关肽结合，不与 IκB 结合。",
+                  "E": "错误。TNF-α 是 NF-κB 入核后诱导转录的下游产物之一。"
+            },
+            "educationalObjective": "NF-κB 正常在胞质中与抑制蛋白 IκB 结合；细菌 LPS 等信号激活 IκB 激酶并降解 IκB 后，直接释放 NF-κB 转位入核介导炎症与免疫反应。"
+      },
+      {
+            "id": "q-path-11916",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 74-year-old woman undergoes left femoral embolectomy for acute limb ischemia. Several hours post-procedure, she develops severe left calf pain, tense swelling, pain with passive dorsiflexion, and loss of distal pulses. The physician suspects reperfusion injury of muscles due to overproduction of reactive oxygen species. Which of the following enzymes is most likely to help neutralize these toxic molecules?",
+            "options": {
+                  "A": "Cytochrome oxidase",
+                  "B": "Cytochrome P450",
+                  "C": "Myeloperoxidase",
+                  "D": "NADPH oxidase",
+                  "E": "Superoxide dismutase"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。细胞色素氧化酶是线粒体呼吸链末端酶，将氧还原为水以产生 ATP。",
+                  "B": "错误。CYP450 代谢药物和毒物时反而可能产生活性氧（ROS）。",
+                  "C": "错误。髓过氧化物酶（MPO）将 H2O2 转化为次氯酸杀菌，同时损伤宿主。",
+                  "D": "错误。NADPH 氧化酶产生超氧阴离子自由基（ROS），而非清除自由基。",
+                  "E": "正确！缺血-再灌注损伤伴骨筋膜室综合征时，超氧化物歧化酶（SOD）、过氧化氢酶（Catalase）及谷胱甘肽过氧化物酶是中和活性氧（ROS）的核心抗氧化酶。"
+            },
+            "educationalObjective": "超氧化物歧化酶（SOD）等抗氧化酶可将活性氧自由基中和为氧气与水；缺血再灌注时 ROS 生成超过抗氧化清除能力导致细胞损伤。"
+      },
+      {
+            "id": "q-path-1660",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 45-year-old man presents with a firm, nontender thyroid nodule. Serum TSH is normal and serum calcitonin is elevated. Neck ultrasound shows a 2-cm hypoechoic nodule with microcalcifications. FNA reveals spindle-shaped cells in an amorphous background. Which of the following gene alterations most likely contributed to this patient's current condition?",
+            "options": {
+                  "A": "Activation of ALK",
+                  "B": "Activation of RET",
+                  "C": "Inactivation of MEN1",
+                  "D": "Inactivation of p53",
+                  "E": "Overexpression of BCL2",
+                  "F": "Overexpression of JAK2"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。ALK 激活常见于间变性大细胞淋巴瘤和非小细胞肺癌。",
+                  "B": "正确！甲状腺结节伴降钙素（Calcitonin）升高及无定形淀粉样基质内的梭形细胞，诊断为甲状腺髓样癌（MTC），由 RET 原癌基因激活突变所致（可见于散发性及 MEN2A/2B）。",
+                  "C": "错误。MEN1 失活与 MEN1 综合征相关，不引起甲状腺髓样癌。",
+                  "D": "错误。p53 失活多见于未分化甲状腺癌等晚期恶性肿瘤。",
+                  "E": "错误。BCL2 过表达见于滤泡性淋巴瘤。",
+                  "F": "错误。JAK2 突变见于真性红细胞增多症等骨髓增殖性肿瘤。"
+            },
+            "educationalObjective": "甲状腺髓样癌起源于分泌降钙素的滤泡旁 C 细胞，病理可见淀粉样物质沉积，散发性与家族性（MEN2）病例均与 RET 原癌基因激活突变相关。"
+      },
+      {
+            "id": "q-path-1801",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 24-year-old man is evaluated for recurrent abdominal pain, bloody diarrhea, and low-grade fevers. CT reveals thickening of the distal colon and rectum. When his anticoagulated blood is placed in an upright, thin glass tube, red blood cells form a stack and settle at 50 mm/hr. Serum levels of which of the following substances is most closely associated with this observed finding?",
+            "options": {
+                  "A": "Bradykinin",
+                  "B": "Erythropoietin",
+                  "C": "Interleukin (IL)-6",
+                  "D": "Leukotriene B4",
+                  "E": "Platelet-activating factor",
+                  "F": "Thromboxane A2"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。缓激肽引起血管扩张、通透性增加与疼痛。",
+                  "B": "错误。促红细胞生成素（EPO）由肾脏响应缺氧产生，刺激红细胞生成。",
+                  "C": "正确！溃疡性结肠炎慢性炎症释放 IL-6 等促炎细胞因子，刺激肝脏合成纤维蛋白原等急性期反应物，中和红细胞表面负电荷（Zeta 电位）使其呈缗钱状排列（Rouleaux），显著加快血沉（ESR）。",
+                  "D": "错误。白三烯 B4 主要趋化中性粒细胞。",
+                  "E": "错误。血小板活化因子参与白细胞功能与血小板激活。",
+                  "F": "错误。血栓素 A2 促进血小板聚集与血管收缩，不引起红细胞缗钱状聚集。"
+            },
+            "educationalObjective": "慢性炎症中升高的 IL-6（及 IL-1、TNF-α）刺激肝脏释放纤维蛋白原等急性期反应蛋白，促进红细胞缗钱状聚集并升高血沉（ESR）。"
+      },
+      {
+            "id": "q-path-297",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 46-year-old man with a stony hard, fixed neck mass undergoes combination chemotherapy. Several weeks later the mass significantly decreases in size, and biopsy demonstrates many shrunken eosinophilic cells within the tumor. Which of the following substances released from mitochondria most likely triggered the observed cellular changes?",
+            "options": {
+                  "A": "Hemosiderin",
+                  "B": "Fas (CD95)",
+                  "C": "Cytochrome c",
+                  "D": "Succinate dehydrogenase",
+                  "E": "Superoxide dismutase",
+                  "F": "Lipoxygenase"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。含铁血黄素蓄积见于溶血性贫血或多次输血。",
+                  "B": "错误。Fas (CD95) 属于细胞表面死亡受体，介导外源性凋亡途径，而非线粒体释放。",
+                  "C": "正确！化疗诱导肿瘤细胞发生内源性（线粒体）凋亡，表现为皱缩嗜酸性细胞，其关键机制是促凋亡蛋白（Bax/Bak）增加线粒体外膜通透性，释放细胞色素 c（Cytochrome c）激活 Caspase 级联反应。",
+                  "D": "错误。琥珀酸脱氢酶是三羧酸循环与电子传递链酶，不直接触发凋亡。",
+                  "E": "错误。超氧化物歧化酶是抗氧化酶，不触发凋亡。",
+                  "F": "错误。脂氧合酶参与白三烯合成。"
+            },
+            "educationalObjective": "细胞色素 c（Cytochrome c）从线粒体释放至胞质后激活 Caspase 级联反应，是内源性细胞凋亡途径的核心触发机制。"
+      },
+      {
+            "id": "q-path-11674",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 26-year-old man tests positive for influenza. Within infected respiratory tract cells, viral proteins are degraded and attached to major histocompatibility complex (MHC) class I molecules, which are then expressed on the cell surface for presentation to cytotoxic CD8+ lymphocytes. Which of the following enzymes is most essential to initiating this process?",
+            "options": {
+                  "A": "Acid phosphatase",
+                  "B": "Caspase",
+                  "C": "Guanylate cyclase",
+                  "D": "Myeloperoxidase",
+                  "E": "Ubiquitin ligase"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。酸性磷酸酶位于溶酶体中，不参与胞质内源性抗原 MHC I 类提呈。",
+                  "B": "错误。Caspase 由 CD8+ T 细胞释放颗粒酶后激活以诱导靶细胞凋亡，非启动抗原降解的酶。",
+                  "C": "错误。鸟苷酸环化酶参与 G 蛋白/NO 信号传导。",
+                  "D": "错误。髓过氧化物酶参与中性粒细胞呼吸爆发杀菌。",
+                  "E": "正确！胞内病毒蛋白经泛素-蛋白酶体通路降解为肽段后由 MHC I 类分子提呈；该过程由泛素连接酶（Ubiquitin ligase）识别底物并打上泛素标签所启动。"
+            },
+            "educationalObjective": "内源性病毒抗原经泛素-蛋白酶体通路降解并由 MHC-I 提呈给 CD8+ T 细胞，该降解过程由泛素连接酶（Ubiquitin ligase）启动。"
+      },
+      {
+            "id": "q-path-421",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 50-year-old healthy woman undergoes colonoscopy showing 2 polyps: one is small with early adenoma features, and the other is larger with late adenoma features. A mutation in which of the following genes would most likely cause this patient's small early adenoma to grow and develop late adenoma features?",
+            "options": {
+                  "A": "BRCA1",
+                  "B": "CCND1",
+                  "C": "KRAS",
+                  "D": "NMYC",
+                  "E": "TP53",
+                  "F": "WT1"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。BRCA1 相关乳腺癌与卵巢癌。",
+                  "B": "错误。CCND1 过表达见于乳腺癌、食管癌及淋巴瘤。",
+                  "C": "正确！在结肠腺瘤-癌序列中，APC 突变形成早期小腺瘤，随后 KRAS 原癌基因激活突变导致 GTP 结合蛋白持续活化，促使小腺瘤生长为晚期大腺瘤。",
+                  "D": "错误。NMYC 扩增见于神经母细胞瘤。",
+                  "E": "错误。TP53 突变负责晚期腺瘤向浸润性腺癌的恶性转化。",
+                  "F": "错误。WT1 突变导致 Wilms 瘤。"
+            },
+            "educationalObjective": "KRAS 原癌基因突变引起细胞不受控增殖，推动早期小腺瘤生长演变为晚期大腺瘤（体积 >4 cm 癌变率显著升高）。"
+      },
+      {
+            "id": "q-path-1039",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 72-year-old man with a 50-pack-year smoking history presents with progressive weakness, anorexia, 10-kg weight loss, bitemporal wasting, and thin arms with notable muscle wasting. Chest x-ray reveals an irregular right perihilar mass. Which of the following is most likely contributing to this patient's muscle wasting?",
+            "options": {
+                  "A": "Calcium channel autoantibody",
+                  "B": "Interferon-alpha",
+                  "C": "Interleukin-3",
+                  "D": "Transforming growth factor-beta",
+                  "E": "Tumor necrosis factor-alpha",
+                  "F": "Vasopressin"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。电压门控钙通道自身抗体引起 Lambert-Eaton 肌无力综合征，表现为肌无力而非显著肌肉消耗萎缩。",
+                  "B": "错误。IFN-α 具有抗病毒和抗肿瘤活性。",
+                  "C": "错误。IL-3 刺激骨髓造血祖细胞生长分化。",
+                  "D": "错误。TGF-β 主要抑制炎症反应与 T 细胞增殖。",
+                  "E": "正确！肿瘤坏死因子-α（TNF-α，又称恶病质素 Cachectin）作用于下丘脑抑制食欲并提高基础代谢率，是副肿瘤恶病质及肌肉消耗的主要介质。",
+                  "F": "错误。异位抗利尿激素（ADH/Vasopressin）分泌引起 SIADH。"
+            },
+            "educationalObjective": "肿瘤坏死因子-α（TNF-α）通过抑制食欲与升高基础代谢率，介导副肿瘤性恶病质综合征及骨骼肌消耗。"
+      },
+      {
+            "id": "q-path-1760",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 45-year-old woman presents with back pain, fatigue, anorexia, and weight loss. Imaging reveals a lytic lesion in the T10 vertebral body. Biopsy shows cells with abnormally high replicative potential, and genetic study reveals a single nucleotide substitution causing an activating mutation. Which of the following genes is most likely involved in this patient's disease?",
+            "options": {
+                  "A": "APC",
+                  "B": "BRCA1",
+                  "C": "KRAS",
+                  "D": "RB",
+                  "E": "TP53"
+            },
+            "answer": "C",
+            "explanations": {
+                  "A": "错误。APC 为抑癌基因，肿瘤中表现为失活（功能丧失）突变。",
+                  "B": "错误。BRCA1 为抑癌基因，表现为失活突变。",
+                  "C": "正确！题干明确指出“单核苷酸替换引起激活突变（Activating mutation）”，属于原癌基因特征；五个选项中仅有 KRAS 为原癌基因，其余均为抑癌基因。",
+                  "D": "错误。RB 为抑癌基因，表现为失活突变。",
+                  "E": "错误。TP53 为抑癌基因，表现为失活突变。"
+            },
+            "educationalObjective": "原癌基因（如 KRAS）通过激活（功能获得）突变促进细胞增殖；抑癌基因（如 APC、BRCA1、RB、TP53）则通过失活（功能丧失）突变致癌。"
+      },
+      {
+            "id": "q-path-1718",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A researcher studying the cell cycle observes a sudden increase in the activity of several enzymes, including dihydrofolate reductase and DNA polymerase. Which of the following processes most immediately precedes the observed increase in enzyme activity?",
+            "options": {
+                  "A": "Caspase enzyme cleavage",
+                  "B": "GDP binding to Ras protein",
+                  "C": "p27 protein upregulation",
+                  "D": "Protein kinase A phosphorylation",
+                  "E": "Retinoblastoma protein phosphorylation"
+            },
+            "answer": "E",
+            "explanations": {
+                  "A": "错误。Caspase 裂解介导细胞凋亡，与 S 期 DNA 合成无关。",
+                  "B": "错误。Ras 结合 GDP 处于失活态（结合 GTP 才激活），且位于细胞周期上游更早期。",
+                  "C": "错误。p27 是细胞周期蛋白依赖性激酶抑制剂，上调会阻滞 G1 期。",
+                  "D": "错误。PKA 属于 cAMP 信号通路，不直接调控 G1/S 转换。",
+                  "E": "正确！二氢叶酸还原酶与 DNA 聚合酶活性骤增标志着细胞进入 S 期（DNA 复制期）；紧邻 S 期之前为 G1/S 检查点，由 CDK4/2 使 Rb 蛋白磷酸化失活并释放 E2F 转录因子所驱动。"
+            },
+            "educationalObjective": "DNA 合成酶（DNA 聚合酶、DHFR）活性升高发生于 S 期；紧邻其前的是 Rb 蛋白磷酸化失活并释放 E2F，使细胞通过 G1/S 检查点。"
+      },
+      {
+            "id": "q-path-1160",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 54-year-old male presents with an enlarged, painless, stony hard left-sided supraclavicular lymph node. Biopsy reveals anaplastic cells that stain positive for keratin. Which of the following is the most likely origin of the cells detected on the biopsy?",
+            "options": {
+                  "A": "Lymphocytes",
+                  "B": "Epithelial surfaces",
+                  "C": "Muscle tissue",
+                  "D": "Endothelium",
+                  "E": "Glial cells"
+            },
+            "answer": "B",
+            "explanations": {
+                  "A": "错误。淋巴细胞免疫组化标志物为 CD3（T 细胞）或 CD20（B 细胞）。",
+                  "B": "正确！角蛋白（Keratin）是上皮细胞的中间丝特征标志，左侧锁骨上淋巴结（Virchow 淋巴结）角蛋白阳性提示上皮源性恶性肿瘤（癌）转移。",
+                  "C": "错误。肌组织标志物为结蛋白（Desmin）或平滑肌肌动蛋白（SMA）。",
+                  "D": "错误。血管内皮标志物为 CD34 及 vWF。",
+                  "E": "错误。神经胶质细胞标志物为 GFAP（胶质纤维酸性蛋白）。"
+            },
+            "educationalObjective": "角蛋白（Keratin）是上皮细胞来源肿瘤的免疫组化特征标志物。"
+      },
+      {
+            "id": "q-path-1759",
+            "system": "Pathology",
+            "difficulty": "Hard",
+            "stem": "A 62-year-old woman presents with a spiculated breast mass diagnosed as infiltrating ductal carcinoma. Malignant tumors are associated with varying degrees of disordered differentiation and maturation. Which of the following findings is most characteristic of an anaplastic tumor?",
+            "options": {
+                  "A": "Brain tumor cells forming giant cells",
+                  "B": "Bronchial epithelial cells producing keratin pearls",
+                  "C": "Colonic tumor cells creating glands",
+                  "D": "Hepatic tumor cells synthesizing bile",
+                  "E": "Skin tumor cells producing keratin pearls"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！间变（Anaplasia）指肿瘤细胞完全缺乏分化特征，典型表现为极性丧失、显著细胞/核多形性、核浆比剧增、异常核分裂象及多核巨细胞形成。",
+                  "B": "错误。支气管上皮产生角化珠为鳞状化生伴高分化角化。",
+                  "C": "错误。结肠肿瘤形成腺体说明保留了原组织腺样结构（高分化）。",
+                  "D": "错误。肝肿瘤细胞合成胆汁说明保留了正常肝细胞功能（高分化）。",
+                  "E": "错误。皮肤鳞癌产生角化珠提示肿瘤细胞分化良好（Well-differentiated）。"
+            },
+            "educationalObjective": "间变（未分化）肿瘤完全失去原组织特征，表现为显著多形性、深染大核、异常核分裂及多核肿瘤巨细胞；能形成腺体、胆汁或角化珠者均为高分化。"
+      },
+      {
+            "id": "q-path-1084",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A research scientist injects hepatocellular carcinoma cells into the liver parenchyma of an experimental guinea pig. After some time, malignant cells begin to penetrate the vascular basement membrane to gain access to the circulation. During the process of basement membrane invasion, expression of which of the following substances is most likely to be increased in the tumor cells?",
+            "options": {
+                  "A": "Acid hydrolase",
+                  "B": "Alkaline phosphatase",
+                  "C": "Carboxypeptidase",
+                  "D": "E-cadherin",
+                  "E": "Hyaluronic acid",
+                  "F": "Metalloproteinase"
+            },
+            "answer": "F",
+            "explanations": {
+                  "A": "错误。酸性水解酶主要在溶酶体内酸性环境下发挥降解作用。",
+                  "B": "错误。碱性磷酸酶升高多提示胆道梗阻或骨代谢异常。",
+                  "C": "错误。羧肽酶参与蛋白质羧基端肽键裂解及胰岛素合成。",
+                  "D": "错误。肿瘤细胞脱离原发灶时 E-cadherin（上皮钙黏蛋白）表达降低而非升高。",
+                  "E": "错误。透明质酸是细胞外基质本身的结构成分。",
+                  "F": "正确！肿瘤细胞突破基底膜（IV 型胶原与层粘连蛋白）需经三步：脱离（E-cadherin 下降）-> 黏附（层粘连蛋白受体）-> 降解基底膜（分泌基质金属蛋白酶 MMPs 与组织蛋白酶 D）。"
+            },
+            "educationalObjective": "基质金属蛋白酶（Metalloproteinases）是含锌蛋白水解酶，可降解细胞外基质与基底膜（IV 型胶原），是肿瘤侵袭与转移的关键酶。"
+      },
+      {
+            "id": "q-path-1717",
+            "system": "Pathology",
+            "difficulty": "Easy",
+            "stem": "A 4-year-old girl is brought to the clinic due to an inward deviated right eye. Examination shows a pale red reflex (leukocoria) in the right eye, and fundoscopy reveals a well-circumscribed white retinal mass. Genetic analysis shows a germline mutation leading to development of the mass. Which of the following is the most likely function of the protein affected by this patient's gene mutation?",
+            "options": {
+                  "A": "Activation of receptor tyrosine kinase",
+                  "B": "Conversion of GTP to GDP",
+                  "C": "Opposition of p53 activity",
+                  "D": "Prevention of the G1/S cell cycle transition",
+                  "E": "Repair of damaged DNA"
+            },
+            "answer": "D",
+            "explanations": {
+                  "A": "错误。受体酪氨酸激酶激活见于 EGFR、MET 或 HER2 等原癌基因。",
+                  "B": "错误。GTP 水解为 GDP 是 Ras GTPase 的功能。",
+                  "C": "错误。Rb 与 p53 协同抑癌而非拮抗 p53 活性。",
+                  "D": "正确！儿童白瞳症及视网膜白色肿物为视网膜母细胞瘤（Retinoblastoma），由 RB1 抑癌基因胚系突变所致；正常去磷酸化活化的 Rb 蛋白结合 E2F，阻止细胞从 G1 期进入 S 期。",
+                  "E": "错误。修复受损 DNA 主要是 BRCA1/2 及错配修复基因的功能。"
+            },
+            "educationalObjective": "视网膜母细胞瘤由 RB1 抑癌基因失活引起；正常 Rb 蛋白通过抑制 E2F 转录因子阻止细胞跨越 G1/S 检查点。"
+      },
+      {
+            "id": "q-path-18929",
+            "system": "Pathology",
+            "difficulty": "Medium",
+            "stem": "A 64-year-old man develops diarrhea, abdominal pain, nausea, vomiting, and anorexia 3 weeks after starting radiation therapy for prostate cancer. Sigmoidoscopy reveals hyperemia, edema, erosion, and ulceration of the intestinal mucosa. Radiation enteritis is suspected. Which of the following is most likely the primary mechanism responsible for this patient's intestinal changes?",
+            "options": {
+                  "A": "Generation of reactive oxygen species",
+                  "B": "Increased activity of the ubiquitin-proteasome system",
+                  "C": "Inhibition of DNA polymerase",
+                  "D": "Inhibition of thymidylate synthesis",
+                  "E": "Prevention of microtubule assembly"
+            },
+            "answer": "A",
+            "explanations": {
+                  "A": "正确！电离辐射导致急性放射性肠炎（肠隐窝干细胞凋亡与黏膜剥脱）的两大主要机制是 DNA 双链断裂及水分子电离产生大量活性氧自由基（ROS）。",
+                  "B": "错误。电离辐射实际上会抑制而非增强泛素-蛋白酶体系统。",
+                  "C": "错误。抑制 DNA 聚合酶是核苷类似物等化疗药物的作用机制。",
+                  "D": "错误。抑制胸苷酸合酶是 5-氟尿嘧啶（5-FU）的作用机制。",
+                  "E": "错误。抑制微管组装是长春花碱类药物的作用机制。"
+            },
+            "educationalObjective": "电离辐射主要通过使水电离产生活性氧自由基（ROS）及引起 DNA 双链断裂造成细胞损伤，导致急性放射性肠炎等黏膜病变。"
+      }
+    ];
+
+    const CARD_LIBRARY = [
+      { id: "c-strike", name: "精准穿刺", cost: 1, type: "Attack", description: "造成伤害；超载诊断翻倍并抽1张牌", baseValue: 6, boostedValue: 12, target: "Enemy" },
+      { id: "c-defend", name: "无菌屏障", cost: 1, type: "Skill", description: "获得护盾格挡；超载诊断翻倍", baseValue: 5, boostedValue: 10, target: "Self" },
+      { id: "c-pci", name: "急诊介入 PCI", cost: 2, type: "Attack", description: "心血管专科共鸣(-1费)；高额穿刺伤害", baseValue: 11, boostedValue: 22, target: "Enemy", systemAffinity: "Cardiovascular" },
+      { id: "c-heparin", name: "抗凝稳态", cost: 1, type: "Skill", description: "心血管专科共鸣(-1费)；获得高额格挡", baseValue: 7, boostedValue: 14, target: "Self", systemAffinity: "Cardiovascular" },
+      { id: "c-bipap", name: "无创正压 BiPAP", cost: 2, type: "Skill", description: "呼吸专科共鸣(-1费)；厚重通气护盾", baseValue: 10, boostedValue: 20, target: "Self", systemAffinity: "Pulmonology" },
+      { id: "c-broncho", name: "支气管解痉冲击", cost: 1, type: "Attack", description: "呼吸专科共鸣(-1费)；解除痉挛打击", baseValue: 7, boostedValue: 14, target: "Enemy", systemAffinity: "Pulmonology" },
+      { id: "c-lr", name: "林格氏液复苏", cost: 1, type: "Skill", description: "消化专科共鸣(-1费)；恢复生命并获得格挡", baseValue: 6, boostedValue: 12, target: "Self", systemAffinity: "Gastroenterology", heal: 3 },
+      { id: "c-tpa", name: "静脉溶栓风暴", cost: 2, type: "Attack", description: "神经专科共鸣(-1费)；穿透敌方护盾打击", baseValue: 12, boostedValue: 24, target: "Enemy", systemAffinity: "Neurology", pierce: true },
+      { id: "c-triage", name: "快速分诊", cost: 0, type: "Skill", description: "抽 1 张牌并获得微弱格挡；超载额外+1能量", baseValue: 3, boostedValue: 6, target: "Self", draw: 1 },
+      { id: "c-defib", name: "电除颤重击", cost: 2, type: "Attack", description: "强力心律转复打击；超载造成毁灭伤害", baseValue: 13, boostedValue: 26, target: "Enemy" },
+      { id: "c-ihc", name: "免疫组化染色", cost: 1, type: "Attack", description: "病理专科共鸣(-1费)；精准识别肿瘤来源打击", baseValue: 8, boostedValue: 16, target: "Enemy", systemAffinity: "Pathology" },
+      { id: "c-p53", name: "p53 基因组卫士", cost: 2, type: "Skill", description: "病理专科共鸣(-1费)；阻滞细胞周期并获得高额护盾", baseValue: 11, boostedValue: 22, target: "Self", systemAffinity: "Pathology" }
+    ];
+
+    const ENEMY_POOLS = {
+      Cardiovascular: [
+        { id: "e-ua", name: "不稳定型心绞痛", maxHp: 42, hp: 42, block: 0, avatar: "🫀", systemTag: "Unstable Angina", intents: [
+          { type: "Attack", value: 9, description: "心肌缺血绞痛：准备造成 9 点伤害" },
+          { type: "Defend", value: 7, description: "冠脉痉挛收缩：准备获得 7 点格挡" },
+          { type: "Attack", value: 12, description: "斑块破裂预警：准备造成 12 点伤害" }
+        ]},
+        { id: "e-af", name: "快速房颤风暴", maxHp: 56, hp: 56, block: 0, avatar: "⚡", systemTag: "Atrial Fibrillation RVR", intents: [
+          { type: "Attack", value: 11, description: "心室率失控：准备造成 11 点伤害" },
+          { type: "Debuff", value: 4, description: "附壁血栓风险：施加虚弱并造成 4 点伤害" },
+          { type: "Attack", value: 14, description: "血流动力学波动：准备造成 14 点伤害" }
+        ]},
+        { id: "e-stemi", name: "Boss · 急性前壁 STEMI", maxHp: 85, hp: 85, block: 0, avatar: "🚨", systemTag: "Acute Anterior STEMI", isBoss: true, intents: [
+          { type: "Attack", value: 14, description: "左前降支近端闭塞：准备造成 14 点伤害" },
+          { type: "Defend", value: 12, description: "血栓负荷加重：准备获得 12 点格挡" },
+          { type: "Attack", value: 18, description: "心源性休克打击：准备造成 18 点伤害" }
+        ]}
+      ],
+      Pulmonology: [
+        { id: "e-asthma", name: "顽固性支气管哮喘", maxHp: 44, hp: 44, block: 0, avatar: "🫁", systemTag: "Status Asthmaticus", intents: [
+          { type: "Defend", value: 8, description: "气道高反应黏液栓：准备获得 8 点格挡" },
+          { type: "Attack", value: 10, description: "呼气性呼吸困难：准备造成 10 点伤害" }
+        ]},
+        { id: "e-copd", name: "急性加重期 COPD", maxHp: 58, hp: 58, block: 0, avatar: "💨", systemTag: "COPD Exacerbation", intents: [
+          { type: "Attack", value: 12, description: "CO2 潴留昏迷：准备造成 12 点伤害" },
+          { type: "Defend", value: 9, description: "肺气肿过度充气：准备获得 9 点格挡" }
+        ]},
+        { id: "e-pe", name: "Boss · 骑跨型肺栓塞", maxHp: 88, hp: 88, block: 0, avatar: "🩸", systemTag: "Massive Pulmonary Embolism", isBoss: true, intents: [
+          { type: "Attack", value: 15, description: "肺动脉高压骤升：准备造成 15 点伤害" },
+          { type: "Defend", value: 12, description: "右心室负荷屏障：准备获得 12 点格挡" },
+          { type: "Attack", value: 19, description: "梗阻性休克爆发：准备造成 19 点伤害" }
+        ]}
+      ],
+      Gastroenterology: [
+        { id: "e-pan", name: "重症急性胰腺炎", maxHp: 48, hp: 48, block: 0, avatar: "🔥", systemTag: "Acute Pancreatitis", intents: [
+          { type: "Attack", value: 11, description: "胰酶自身消化：准备造成 11 点伤害" },
+          { type: "Defend", value: 8, description: "第三间隙渗出屏障：准备获得 8 点格挡" }
+        ]},
+        { id: "e-ugib", name: "上消化道大出血", maxHp: 60, hp: 60, block: 0, avatar: "🩸", systemTag: "Variceal Upper GI Bleed", intents: [
+          { type: "Attack", value: 13, description: "食管静脉曲张破裂：准备造成 13 点伤害" },
+          { type: "Attack", value: 10, description: "失血性低血压：准备造成 10 点伤害" }
+        ]},
+        { id: "e-he", name: "Boss · 肝性脑病 IV 期", maxHp: 86, hp: 86, block: 0, avatar: "☣️", systemTag: "Hepatic Encephalopathy", isBoss: true, intents: [
+          { type: "Attack", value: 14, description: "血氨毒性风暴：准备造成 14 点伤害" },
+          { type: "Defend", value: 14, description: "门脉高压代偿：准备获得 14 点格挡" },
+          { type: "Attack", value: 18, description: "肝肾综合征打击：准备造成 18 点伤害" }
+        ]}
+      ],
+      Neurology: [
+        { id: "e-tia", name: "进展性脑卒中", maxHp: 46, hp: 46, block: 0, avatar: "🧠", systemTag: "Acute Ischemic Stroke", intents: [
+          { type: "Attack", value: 11, description: "缺血半暗带扩大：准备造成 11 点伤害" },
+          { type: "Defend", value: 7, description: "脑水肿代偿：准备获得 7 点格挡" }
+        ]},
+        { id: "e-se", name: "癫痫持续状态", maxHp: 62, hp: 62, block: 0, avatar: "⚡", systemTag: "Status Epilepticus", intents: [
+          { type: "Attack", value: 13, description: "异常高频放电：准备造成 13 点伤害" },
+          { type: "Debuff", value: 5, description: "神经元兴奋毒性：施加虚弱并造成 5 点伤害" }
+        ]},
+        { id: "e-ich", name: "Boss · 脑疝危机", maxHp: 90, hp: 90, block: 0, avatar: "🌋", systemTag: "Intracranial Herniation", isBoss: true, intents: [
+          { type: "Attack", value: 16, description: "颅内压骤升：准备造成 16 点伤害" },
+          { type: "Defend", value: 12, description: "Cushing 反射防御：准备获得 12 点格挡" },
+          { type: "Attack", value: 20, description: "脑干受压致命一击：准备造成 20 点伤害" }
+        ]}
+      ],
+      Pathology: [
+        { id: "e-dys", name: "异常增生结节", maxHp: 45, hp: 45, block: 0, avatar: "🔬", systemTag: "Cellular Dysplasia", intents: [
+          { type: "Attack", value: 9, description: "基底膜侵袭试探：准备造成 9 点伤害" },
+          { type: "Defend", value: 8, description: "纤维化包膜形成：准备获得 8 点格挡" }
+        ]},
+        { id: "e-met", name: "转移性腺癌", maxHp: 60, hp: 60, block: 0, avatar: "🧬", systemTag: "Metastatic Adenocarcinoma", intents: [
+          { type: "Attack", value: 12, description: "金属蛋白酶降解基底膜：准备造成 12 点伤害" },
+          { type: "Debuff", value: 5, description: "副肿瘤恶病质 TNF-α：干扰并造成 5 点伤害" }
+        ]},
+        { id: "e-ana", name: "Boss · 未分化间变瘤", maxHp: 90, hp: 90, block: 0, avatar: "☣️", systemTag: "Anaplastic Neoplasm (TP53/RB1 Loss)", isBoss: true, intents: [
+          { type: "Attack", value: 15, description: "G1/S 检查点失控增殖：准备造成 15 点伤害" },
+          { type: "Defend", value: 13, description: "KRAS 持续耐药屏障：准备获得 13 点格挡" },
+          { type: "Attack", value: 19, description: "多核巨细胞毁灭打击：准备造成 19 点伤害" }
+        ]}
+      ]
+    };
+
+    const STARTER_DECK_IDS = [
+      "c-strike", "c-strike", "c-strike", "c-strike",
+      "c-defend", "c-defend", "c-defend", "c-defend",
+      "c-triage", "c-pci"
+    ];
+
+    const STORAGE_KEYS = {
+      QUESTIONS: "medspire_questions_v1",
+      MISTAKES: "medspire_mistakes_v1",
+      HISTORY: "medspire_history_v1"
+    };
+
+    // Safe localStorage helpers
+    const safeGetStorage = (key, fallback) => {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    };
+    const safeSetStorage = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {}
+    };
+
+    const ACCOUNT_STORAGE = {
+      USERS: "medspire_users_v1",
+      CURRENT_USER: "medspire_current_user_v1",
+      CLOUD_CFG: "medspire_cloud_cfg_v1"
+    };
+
+    const getUserStorageKey = (username, suffix) => `medspire_u_${username || "guest"}_${suffix}`;
+
+    async function hashPassword(pw) {
+      try {
+        if (window.crypto && window.crypto.subtle) {
+          const buf = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
+          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+      } catch (e) {}
+      let h = 0;
+      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i);
+      return "fb_" + Math.abs(h).toString(16);
+    }
+
+
+    // =========================================================================
+    // 4. SMART AI QUESTION PARSER (JSON & Unstructured Markdown/Text)
+    // =========================================================================
+    function parseSmartQuestions(rawText, defaultSystem = "Cardiovascular") {
+      const trimmed = (rawText || "").trim();
+      if (!trimmed) return { questions: [], error: "请输入题目文本或 JSON 数组" };
+
+      // 1. Try JSON first
+      if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          const arr = Array.isArray(parsed) ? parsed : [parsed];
+          const valid = arr
+            .filter(q => q && q.stem && q.options && q.answer)
+            .map((q, idx) => ({
+              id: q.id || `q-imp-${Date.now()}-${idx}`,
+              system: SYSTEMS.some(s => s.id === q.system) || q.system === "General" ? q.system : defaultSystem,
+              difficulty: ["Easy", "Medium", "Hard"].includes(q.difficulty) ? q.difficulty : "Medium",
+              stem: String(q.stem).trim(),
+              vignetteImage: q.vignetteImage || undefined,
+              options: q.options,
+              answer: String(q.answer).trim().toUpperCase().charAt(0),
+              explanations: q.explanations || {},
+              educationalObjective: q.educationalObjective || "已从 JSON 导入核心临床考点。"
+            }));
+          if (valid.length > 0) return { questions: valid, error: null };
+        } catch (e) {
+          // Fall through to regex parser
+        }
+      }
+
+      // 2. Robust Regex Parser for Markdown / Unstructured AI Output
+      const blocks = trimmed.split(/(?=(?:^|\n)(?:#{1,3}\s*)?(?:Question|Q\d+|题干|题目)\s*[:：.\d])/i).filter(b => b.trim().length > 15);
+      const blocksToParse = blocks.length > 0 ? blocks : [trimmed];
+      const extracted = [];
+
+      blocksToParse.forEach((block, idx) => {
+        // Extract Answer
+        const ansMatch = block.match(/(?:Answer|Correct\s*Answer|答案|正确答案)\s*[:：]\s*\*{0,2}([A-E])\*{0,2}/i);
+        // Extract EO
+        const eoMatch = block.match(/(?:Educational\s*Objective|EO|核心考点|考点总结)\s*[:：]\s*([\s\S]+?)(?=\n(?:Question|Q\d+|题干|题目)|$)/i);
+        // Extract Explanation
+        const expMatch = block.match(/(?:Explanation|解析|答案解析)\s*[:：]\s*([\s\S]+?)(?=\n(?:Educational\s*Objective|EO|核心考点|考点总结)|$)/i);
+
+        // Extract Options A-E
+        const optionRegex = /(?:^|\n)\s*[-*]?\s*\*{0,2}([A-E])[.)、:：]\*{0,2}\s+([^\n]+)/g;
+        const options = {};
+        let firstOptionIndex = block.length;
+        let match;
+        while ((match = optionRegex.exec(block)) !== null) {
+          if (match.index < firstOptionIndex) firstOptionIndex = match.index;
+          options[match[1].toUpperCase()] = match[2].trim();
+        }
+
+        // Stem is everything before first option, stripped of header label
+        let stemRaw = block.slice(0, firstOptionIndex)
+          .replace(/^(?:#{1,3}\s*)?(?:Question|Q\d+|题干|题目)\s*\d*\s*[:：.]?\s*/i, "")
+          .trim();
+
+        if (stemRaw && Object.keys(options).length >= 2 && ansMatch) {
+          const ansKey = ansMatch[1].toUpperCase();
+          const expText = expMatch ? expMatch[1].trim() : "暂无详细解析，请结合临床指南复盘。";
+          const explanations = {};
+          Object.keys(options).forEach(k => {
+            explanations[k] = k === ansKey ? `正确选项。${expText}` : `干扰项。${expText}`;
+          });
+          extracted.push({
+            id: `q-regex-${Date.now()}-${idx}`,
+            system: defaultSystem,
+            difficulty: "Medium",
+            stem: stemRaw,
+            options,
+            answer: ansKey,
+            explanations,
+            educationalObjective: eoMatch ? eoMatch[1].trim() : "AI 文本智能解析导入考点。"
+          });
+        }
+      });
+
+      if (extracted.length === 0) {
+        return { questions: [], error: "未能识别标准题干/选项(A-E)/答案(Answer: X) 格式，请检查粘贴内容。" };
+      }
+      return { questions: extracted, error: null };
+    }
+
+    // =========================================================================
+    // 5. MAIN APPLICATION COMPONENT
+    // =========================================================================
+    function App() {
+      // Account & Cloud state
+      const [currentUser, setCurrentUser] = useState(() => safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest"));
+      const [showAuthModal, setShowAuthModal] = useState(false);
+      const [authTab, setAuthTab] = useState("account"); // account | sync
+      const [authMode, setAuthMode] = useState("login"); // login | register
+      const [authUsername, setAuthUsername] = useState("");
+      const [authPassword, setAuthPassword] = useState("");
+      const [cloudCfg, setCloudCfg] = useState(() => {
+        const saved = safeGetStorage(ACCOUNT_STORAGE.CLOUD_CFG, null);
+        if (saved && saved.url && saved.anonKey) return saved;
+        return { url: "https://jaexrgcleikvtdyfkmef.supabase.co", anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphZXhyZ2NsZWlrdnRkeWZrbWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3NDI1NDUsImV4cCI6MjExMDMxODU0NX0._KIV3kaoBQD17-QdAgeGvWEyksTX4CCpUPu_UUI-GOY" };
+      });
+      const [cloudBusy, setCloudBusy] = useState(false);
+      const [showInstallModal, setShowInstallModal] = useState(false);
+
+      const loadUserQuestions = useCallback((uname) => {
+        const key = uname === "guest" ? STORAGE_KEYS.QUESTIONS : getUserStorageKey(uname, "questions");
+        const saved = safeGetStorage(key, null);
+        if (!Array.isArray(saved) || saved.length === 0) return INITIAL_QUESTIONS;
+        const savedIds = new Set(saved.map(q => q.id));
+        const missing = INITIAL_QUESTIONS.filter(q => !savedIds.has(q.id));
+        return missing.length > 0 ? [...saved, ...missing] : saved;
+      }, []);
+
+      const loadUserMistakes = useCallback((uname) => {
+        const key = uname === "guest" ? STORAGE_KEYS.MISTAKES : getUserStorageKey(uname, "mistakes");
+        return safeGetStorage(key, []);
+      }, []);
+
+      const loadUserHistory = useCallback((uname) => {
+        const key = uname === "guest" ? STORAGE_KEYS.HISTORY : getUserStorageKey(uname, "history");
+        return safeGetStorage(key, []);
+      }, []);
+
+      // Persistent state (scoped by currentUser)
+      const [questions, setQuestions] = useState(() => loadUserQuestions(safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest")));
+      const [mistakes, setMistakes] = useState(() => loadUserMistakes(safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest")));
+      const [runHistory, setRunHistory] = useState(() => loadUserHistory(safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest")));
+      const [savedActiveRun, setSavedActiveRun] = useState(() => safeGetStorage(getUserStorageKey(safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest"), "activeRun"), null));
+      const [showResumePrompt, setShowResumePrompt] = useState(() => {
+        const run = safeGetStorage(getUserStorageKey(safeGetStorage(ACCOUNT_STORAGE.CURRENT_USER, "guest"), "activeRun"), null);
+        return Boolean(run && run.screen && ["COMBAT", "REWARD", "REST"].includes(run.screen));
+      });
+
+      useEffect(() => safeSetStorage(ACCOUNT_STORAGE.CURRENT_USER, currentUser), [currentUser]);
+      useEffect(() => safeSetStorage(ACCOUNT_STORAGE.CLOUD_CFG, cloudCfg), [cloudCfg]);
+      useEffect(() => safeSetStorage(currentUser === "guest" ? STORAGE_KEYS.QUESTIONS : getUserStorageKey(currentUser, "questions"), questions), [questions, currentUser]);
+      useEffect(() => safeSetStorage(currentUser === "guest" ? STORAGE_KEYS.MISTAKES : getUserStorageKey(currentUser, "mistakes"), mistakes), [mistakes, currentUser]);
+      useEffect(() => safeSetStorage(currentUser === "guest" ? STORAGE_KEYS.HISTORY : getUserStorageKey(currentUser, "history"), runHistory), [runHistory, currentUser]);
+
+      // Navigation & UI state
+      const [screen, setScreen] = useState("MENU"); // MENU | PATH_SELECT | COMBAT | REWARD | REST | VICTORY | DEFEAT
+      const [muted, setMuted] = useState(false);
+      const [toast, setToast] = useState(null);
+      const [showQManager, setShowQManager] = useState(false);
+      const [showMistakeModal, setShowMistakeModal] = useState(false);
+      const [mistakeFilter, setMistakeFilter] = useState("ALL");
+      const [expandedMistakeId, setExpandedMistakeId] = useState(null);
+
+      // Run state
+      const [currentPath, setCurrentPath] = useState("Cardiovascular");
+      const [nodeIndex, setNodeIndex] = useState(0); // 0, 1, 2 (Boss)
+      const [gold, setGold] = useState(50);
+      const [playerMaxHp, setPlayerMaxHp] = useState(80);
+      const [playerHp, setPlayerHp] = useState(80);
+      const [playerDeck, setPlayerDeck] = useState([]);
+
+      // Combat state
+      const [playerBlock, setPlayerBlock] = useState(0);
+      const [energy, setEnergy] = useState(3);
+      const [maxEnergy] = useState(3);
+      const [drawPile, setDrawPile] = useState([]);
+      const [hand, setHand] = useState([]);
+      const [discardPile, setDiscardPile] = useState([]);
+      const [enemy, setEnemy] = useState(null);
+      const [enemyIntentIdx, setEnemyIntentIdx] = useState(0);
+      const [turnCount, setTurnCount] = useState(1);
+      const [isEnemyTurn, setIsEnemyTurn] = useState(false);
+      const [selectedCardUid, setSelectedCardUid] = useState(null);
+      const [floatingTexts, setFloatingTexts] = useState([]);
+      const [shakeTarget, setShakeTarget] = useState(null); // "player" | "enemy" | null
+      const [critEffect, setCritEffect] = useState(false);
+
+      // Overcharge Diagnostic Modal state
+      const [diagModal, setDiagModal] = useState(null); // { card, question, selectedOpt, submitted, expandedOpt }
+      const [rewardChoices, setRewardChoices] = useState([]);
+
+      // Question Manager modal state
+      const [qmTab, setQmTab] = useState("import"); // import | browse
+      const [importText, setImportText] = useState("");
+      const [importSystem, setImportSystem] = useState("Cardiovascular");
+      const [qmFilter, setQmFilter] = useState("ALL");
+
+      // Auto-save active run progress whenever in COMBAT / REWARD / REST
+      useEffect(() => {
+        const runKey = getUserStorageKey(currentUser, "activeRun");
+        if (["COMBAT", "REWARD", "REST"].includes(screen) && enemy) {
+          const snapshot = {
+            screen,
+            currentPath,
+            nodeIndex,
+            gold,
+            playerMaxHp,
+            playerHp,
+            playerDeck,
+            playerBlock,
+            energy,
+            drawPile,
+            hand,
+            discardPile,
+            enemy,
+            enemyIntentIdx,
+            turnCount,
+            rewardChoices,
+            savedAt: new Date().toLocaleString("zh-CN", { hour12: false })
+          };
+          safeSetStorage(runKey, snapshot);
+          setSavedActiveRun(snapshot);
+        } else if (screen === "VICTORY" || screen === "DEFEAT") {
+          safeSetStorage(runKey, null);
+          setSavedActiveRun(null);
+        }
+      }, [screen, currentPath, nodeIndex, gold, playerMaxHp, playerHp, playerDeck, playerBlock, energy, drawPile, hand, discardPile, enemy, enemyIntentIdx, turnCount, rewardChoices, currentUser]);
+
+      const resumeSavedRun = () => {
+        if (!savedActiveRun) return;
+        setCurrentPath(savedActiveRun.currentPath);
+        setNodeIndex(savedActiveRun.nodeIndex);
+        setGold(savedActiveRun.gold);
+        setPlayerMaxHp(savedActiveRun.playerMaxHp);
+        setPlayerHp(savedActiveRun.playerHp);
+        setPlayerDeck(savedActiveRun.playerDeck || []);
+        setPlayerBlock(savedActiveRun.playerBlock || 0);
+        setEnergy(savedActiveRun.energy ?? 3);
+        setDrawPile(savedActiveRun.drawPile || []);
+        setHand(savedActiveRun.hand || []);
+        setDiscardPile(savedActiveRun.discardPile || []);
+        setEnemy(savedActiveRun.enemy);
+        setEnemyIntentIdx(savedActiveRun.enemyIntentIdx || 0);
+        setTurnCount(savedActiveRun.turnCount || 1);
+        setRewardChoices(savedActiveRun.rewardChoices || []);
+        setIsEnemyTurn(false);
+        setShowResumePrompt(false);
+        setScreen(savedActiveRun.screen);
+        showToast("已恢复上次查房进度！", "success");
+      };
+
+      const discardSavedRun = () => {
+        safeSetStorage(getUserStorageKey(currentUser, "activeRun"), null);
+        setSavedActiveRun(null);
+        setShowResumePrompt(false);
+      };
+
+      const switchToUser = (uname) => {
+        setCurrentUser(uname);
+        setQuestions(loadUserQuestions(uname));
+        setMistakes(loadUserMistakes(uname));
+        setRunHistory(loadUserHistory(uname));
+        const run = safeGetStorage(getUserStorageKey(uname, "activeRun"), null);
+        setSavedActiveRun(run);
+        setShowResumePrompt(Boolean(run && run.screen && ["COMBAT", "REWARD", "REST"].includes(run.screen)));
+        setScreen("MENU");
+      };
+
+      const handleAuthSubmit = async () => {
+        const uname = authUsername.trim();
+        const pw = authPassword;
+        if (!uname || pw.length < 4) {
+          showToast("请输入用户名且密码至少 4 位", "error");
+          return;
+        }
+        const users = safeGetStorage(ACCOUNT_STORAGE.USERS, {});
+        const pwHash = await hashPassword(pw);
+        if (authMode === "register") {
+          if (users[uname]) {
+            showToast("该账号已存在，请直接登录", "error");
+            return;
+          }
+          users[uname] = { passwordHash: pwHash, createdAt: new Date().toLocaleString("zh-CN", { hour12: false }) };
+          safeSetStorage(ACCOUNT_STORAGE.USERS, users);
+          // Copy current guest questions if registering fresh
+          safeSetStorage(getUserStorageKey(uname, "questions"), questions);
+          switchToUser(uname);
+          setShowAuthModal(false);
+          setAuthPassword("");
+          showToast(`注册成功！欢迎住院医 ${uname}`, "success");
+        } else {
+          if (!users[uname] || users[uname].passwordHash !== pwHash) {
+            showToast("账号不存在或密码错误", "error");
+            return;
+          }
+          switchToUser(uname);
+          setShowAuthModal(false);
+          setAuthPassword("");
+          showToast(`欢迎回来，${uname}！已加载个人存档`, "success");
+        }
+      };
+
+      const exportFullBackup = () => {
+        const payload = {
+          version: "medspire_v2",
+          exportedAt: new Date().toLocaleString("zh-CN", { hour12: false }),
+          user: currentUser,
+          questions,
+          mistakes,
+          runHistory,
+          activeRun: savedActiveRun
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `medspire_${currentUser}_backup.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("全量存档（含题库/错题本/进度）已导出！", "success");
+      };
+
+      const importFullBackup = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (Array.isArray(data.questions)) setQuestions(data.questions);
+            if (Array.isArray(data.mistakes)) setMistakes(data.mistakes);
+            if (Array.isArray(data.runHistory)) setRunHistory(data.runHistory);
+            if (data.activeRun) {
+              safeSetStorage(getUserStorageKey(currentUser, "activeRun"), data.activeRun);
+              setSavedActiveRun(data.activeRun);
+              setShowResumePrompt(true);
+            }
+            showToast("存档导入恢复成功！", "success");
+          } catch (err) {
+            showToast("存档文件格式无效", "error");
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      const syncToSupabase = async (direction) => {
+        if (!cloudCfg.url || !cloudCfg.anonKey) {
+          showToast("请先填写 Supabase Project URL 和 Anon Key", "error");
+          return;
+        }
+        if (currentUser === "guest") {
+          showToast("请先注册或登录个人账号再进行云端同步", "error");
+          return;
+        }
+        setCloudBusy(true);
+        try {
+          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+          const headers = {
+            "apikey": cloudCfg.anonKey,
+            "Authorization": "Bearer " + cloudCfg.anonKey,
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates"
+          };
+          if (direction === "push") {
+            const payload = {
+              username: currentUser,
+              data: { questions, mistakes, runHistory, activeRun: savedActiveRun, updatedAt: new Date().toISOString() }
+            };
+            const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            showToast("已将当前账号全部进度与错题上传至云端！", "success");
+          } else {
+            const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(currentUser)}&select=data`, {
+              headers
+            });
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const rows = await res.json();
+            if (!rows || rows.length === 0) {
+              showToast("云端暂无该账号存档", "info");
+            } else {
+              const d = rows[0].data;
+              if (Array.isArray(d.questions)) setQuestions(d.questions);
+              if (Array.isArray(d.mistakes)) setMistakes(d.mistakes);
+              if (Array.isArray(d.runHistory)) setRunHistory(d.runHistory);
+              if (d.activeRun) {
+                safeSetStorage(getUserStorageKey(currentUser, "activeRun"), d.activeRun);
+                setSavedActiveRun(d.activeRun);
+                setShowResumePrompt(true);
+              }
+              showToast("已从云端拉取最新进度与错题本！", "success");
+            }
+          }
+        } catch (err) {
+          showToast("云端连接失败，请检查网络与 Supabase 表配置", "error");
+        } finally {
+          setCloudBusy(false);
+        }
+      };
+
+      // Auto-pull global hot-updated questions from Supabase on startup
+      useEffect(() => {
+        if (!cloudCfg.url || !cloudCfg.anonKey) return;
+        const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+        (async () => {
+          try {
+            const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_questions__&select=data`, {
+              headers: {
+                "apikey": cloudCfg.anonKey,
+                "Authorization": "Bearer " + cloudCfg.anonKey
+              }
+            });
+            if (!res.ok) return;
+            const rows = await res.json();
+            const remoteQs = rows?.[0]?.data?.questions;
+            if (Array.isArray(remoteQs) && remoteQs.length > 0) {
+              setQuestions(prev => {
+                const existingIds = new Set(prev.map(q => q.id));
+                const added = remoteQs.filter(q => q && q.id && !existingIds.has(q.id));
+                if (added.length > 0) {
+                  showToast(`已从云端热更新 +${added.length} 道新题！`, "success");
+                  return [...added, ...prev];
+                }
+                return prev;
+              });
+            }
+          } catch (e) {}
+        })();
+      }, []);
+
+      const publishGlobalQuestions = async () => {
+        if (!cloudCfg.url || !cloudCfg.anonKey) {
+          showToast("未配置云端参数", "error");
+          return;
+        }
+        setCloudBusy(true);
+        try {
+          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
+            method: "POST",
+            headers: {
+              "apikey": cloudCfg.anonKey,
+              "Authorization": "Bearer " + cloudCfg.anonKey,
+              "Content-Type": "application/json",
+              "Prefer": "resolution=merge-duplicates"
+            },
+            body: JSON.stringify({
+              username: "__global_questions__",
+              data: { questions, updatedAt: new Date().toISOString() }
+            })
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          showToast(`已发布全部 ${questions.length} 题至云端公共库！所有设备打开即自动同步`, "success");
+        } catch (err) {
+          showToast("发布失败，请检查网络连接", "error");
+        } finally {
+          setCloudBusy(false);
+        }
+      };
+
+      const showToast = useCallback((msg, type = "info") => {
+        setToast({ msg, type, id: Date.now() });
+      }, []);
+
+      useEffect(() => {
+        if (!toast) return;
+        const t = setTimeout(() => setToast(null), 2600);
+        return () => clearTimeout(t);
+      }, [toast]);
+
+      const toggleMute = () => {
+        sfx.muted = !muted;
+        setMuted(!muted);
+      };
+
+      const spawnFloatText = useCallback((target, text, colorClass = "text-amber-300") => {
+        const id = `${Date.now()}-${Math.random()}`;
+        setFloatingTexts(prev => [...prev, { id, target, text, colorClass }]);
+        setTimeout(() => {
+          setFloatingTexts(prev => prev.filter(f => f.id !== id));
+        }, 1050);
+      }, []);
+
+      const shuffleArray = (arr) => {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      };
+
+      const getCardEffectiveCost = useCallback((card) => {
+        if (card.systemAffinity && card.systemAffinity === currentPath) {
+          return Math.max(0, card.cost - 1);
+        }
+        return card.cost;
+      }, [currentPath]);
+
+      // Start Combat for a given path and nodeIndex
+      const startCombat = useCallback((pathId, nIdx, deckToUse) => {
+        const pool = ENEMY_POOLS[pathId] || ENEMY_POOLS.Cardiovascular;
+        const template = pool[Math.min(nIdx, pool.length - 1)];
+        const freshEnemy = JSON.parse(JSON.stringify(template));
+
+        const shuffledDeck = shuffleArray(deckToUse.map((c, idx) => ({ ...c, uid: `${c.id}-${idx}-${Date.now()}` })));
+        const initialHand = shuffledDeck.slice(0, 5);
+        const remainingDraw = shuffledDeck.slice(5);
+
+        setEnemy(freshEnemy);
+        setEnemyIntentIdx(0);
+        setPlayerBlock(0);
+        setEnergy(maxEnergy);
+        setHand(initialHand);
+        setDrawPile(remainingDraw);
+        setDiscardPile([]);
+        setTurnCount(1);
+        setIsEnemyTurn(false);
+        setSelectedCardUid(null);
+        setScreen("COMBAT");
+        sfx.shuffle();
+      }, [maxEnergy]);
+
+      const startNewRun = (pathId) => {
+        const initialDeck = STARTER_DECK_IDS.map(id => CARD_LIBRARY.find(c => c.id === id)).filter(Boolean);
+        setCurrentPath(pathId);
+        setNodeIndex(0);
+        setGold(50);
+        setPlayerMaxHp(80);
+        setPlayerHp(80);
+        setPlayerDeck(initialDeck);
+        startCombat(pathId, 0, initialDeck);
+      };
+
+      // Draw N cards helper handling empty draw pile reshuffle
+      const drawCards = useCallback((count, currentDraw, currentDiscard, currentHand) => {
+        let d = [...currentDraw];
+        let disc = [...currentDiscard];
+        let h = [...currentHand];
+        for (let i = 0; i < count; i++) {
+          if (d.length === 0) {
+            if (disc.length === 0) break;
+            d = shuffleArray(disc);
+            disc = [];
+            sfx.shuffle();
+            showToast("抽牌堆已空，弃牌堆已重洗！", "info");
+          }
+          h.push(d.shift());
+        }
+        return { nextDraw: d, nextDiscard: disc, nextHand: h };
+      }, [showToast]);
+
+      // Execute Card Effect after normal play or diagnostic modal
+      const executeCardEffect = useCallback((card, mode, extraBonus = false) => {
+        const cost = getCardEffectiveCost(card);
+        if (energy < cost) {
+          showToast("能量不足！无法打出该卡牌", "error");
+          return;
+        }
+
+        let value = card.baseValue;
+        if (mode === "crit") {
+          value = card.boostedValue;
+        } else if (mode === "fail") {
+          value = Math.max(1, Math.floor(card.baseValue * 0.5));
+        }
+
+        // Remove card from hand -> discard
+        const remainingHand = hand.filter(c => c.uid !== card.uid);
+        let nextDraw = [...drawPile];
+        let nextDiscard = [...discardPile, card];
+        let nextHand = [...remainingHand];
+        let nextEnergy = energy - cost;
+
+        // Handle extra draw or energy bonus
+        if (card.draw) {
+          const res = drawCards(card.draw, nextDraw, nextDiscard, nextHand);
+          nextDraw = res.nextDraw; nextDiscard = res.nextDiscard; nextHand = res.nextHand;
+        }
+        if (mode === "crit" && extraBonus) {
+          nextEnergy += 1;
+          const res = drawCards(1, nextDraw, nextDiscard, nextHand);
+          nextDraw = res.nextDraw; nextDiscard = res.nextDiscard; nextHand = res.nextHand;
+          spawnFloatText("player", "+1 能量 / +1 抽牌", "text-emerald-300");
+        }
+
+        setEnergy(nextEnergy);
+        setHand(nextHand);
+        setDrawPile(nextDraw);
+        setDiscardPile(nextDiscard);
+        setSelectedCardUid(null);
+
+        // Apply combat math
+        if (card.type === "Attack") {
+          sfx.attack();
+          setShakeTarget("enemy");
+          setTimeout(() => setShakeTarget(null), 420);
+
+          setEnemy(prevEnemy => {
+            if (!prevEnemy) return prevEnemy;
+            let dmg = value;
+            let newBlock = prevEnemy.block;
+            if (!card.pierce && newBlock > 0) {
+              const absorbed = Math.min(newBlock, dmg);
+              newBlock -= absorbed;
+              dmg -= absorbed;
+            }
+            const newHp = Math.max(0, prevEnemy.hp - dmg);
+            spawnFloatText("enemy", `-${value}${mode === "crit" ? " CRIT!" : ""}`, mode === "crit" ? "text-emerald-400 font-extrabold" : "text-rose-400");
+
+            // Check enemy death
+            if (newHp <= 0) {
+              setTimeout(() => {
+                sfx.victory();
+                setGold(g => g + (prevEnemy.isBoss ? 80 : 35));
+                if (nodeIndex >= 2 || prevEnemy.isBoss) {
+                  setRunHistory(h => [{ date: new Date().toLocaleDateString(), path: currentPath, result: "通关胜利" }, ...h.slice(0, 9)]);
+                  setScreen("VICTORY");
+                } else {
+                  const pool = shuffleArray(CARD_LIBRARY.filter(c => c.id !== "c-strike" && c.id !== "c-defend")).slice(0, 3);
+                  setRewardChoices(pool);
+                  setScreen("REWARD");
+                }
+              }, 480);
+            }
+            return { ...prevEnemy, block: newBlock, hp: newHp };
+          });
+        } else {
+          sfx.defend();
+          setPlayerBlock(b => b + value);
+          spawnFloatText("player", `+${value} 格挡`, "text-sky-300");
+          if (card.heal) {
+            const healAmt = mode === "crit" ? card.heal * 2 : card.heal;
+            setPlayerHp(hp => Math.min(playerMaxHp, hp + healAmt));
+            spawnFloatText("player", `+${healAmt} HP`, "text-emerald-300");
+          }
+        }
+
+        if (mode === "fail") {
+          setShakeTarget("player");
+          setTimeout(() => setShakeTarget(null), 420);
+          setPlayerHp(hp => {
+            const nhp = Math.max(0, hp - 3);
+            if (nhp <= 0) {
+              setTimeout(() => {
+                setRunHistory(h => [{ date: new Date().toLocaleDateString(), path: currentPath, result: "误诊阵亡" }, ...h.slice(0, 9)]);
+                setScreen("DEFEAT");
+              }, 450);
+            }
+            return nhp;
+          });
+          spawnFloatText("player", "-3 HP (误诊反噬)", "text-red-400");
+        }
+      }, [energy, hand, drawPile, discardPile, getCardEffectiveCost, showToast, drawCards, spawnFloatText, nodeIndex, currentPath, playerMaxHp]);
+
+      // Trigger Overcharge Diagnostic Modal
+      const handleOverchargeClick = (card) => {
+        const cost = getCardEffectiveCost(card);
+        if (energy < cost) {
+          showToast("能量不足！无法启动精准诊断", "error");
+          return;
+        }
+        // Prefer questions matching currentPath, fallback to all
+        const pathQs = questions.filter(q => q.system === currentPath);
+        const pool = pathQs.length > 0 ? pathQs : questions;
+        if (pool.length === 0) {
+          showToast("题库为空，请先在题库管理中添加题目！", "error");
+          return;
+        }
+        const picked = pool[Math.floor(Math.random() * pool.length)];
+        setDiagModal({
+          card,
+          question: picked,
+          selectedOpt: null,
+          submitted: false,
+          expandedOpt: null
+        });
+      };
+
+      const submitDiagnosticAnswer = () => {
+        if (!diagModal || !diagModal.selectedOpt || diagModal.submitted) return;
+        const isCorrect = diagModal.selectedOpt === diagModal.question.answer;
+        if (isCorrect) {
+          sfx.critSuccess();
+          setCritEffect(true);
+          setTimeout(() => setCritEffect(false), 750);
+        } else {
+          sfx.alarmFail();
+          // Add or update Mistake Notebook with exact datetime, section, node, and wrong count
+          const exactTime = new Date().toLocaleString("zh-CN", { hour12: false });
+          const sysLabel = (SYSTEMS.find(s => s.id === currentPath)?.label) || currentPath;
+          const sectionLabel = `${sysLabel} · 第 ${nodeIndex + 1}/3 节点 (${enemy?.name || "临床遭遇"}) · 第 ${turnCount} 回合`;
+          setMistakes(prev => {
+            const existing = prev.find(m => m.id === diagModal.question.id);
+            const record = {
+              ...diagModal.question,
+              wrongChoice: diagModal.selectedOpt,
+              timestamp: exactTime,
+              sectionLabel,
+              cardName: diagModal.card?.name || "精准诊断",
+              wrongCount: existing ? (existing.wrongCount || 1) + 1 : 1
+            };
+            return [record, ...prev.filter(m => m.id !== diagModal.question.id)];
+          });
+        }
+        setDiagModal(prev => ({
+          ...prev,
+          submitted: true,
+          expandedOpt: prev.question.answer
+        }));
+      };
+
+      const confirmDiagnosticAndPlay = () => {
+        if (!diagModal || !diagModal.submitted) return;
+        const isCorrect = diagModal.selectedOpt === diagModal.question.answer;
+        const card = diagModal.card;
+        setDiagModal(null);
+        executeCardEffect(card, isCorrect ? "crit" : "fail", isCorrect);
+      };
+
+      // End Turn -> Enemy acts -> Start Next Player Turn
+      const handleEndTurn = () => {
+        if (isEnemyTurn || !enemy || enemy.hp <= 0) return;
+        setIsEnemyTurn(true);
+        setSelectedCardUid(null);
+
+        // Discard remaining hand
+        const afterHandDiscard = [...discardPile, ...hand];
+        setHand([]);
+        setDiscardPile(afterHandDiscard);
+
+        setTimeout(() => {
+          const intent = enemy.intents[enemyIntentIdx % enemy.intents.length];
+          if (intent.type === "Attack" || intent.type === "Debuff") {
+            sfx.attack();
+            setShakeTarget("player");
+            setTimeout(() => setShakeTarget(null), 420);
+
+            setPlayerBlock(prevBlock => {
+              const absorbed = Math.min(prevBlock, intent.value);
+              const unblockedDmg = intent.value - absorbed;
+              if (unblockedDmg > 0) {
+                setPlayerHp(hp => {
+                  const nhp = Math.max(0, hp - unblockedDmg);
+                  if (nhp <= 0) {
+                    setTimeout(() => {
+                      setRunHistory(h => [{ date: new Date().toLocaleDateString(), path: currentPath, result: "战斗阵亡" }, ...h.slice(0, 9)]);
+                      setScreen("DEFEAT");
+                    }, 480);
+                  }
+                  return nhp;
+                });
+                spawnFloatText("player", `-${unblockedDmg} HP`, "text-red-400");
+              } else {
+                spawnFloatText("player", "格挡成功!", "text-sky-300");
+              }
+              return 0; // Block clears at start of player's next turn
+            });
+          } else if (intent.type === "Defend") {
+            sfx.defend();
+            setEnemy(e => e ? { ...e, block: e.block + intent.value } : e);
+            spawnFloatText("enemy", `+${intent.value} 格挡`, "text-sky-300");
+          }
+
+          // Advance to next player turn if alive
+          setTimeout(() => {
+            setPlayerHp(currHp => {
+              if (currHp > 0) {
+                setPlayerBlock(0);
+                setEnergy(maxEnergy);
+                setTurnCount(t => t + 1);
+                setEnemyIntentIdx(idx => idx + 1);
+                const { nextDraw, nextDiscard, nextHand } = drawCards(5, drawPile, afterHandDiscard, []);
+                setDrawPile(nextDraw);
+                setDiscardPile(nextDiscard);
+                setHand(nextHand);
+                setIsEnemyTurn(false);
+              }
+              return currHp;
+            });
+          }, 550);
+        }, 550);
+      };
+
+      const handlePickRewardCard = (card) => {
+        const updatedDeck = [...playerDeck, card];
+        setPlayerDeck(updatedDeck);
+        showToast(`已将【${card.name}】加入卡组！`, "success");
+        setScreen("REST");
+      };
+
+      const handleSkipReward = () => {
+        setScreen("REST");
+      };
+
+      const handleProceedNextNode = (healOption) => {
+        if (healOption) {
+          const healAmt = Math.floor(playerMaxHp * 0.3);
+          setPlayerHp(hp => Math.min(playerMaxHp, hp + healAmt));
+          showToast(`休整恢复 +${healAmt} HP`, "success");
+        }
+        const nextIdx = nodeIndex + 1;
+        setNodeIndex(nextIdx);
+        startCombat(currentPath, nextIdx, playerDeck);
+      };
+
+      const handleImportQuestions = () => {
+        const res = parseSmartQuestions(importText, importSystem);
+        if (res.error) {
+          showToast(res.error, "error");
+          return;
+        }
+        setQuestions(prev => [...res.questions, ...prev]);
+        setImportText("");
+        showToast(`成功解析并导入 ${res.questions.length} 道临床题目！`, "success");
+        setQmTab("browse");
+      };
+
+      const handleResetQuestions = () => {
+        setQuestions(INITIAL_QUESTIONS);
+        showToast("已重置为默认预置题库", "info");
+      };
+
+      const currentSystemMeta = SYSTEMS.find(s => s.id === currentPath) || SYSTEMS[0];
+      const filteredQuestions = useMemo(() => {
+        if (qmFilter === "ALL") return questions;
+        return questions.filter(q => q.system === qmFilter);
+      }, [questions, qmFilter]);
+
+      // =========================================================================
+      // 6. RENDER HELPERS & SCREENS
+      // =========================================================================
+      return (
+        <div className={`min-h-screen flex flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 ${critEffect ? "animate-crit" : ""}`}>
+          {/* Toast Notification */}
+          {toast && (
+            <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl shadow-2xl border backdrop-blur-md text-sm font-medium flex items-center gap-2 transition-all ${
+              toast.type === "error" ? "bg-red-950/90 border-red-500/50 text-red-200" :
+              toast.type === "success" ? "bg-emerald-950/90 border-emerald-500/50 text-emerald-200" :
+              "bg-slate-800/90 border-sky-500/40 text-sky-200"
+            }`}>
+              <Icon name={toast.type === "error" ? "alert" : "sparkles"} className="w-4 h-4 shrink-0" />
+              <span>{toast.msg}</span>
+            </div>
+          )}
+
+          {/* Top HUD */}
+          <header className="sticky top-0 z-30 bg-slate-900/85 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 py-2.5">
+            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <button onClick={() => setScreen("MENU")} className="flex items-center gap-2 font-bold text-base sm:text-lg tracking-tight text-white hover:text-sky-400 transition">
+                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <Icon name="stethoscope" className="w-4 h-4 text-white" />
+                  </span>
+                  <span>MedSpire <span className="hidden sm:inline text-xs font-normal text-slate-400">医学尖塔</span></span>
+                </button>
+
+                {screen !== "MENU" && screen !== "PATH_SELECT" && (
+                  <div className="hidden md:flex items-center gap-3 pl-3 border-l border-slate-700/80 text-xs">
+                    <div className="flex items-center gap-1.5 text-rose-400 font-semibold">
+                      <Icon name="heart" className="w-4 h-4 fill-rose-500/30" />
+                      <span>{playerHp}/{playerMaxHp}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-amber-400 font-semibold">
+                      <Icon name="coins" className="w-4 h-4" />
+                      <span>{gold}</span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full border ${currentSystemMeta.badge}`}>
+                      Path: {currentSystemMeta.en} ({nodeIndex + 1}/3)
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm text-slate-200 transition"
+                >
+                  <Icon name="user" className="w-4 h-4 text-emerald-400" />
+                  <span className="max-w-[72px] truncate">{currentUser === "guest" ? "登录/存档" : currentUser}</span>
+                </button>
+
+                <button
+                  onClick={() => setShowInstallModal(true)}
+                  title="安装为桌面/平板图标"
+                  className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition"
+                >
+                  <Icon name="monitor" className="w-4 h-4 text-indigo-400" />
+                  <span>桌面版</span>
+                </button>
+
+                <button
+                  onClick={() => setShowMistakeModal(true)}
+                  className="relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm text-slate-200 transition"
+                >
+                  <Icon name="book" className="w-4 h-4 text-amber-400" />
+                  <span className="hidden sm:inline">错题本</span>
+                  {mistakes.length > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+                      {mistakes.length}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setShowQManager(true)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm text-slate-200 transition"
+                >
+                  <Icon name="database" className="w-4 h-4 text-sky-400" />
+                  <span className="hidden sm:inline">题库</span>
+                  <span className="text-xs text-sky-400 font-semibold">({questions.length})</span>
+                </button>
+
+                <button
+                  onClick={toggleMute}
+                  title={muted ? "取消静音" : "静音"}
+                  className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition"
+                >
+                  <Icon name={muted ? "volumeX" : "volume2"} className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content Area */}
+          <main className="flex-1 flex flex-col max-w-7xl w-full mx-auto px-3 sm:px-6 py-4">
+            {/* 1. MAIN MENU */}
+            {screen === "MENU" && (
+              <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs font-medium mb-5">
+                  <Icon name="sparkles" className="w-3.5 h-3.5" />
+                  <span>Slay the Spire × UWorld 临床决策 Roguelike</span>
+                </div>
+                <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-sky-200 to-indigo-300 bg-clip-text text-transparent mb-4">
+                  医学尖塔 MedSpire
+                </h1>
+                <p className="max-w-xl text-slate-400 text-sm sm:text-base mb-8 leading-relaxed">
+                  在回合制卡牌交锋中触发<strong className="text-emerald-400">【精准诊断】</strong>，直面高仿真临床病例题。答对即刻超载翻倍并抽牌回能；误诊则反噬扣血并自动归档至病历错题本。
+                </p>
+
+                {savedActiveRun && (
+                  <div className="w-full max-w-xl mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 to-sky-950/90 border border-emerald-500/50 shadow-xl text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2 text-emerald-300 text-xs font-bold mb-1">
+                        <Icon name="clock" className="w-4 h-4" />
+                        <span>检测到上次未完成的查房进度 ({savedActiveRun.savedAt})</span>
+                      </div>
+                      <div className="text-sm font-semibold text-white">
+                        {SYSTEMS.find(s => s.id === savedActiveRun.currentPath)?.label || savedActiveRun.currentPath} · 第 {savedActiveRun.nodeIndex + 1}/3 节点 ({savedActiveRun.enemy?.name}) · HP {savedActiveRun.playerHp}/{savedActiveRun.playerMaxHp}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button onClick={resumeSavedRun} className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition">
+                        继续上次进度
+                      </button>
+                      <button onClick={discardSavedRun} className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+                        放弃
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+                  <button
+                    onClick={() => setScreen("PATH_SELECT")}
+                    className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-sky-500/25 transition transform hover:-translate-y-0.5 flex items-center gap-2"
+                  >
+                    <Icon name="sword" className="w-5 h-5" />
+                    <span>开始临床查房征程</span>
+                  </button>
+                  <button
+                    onClick={() => setShowQManager(true)}
+                    className="px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-base transition flex items-center gap-2"
+                  >
+                    <Icon name="database" className="w-5 h-5 text-sky-400" />
+                    <span>AI 题库导入与管理</span>
+                  </button>
+                </div>
+
+                {runHistory.length > 0 && (
+                  <div className="w-full max-w-md bg-slate-900/70 border border-slate-800 rounded-2xl p-4 text-left">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">近期查房战绩</h3>
+                    <div className="space-y-1.5">
+                      {runHistory.slice(0, 4).map((r, i) => (
+                        <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-slate-800/60 last:border-0">
+                          <span className="text-slate-300">{r.path}</span>
+                          <span className={r.result === "通关胜利" ? "text-emerald-400 font-semibold" : "text-rose-400"}>{r.result}</span>
+                          <span className="text-slate-500">{r.date}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 2. PATH SELECTION */}
+            {screen === "PATH_SELECT" && (
+              <div className="flex-1 flex flex-col justify-center py-4">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">选择临床专科轮转路径</h2>
+                  <p className="text-sm text-slate-400">同专科卡牌在对应病区享有 <span className="text-sky-400 font-semibold">消耗 -1 费</span> 的专科共鸣加成</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {SYSTEMS.map(sys => {
+                    const qCount = questions.filter(q => q.system === sys.id).length;
+                    return (
+                      <button
+                        key={sys.id}
+                        onClick={() => startNewRun(sys.id)}
+                        className="group text-left bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-sky-500/60 rounded-2xl p-5 transition-all flex flex-col justify-between shadow-lg hover:-translate-y-1"
+                      >
+                        <div>
+                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${sys.color} flex items-center justify-center mb-4 shadow-lg`}>
+                            <Icon name={sys.icon} className="w-6 h-6 text-white" />
+                          </div>
+                          <h3 className="text-lg font-bold text-white group-hover:text-sky-300 transition">{sys.label}</h3>
+                          <p className="text-xs text-slate-400 font-mono mb-3">{sys.en}</p>
+                          <p className="text-xs text-slate-300 leading-relaxed mb-4">{sys.desc}</p>
+                        </div>
+                        <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                          <span className="text-slate-400">题库储备: <strong className="text-slate-200">{qCount}</strong> 题</span>
+                          <span className="text-sky-400 font-semibold flex items-center gap-0.5">进入病区 <Icon name="chevronRight" className="w-4 h-4" /></span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* 3. COMBAT ARENA */}
+            {screen === "COMBAT" && enemy && (
+              <div className="flex-1 flex flex-col justify-between gap-4">
+                {/* Mobile Compact Status */}
+                <div className="flex md:hidden items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs">
+                  <span className="text-rose-400 font-bold">HP {playerHp}/{playerMaxHp}</span>
+                  <span className={`px-2 py-0.5 rounded-full border ${currentSystemMeta.badge}`}>{currentSystemMeta.label} {nodeIndex + 1}/3</span>
+                  <span className="text-amber-400 font-bold">金币 {gold}</span>
+                </div>
+
+                {/* Middle Arena: Player vs Enemy */}
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-slate-900/50 border border-slate-800/80 rounded-3xl p-5 sm:p-8 relative overflow-hidden">
+                  {/* Subtle turn indicator */}
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-[11px] font-mono text-slate-300">
+                    第 {turnCount} 回合 · {isEnemyTurn ? "病症发作中..." : "医师行动回合"}
+                  </div>
+
+                  {/* LEFT: Player */}
+                  <div className={`relative flex flex-col items-center justify-center pt-6 ${shakeTarget === "player" ? "animate-shake" : ""}`}>
+                    {floatingTexts.filter(f => f.target === "player").map(f => (
+                      <div key={f.id} className={`absolute -top-2 z-20 text-lg font-bold animate-float-up pointer-events-none ${f.colorClass}`}>
+                        {f.text}
+                      </div>
+                    ))}
+
+                    <div className="relative mb-3">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-sky-500/20 to-indigo-600/30 border-2 border-sky-400/50 flex items-center justify-center text-5xl shadow-2xl">
+                        🩺
+                      </div>
+                      {playerBlock > 0 && (
+                        <div className="absolute -bottom-2 -right-2 px-2.5 py-1 rounded-full bg-sky-600 border-2 border-sky-300 text-white text-xs font-extrabold flex items-center gap-1 shadow-lg">
+                          <Icon name="shield" className="w-3.5 h-3.5" />
+                          <span>{playerBlock}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-48 sm:w-56">
+                      <div className="flex justify-between text-xs font-semibold mb-1">
+                        <span className="text-slate-200">主治医师 (Player)</span>
+                        <span className="text-rose-400">{playerHp} / {playerMaxHp}</span>
+                      </div>
+                      <div className="h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                        <div className="h-full bg-gradient-to-r from-rose-600 to-rose-400 transition-all duration-300" style={{ width: `${(playerHp / playerMaxHp) * 100}%` }} />
+                      </div>
+                    </div>
+
+                    {/* Energy Orb */}
+                    <div className="mt-5 flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 border-2 border-sky-200 flex flex-col items-center justify-center animate-orb">
+                        <span className="text-xl font-black text-white leading-none">{energy}/{maxEnergy}</span>
+                        <span className="text-[10px] font-semibold text-sky-100 uppercase">Energy</span>
+                      </div>
+                      <div className="text-xs text-slate-400 space-y-1">
+                        <div>抽牌堆: <strong className="text-slate-200">{drawPile.length}</strong></div>
+                        <div>弃牌堆: <strong className="text-slate-200">{discardPile.length}</strong></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* RIGHT: Enemy */}
+                  <div className={`relative flex flex-col items-center justify-center pt-6 ${shakeTarget === "enemy" ? "animate-shake" : ""}`}>
+                    {floatingTexts.filter(f => f.target === "enemy").map(f => (
+                      <div key={f.id} className={`absolute -top-2 z-20 text-xl font-bold animate-float-up pointer-events-none ${f.colorClass}`}>
+                        {f.text}
+                      </div>
+                    ))}
+
+                    {/* Intent Badge */}
+                    {(() => {
+                      const intent = enemy.intents[enemyIntentIdx % enemy.intents.length];
+                      return (
+                        <div title={intent.description} className={`mb-3 px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-lg ${
+                          intent.type === "Attack" ? "bg-rose-950/80 border-rose-500/60 text-rose-300" :
+                          intent.type === "Defend" ? "bg-sky-950/80 border-sky-500/60 text-sky-300" :
+                          "bg-amber-950/80 border-amber-500/60 text-amber-300"
+                        }`}>
+                          <Icon name={intent.type === "Attack" ? "sword" : intent.type === "Defend" ? "shield" : "alert"} className="w-4 h-4" />
+                          <span>意图: {intent.type === "Attack" ? `攻击 ${intent.value}` : intent.type === "Defend" ? `格挡 ${intent.value}` : `干扰 ${intent.value}`}</span>
+                        </div>
+                      );
+                    })()}
+
+                    <div className="relative mb-3">
+                      <div className={`w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br ${enemy.isBoss ? "from-rose-600/30 to-purple-900/40 border-rose-400" : "from-slate-800 to-slate-900 border-slate-600"} border-2 flex items-center justify-center text-5xl shadow-2xl`}>
+                        {enemy.avatar}
+                      </div>
+                      {enemy.block > 0 && (
+                        <div className="absolute -bottom-2 -right-2 px-2.5 py-1 rounded-full bg-sky-600 border-2 border-sky-300 text-white text-xs font-extrabold flex items-center gap-1 shadow-lg">
+                          <Icon name="shield" className="w-3.5 h-3.5" />
+                          <span>{enemy.block}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-52 sm:w-64 text-center">
+                      <div className="text-xs font-mono text-amber-400/90 mb-0.5">{enemy.systemTag}</div>
+                      <div className="flex justify-between text-xs font-semibold mb-1">
+                        <span className="text-white">{enemy.name}</span>
+                        <span className="text-rose-400">{enemy.hp} / {enemy.maxHp}</span>
+                      </div>
+                      <div className="h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                        <div className="h-full bg-gradient-to-r from-red-600 to-orange-400 transition-all duration-300" style={{ width: `${(enemy.hp / enemy.maxHp) * 100}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Hand Dock & End Turn */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between px-2">
+                    <span className="text-xs text-slate-400">
+                      提示：悬停或点击手牌，可选择<strong className="text-slate-200">普通打出</strong>或触发<strong className="text-emerald-400">【精准诊断】</strong>答题翻倍
+                    </span>
+                    <button
+                      onClick={handleEndTurn}
+                      disabled={isEnemyTurn}
+                      className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition"
+                    >
+                      {isEnemyTurn ? "敌方行动中..." : "结束回合"}
+                    </button>
+                  </div>
+
+                  {/* Cards Fan / Row */}
+                  <div className="flex flex-wrap sm:flex-nowrap items-end justify-center gap-2.5 sm:gap-3 pt-4 pb-2 min-h-[210px]">
+                    {hand.map((card, index) => {
+                      const cost = getCardEffectiveCost(card);
+                      const canAfford = energy >= cost && !isEnemyTurn;
+                      const isSelected = selectedCardUid === card.uid;
+                      const mid = (hand.length - 1) / 2;
+                      const offset = index - mid;
+                      const rotateDeg = hand.length > 1 ? offset * 2.5 : 0;
+                      const translateY = Math.abs(offset) * 4;
+
+                      return (
+                        <div
+                          key={card.uid}
+                          onClick={() => setSelectedCardUid(isSelected ? null : card.uid)}
+                          style={{
+                            transform: isSelected ? "translateY(-14px) scale(1.05)" : `rotate(${rotateDeg}deg) translateY(${translateY}px)`
+                          }}
+                          className={`group relative w-40 sm:w-44 rounded-2xl border-2 p-3 flex flex-col justify-between transition-all duration-200 cursor-pointer select-none shadow-xl ${
+                            card.type === "Attack" ? "bg-gradient-to-b from-slate-800 to-rose-950/60 border-rose-500/40 hover:border-rose-400" :
+                            "bg-gradient-to-b from-slate-800 to-sky-950/60 border-sky-500/40 hover:border-sky-400"
+                          } ${!canAfford ? "opacity-55" : "hover:-translate-y-4 hover:scale-105 hover:z-20"} ${isSelected ? "z-20 ring-2 ring-emerald-400" : ""}`}
+                        >
+                          {/* Cost Badge */}
+                          <div className="flex items-start justify-between gap-1 mb-2">
+                            <span className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-sm border ${
+                              cost < card.cost ? "bg-emerald-500 text-slate-950 border-emerald-200" : "bg-sky-600 text-white border-sky-300"
+                            }`}>
+                              {cost}
+                            </span>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold uppercase ${
+                              card.type === "Attack" ? "bg-rose-500/20 text-rose-300" : "bg-sky-500/20 text-sky-300"
+                            }`}>
+                              {card.type}
+                            </span>
+                          </div>
+
+                          <div className="mb-3">
+                            <h4 className="font-bold text-sm text-white leading-tight mb-1">{card.name}</h4>
+                            <p className="text-[11px] text-slate-300 leading-snug">{card.description}</p>
+                            <div className="mt-2 flex items-center justify-between text-[11px] font-mono">
+                              <span className="text-slate-400">基础: <strong className="text-white">{card.baseValue}</strong></span>
+                              <span className="text-emerald-400">超载: <strong>{card.boostedValue}</strong></span>
+                            </div>
+                          </div>
+
+                          {/* Dual Action Buttons (visible on hover or mobile tap select) */}
+                          <div className={`grid grid-cols-2 gap-1.5 transition-opacity ${isSelected ? "opacity-100" : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"}`}>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); executeCardEffect(card, "normal"); }}
+                              disabled={!canAfford}
+                              className="py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-[11px] font-bold text-white transition"
+                            >
+                              普通打出
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleOverchargeClick(card); }}
+                              disabled={!canAfford}
+                              className="py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-[11px] font-extrabold text-slate-950 transition flex items-center justify-center gap-0.5"
+                            >
+                              <Icon name="zap" className="w-3 h-3" />
+                              <span>精准诊断</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 4. POST-BATTLE CARD REWARD */}
+            {screen === "REWARD" && (
+              <div className="flex-1 flex flex-col items-center justify-center py-8 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 mb-4">
+                  <Icon name="trophy" className="w-8 h-8" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">病症已控制！选择一张战利品卡牌</h2>
+                <p className="text-sm text-slate-400 mb-8">已获得 35 金币，点击下方任意一张卡牌加入你的临床卡组</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl w-full mb-8">
+                  {rewardChoices.map(card => (
+                    <button
+                      key={card.id}
+                      onClick={() => handlePickRewardCard(card)}
+                      className="text-left bg-slate-900 hover:bg-slate-800 border-2 border-slate-700 hover:border-emerald-400 rounded-2xl p-5 transition-all hover:-translate-y-1 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="w-8 h-8 rounded-full bg-sky-600 text-white font-black flex items-center justify-center">{card.cost}</span>
+                          <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">{card.type}</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">{card.name}</h3>
+                        <p className="text-xs text-slate-300 leading-relaxed mb-3">{card.description}</p>
+                      </div>
+                      <div className="text-xs font-mono text-emerald-400 pt-2 border-t border-slate-800">
+                        基础 {card.baseValue} ➔ 超载 {card.boostedValue}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <button onClick={handleSkipReward} className="text-sm text-slate-400 hover:text-white underline">
+                  跳过选牌，直接前往休整室
+                </button>
+              </div>
+            )}
+
+            {/* 5. REST & MISTAKE REVIEW ROOM */}
+            {screen === "REST" && (
+              <div className="flex-1 flex flex-col items-center justify-center py-8 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mb-4">
+                  <Icon name="coffee" className="w-8 h-8" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">值班休整室 · 错题复盘</h2>
+                <p className="text-sm text-slate-400 mb-8">下一关即将面对更严峻的临床挑战（当前 HP: {playerHp}/{playerMaxHp}）</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl w-full">
+                  <button
+                    onClick={() => handleProceedNextNode(true)}
+                    className="bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 rounded-2xl p-6 text-left transition hover:-translate-y-0.5"
+                  >
+                    <h3 className="text-lg font-bold text-emerald-400 mb-1">短暂休整 (+30% HP)</h3>
+                    <p className="text-xs text-slate-300">恢复 {Math.floor(playerMaxHp * 0.3)} 点生命值并立即进入下一病区节点。</p>
+                  </button>
+
+                  <button
+                    onClick={() => setShowMistakeModal(true)}
+                    className="bg-slate-900 hover:bg-slate-800 border border-amber-500/40 rounded-2xl p-6 text-left transition hover:-translate-y-0.5"
+                  >
+                    <h3 className="text-lg font-bold text-amber-400 mb-1">病历讨论室 (复盘错题)</h3>
+                    <p className="text-xs text-slate-300">当前共有 {mistakes.length} 道错题记录，点击随时查阅完整解析与 EO。</p>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => handleProceedNextNode(false)}
+                  className="mt-6 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition"
+                >
+                  直接进入下一节点 ({nodeIndex + 2}/3) ➔
+                </button>
+              </div>
+            )}
+
+            {/* 6. VICTORY / DEFEAT */}
+            {(screen === "VICTORY" || screen === "DEFEAT") && (
+              <div className="flex-1 flex flex-col items-center justify-center py-10 text-center">
+                <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-5 ${
+                  screen === "VICTORY" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40" : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                }`}>
+                  <Icon name={screen === "VICTORY" ? "trophy" : "alert"} className="w-10 h-10" />
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-3">
+                  {screen === "VICTORY" ? "专科通关！首席住院医达成" : "抢救无效 · 查房中断"}
+                </h2>
+                <p className="text-slate-400 max-w-md mb-8 text-sm">
+                  {screen === "VICTORY"
+                    ? `你成功平息了 ${currentSystemMeta.label} 的所有急危重症危机，累计收获 ${gold} 金币！`
+                    : "临床决策容不得半点侥幸。去错题本复盘刚才的病例，整装再战！"}
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <button
+                    onClick={() => setScreen("PATH_SELECT")}
+                    className="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold flex items-center gap-2 transition"
+                  >
+                    <Icon name="rotateCcw" className="w-4 h-4" />
+                    <span>开启新一轮挑战</span>
+                  </button>
+                  {mistakes.length > 0 && (
+                    <button
+                      onClick={() => setShowMistakeModal(true)}
+                      className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 font-bold flex items-center gap-2 transition"
+                    >
+                      <Icon name="book" className="w-4 h-4" />
+                      <span>复盘错题 ({mistakes.length})</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* =================================================================
+              MODAL 1: UWORLD-STYLE OVERCHARGE DIAGNOSTIC MODAL
+             ================================================================= */}
+          {diagModal && (
+            <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+              <div className="w-full max-w-3xl bg-slate-100 text-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-300 my-auto">
+                {/* UWorld Header */}
+                <div className="bg-slate-800 text-white px-5 py-3.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="px-2.5 py-0.5 rounded bg-emerald-500 text-slate-950 font-extrabold text-xs">精准诊断超载</span>
+                    <span className="text-sm font-semibold text-slate-200">
+                      卡牌：{diagModal.card.name} ({diagModal.card.baseValue} ➔ {diagModal.card.boostedValue})
+                    </span>
+                  </div>
+                  <span className="text-xs font-mono text-sky-300">{diagModal.question.system} · {diagModal.question.difficulty}</span>
+                </div>
+
+                {/* Question Stem & Options */}
+                <div className="p-5 sm:p-7 max-h-[75vh] overflow-y-auto space-y-5">
+                  <p className="font-serif-clinical text-sm sm:text-base leading-relaxed text-slate-800">
+                    {diagModal.question.stem}
+                  </p>
+
+                  {diagModal.question.vignetteImage && (
+                    <img src={diagModal.question.vignetteImage} alt="Clinical Vignette" className="max-w-full h-auto rounded-lg border border-slate-300 mx-auto" />
+                  )}
+
+                  <div className="space-y-2.5">
+                    {Object.entries(diagModal.question.options).map(([key, text]) => {
+                      const isSelected = diagModal.selectedOpt === key;
+                      const isAnswer = diagModal.question.answer === key;
+                      const isExpanded = diagModal.expandedOpt === key;
+
+                      let borderStyle = "border-slate-300 bg-white hover:bg-sky-50";
+                      if (!diagModal.submitted && isSelected) {
+                        borderStyle = "border-sky-600 bg-sky-50 ring-2 ring-sky-500/30";
+                      } else if (diagModal.submitted) {
+                        if (isAnswer) borderStyle = "border-emerald-600 bg-emerald-50";
+                        else if (isSelected && !isAnswer) borderStyle = "border-rose-500 bg-rose-50";
+                      }
+
+                      return (
+                        <div key={key} className={`rounded-xl border-2 transition ${borderStyle}`}>
+                          <button
+                            onClick={() => {
+                              if (!diagModal.submitted) {
+                                setDiagModal(prev => ({ ...prev, selectedOpt: key }));
+                              } else {
+                                setDiagModal(prev => ({ ...prev, expandedOpt: prev.expandedOpt === key ? null : key }));
+                              }
+                            }}
+                            className="w-full text-left px-4 py-3 flex items-start justify-between gap-3"
+                          >
+                            <div className="flex items-start gap-3">
+                              <span className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                                !diagModal.submitted && isSelected ? "bg-sky-600 text-white border-sky-600" :
+                                diagModal.submitted && isAnswer ? "bg-emerald-600 text-white border-emerald-600" :
+                                diagModal.submitted && isSelected ? "bg-rose-600 text-white border-rose-600" :
+                                "border-slate-400 text-slate-700"
+                              }`}>
+                                {key}
+                              </span>
+                              <span className="text-sm font-medium text-slate-800">{text}</span>
+                            </div>
+
+                            {diagModal.submitted && (
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                {isAnswer && <Icon name="check" className="w-5 h-5 text-emerald-600" />}
+                                {!isAnswer && isSelected && <Icon name="x" className="w-5 h-5 text-rose-600" />}
+                                <Icon name={isExpanded ? "chevronDown" : "chevronRight"} className="w-4 h-4 text-slate-500" />
+                              </div>
+                            )}
+                          </button>
+
+                          {diagModal.submitted && isExpanded && (
+                            <div className="px-4 pb-3.5 pt-1 border-t border-slate-200/80 text-xs sm:text-sm text-slate-700 leading-relaxed bg-white/60 rounded-b-xl">
+                              {diagModal.question.explanations?.[key] || "暂无该选项详细解析。"}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Educational Objective */}
+                  {diagModal.submitted && (
+                    <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-slate-800">
+                      <div className="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-1">
+                        Educational Objective (核心考点)
+                      </div>
+                      <p className="text-xs sm:text-sm leading-relaxed">{diagModal.question.educationalObjective}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="bg-slate-200 px-5 py-3.5 flex items-center justify-between">
+                  <span className="text-xs text-slate-600">
+                    {diagModal.submitted
+                      ? (diagModal.selectedOpt === diagModal.question.answer ? "✅ 诊断精准！卡牌数值翻倍 +1能量 +1抽牌" : "⚠️ 误诊！卡牌效果减半且自损 3 HP，已加入错题本")
+                      : "点击选项后提交诊断（答完可点击各选项查看辨析）"}
+                  </span>
+                  {!diagModal.submitted ? (
+                    <button
+                      onClick={submitDiagnosticAnswer}
+                      disabled={!diagModal.selectedOpt}
+                      className="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold text-sm transition"
+                    >
+                      提交诊断
+                    </button>
+                  ) : (
+                    <button
+                      onClick={confirmDiagnosticAndPlay}
+                      className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition"
+                    >
+                      执行卡牌效果 ➔
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              MODAL 2: QUESTION MANAGER (AI Smart Parser + Bank Browser)
+             ================================================================= */}
+          {showQManager && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+              <div className="w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
+                <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Icon name="database" className="w-5 h-5 text-sky-400" />
+                    <h3 className="font-bold text-lg text-white">题库管理与 AI 智能导入</h3>
+                  </div>
+                  <button onClick={() => setShowQManager(false)} className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <Icon name="x" className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Tabs */}
+                <div className="px-5 pt-3 border-b border-slate-800 flex gap-4 text-sm font-semibold">
+                  <button
+                    onClick={() => setQmTab("import")}
+                    className={`pb-2.5 border-b-2 transition ${qmTab === "import" ? "border-sky-400 text-sky-400" : "border-transparent text-slate-400 hover:text-slate-200"}`}
+                  >
+                    AI 格式智能解析导入
+                  </button>
+                  <button
+                    onClick={() => setQmTab("browse")}
+                    className={`pb-2.5 border-b-2 transition ${qmTab === "browse" ? "border-sky-400 text-sky-400" : "border-transparent text-slate-400 hover:text-slate-200"}`}
+                  >
+                    当前题库浏览 ({questions.length})
+                  </button>
+                </div>
+
+                <div className="p-5 overflow-y-auto flex-1">
+                  {qmTab === "import" ? (
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="text-xs text-slate-400">
+                          支持直接粘贴 <strong className="text-slate-200">JSON 数组</strong>，或非结构化 Markdown（含 <code className="text-sky-300">Question: / A. B. C. D. / Answer: / Explanation:</code>）。
+                        </p>
+                        <select
+                          value={importSystem}
+                          onChange={(e) => setImportSystem(e.target.value)}
+                          className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200"
+                        >
+                          {SYSTEMS.map(s => <option key={s.id} value={s.id}>归类专科: {s.label}</option>)}
+                          <option value="General">归类专科: 全科综合</option>
+                        </select>
+                      </div>
+
+                      <textarea
+                        value={importText}
+                        onChange={(e) => setImportText(e.target.value)}
+                        rows={10}
+                        placeholder={`示例 Markdown：\nQuestion: A 58-year-old man presents with crushing chest pain...\nA. Aspirin + UFH\nB. Warfarin\nC. Alteplase\nD. Observation\nAnswer: A\nExplanation: Primary PCI requires UFH...\nEducational Objective: STEMI anticoagulation`}
+                        className="w-full rounded-xl bg-slate-950 border border-slate-700 p-3.5 text-xs sm:text-sm text-slate-200 font-mono focus:outline-none focus:border-sky-500"
+                      />
+
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={handleResetQuestions}
+                          className="text-xs text-slate-400 hover:text-rose-400 transition"
+                        >
+                          恢复默认预置题库
+                          </button>
+                          <button
+                            disabled={cloudBusy}
+                            onClick={publishGlobalQuestions}
+                            className="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1 transition"
+                          >
+                            <Icon name="cloud" className="w-3.5 h-3.5" />
+                            <span>{cloudBusy ? "发布中..." : "发布至全端公共库（热更新）"}</span>
+                          </button>
+                        </div>
+                        <button
+                          onClick={handleImportQuestions}
+                          className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm flex items-center gap-1.5 transition"
+                        >
+                          <Icon name="plus" className="w-4 h-4" />
+                          <span>智能解析并保存至本地</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {["ALL", ...SYSTEMS.map(s => s.id), "General"].map(f => (
+                          <button
+                            key={f}
+                            onClick={() => setQmFilter(f)}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                              qmFilter === f ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-400 hover:text-slate-200"
+                            }`}
+                          >
+                            {f === "ALL" ? "全部" : f}
+                          </button>
+                        ))}
+                      </div>
+
+                      {filteredQuestions.map(q => (
+                        <div key={q.id} className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start justify-between gap-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-[11px]">
+                              <span className="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-semibold">{q.system}</span>
+                              <span className="text-emerald-400 font-mono">答案: {q.answer}</span>
+                            </div>
+                            <p className="text-xs text-slate-300 line-clamp-2">{q.stem}</p>
+                            <p className="text-[11px] text-amber-400/90">EO: {q.educationalObjective}</p>
+                          </div>
+                          <button
+                            onClick={() => setQuestions(prev => prev.filter(item => item.id !== q.id))}
+                            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 shrink-0"
+                          >
+                            <Icon name="trash" className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              MODAL 3: MISTAKE NOTEBOOK (病历讨论室 / 错题本升级版)
+             ================================================================= */}
+          {showMistakeModal && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+              <div className="w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
+                <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Icon name="book" className="w-5 h-5 text-amber-400" />
+                    <h3 className="font-bold text-lg text-white">病历讨论室 · 错题复盘本 ({mistakes.length})</h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {mistakes.length > 0 && (
+                      <button onClick={() => setMistakes([])} className="text-xs text-slate-400 hover:text-rose-400 px-2 py-1">
+                        清空记录
+                      </button>
+                    )}
+                    <button onClick={() => setShowMistakeModal(false)} className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+                      <Icon name="x" className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filter Pills */}
+                <div className="px-5 py-2.5 border-b border-slate-800/80 flex flex-wrap gap-1.5 bg-slate-900/60">
+                  {["ALL", ...SYSTEMS.map(s => s.id)].map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setMistakeFilter(f)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                        mistakeFilter === f ? "bg-amber-500 text-slate-950" : "bg-slate-800 text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      {f === "ALL" ? `全部 (${mistakes.length})` : `${SYSTEMS.find(s => s.id === f)?.label || f} (${mistakes.filter(m => m.system === f).length})`}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="p-5 overflow-y-auto space-y-4">
+                  {mistakes.filter(m => mistakeFilter === "ALL" || m.system === mistakeFilter).length === 0 ? (
+                    <div className="text-center py-12 text-slate-400 text-sm">
+                      该版块暂无错题记录！继续保持精准诊断。
+                    </div>
+                  ) : (
+                    mistakes
+                      .filter(m => mistakeFilter === "ALL" || m.system === mistakeFilter)
+                      .map((m, idx) => {
+                        const isExp = expandedMistakeId === (m.id + idx);
+                        return (
+                          <div key={m.id + idx} className="p-4 rounded-xl bg-slate-950/85 border border-slate-800 space-y-3">
+                            {/* Metadata Header: Exact Time + Section + Wrong Count */}
+                            <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-semibold">{m.system}</span>
+                                {m.sectionLabel && (
+                                  <span className="px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                                    版块: {m.sectionLabel}
+                                  </span>
+                                )}
+                                {m.cardName && (
+                                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                                    卡牌: {m.cardName}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-400 font-mono">
+                                <span className="flex items-center gap-1 text-amber-300/90">
+                                  <Icon name="clock" className="w-3.5 h-3.5" />
+                                  {m.timestamp}
+                                </span>
+                                {(m.wrongCount || 1) > 1 && (
+                                  <span className="px-1.5 py-0.5 rounded bg-rose-600/30 text-rose-300 font-bold">错 {m.wrongCount} 次</span>
+                                )}
+                              </div>
+                            </div>
+
+                            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif-clinical">{m.stem}</p>
+
+                            <div className="flex flex-wrap items-center justify-between gap-2 text-xs bg-slate-900/90 px-3 py-2 rounded-lg border border-slate-800">
+                              <span>
+                                你的误选: <strong className="text-rose-400">{m.wrongChoice}. {m.options?.[m.wrongChoice]}</strong>
+                              </span>
+                              <span>
+                                正确答案: <strong className="text-emerald-400">{m.answer}. {m.options?.[m.answer]}</strong>
+                              </span>
+                            </div>
+
+                            <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 space-y-1.5">
+                              <div><strong className="text-emerald-400">正解解析:</strong> {m.explanations?.[m.answer] || m.options?.[m.answer]}</div>
+                              {m.explanations?.[m.wrongChoice] && (
+                                <div><strong className="text-rose-400">误选辨析 ({m.wrongChoice}):</strong> {m.explanations[m.wrongChoice]}</div>
+                              )}
+                              <div className="text-amber-300 pt-1"><strong>EO 核心考点:</strong> {m.educationalObjective}</div>
+                            </div>
+
+                            <button
+                              onClick={() => setExpandedMistakeId(isExp ? null : (m.id + idx))}
+                              className="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1"
+                            >
+                              <Icon name={isExp ? "chevronDown" : "chevronRight"} className="w-3.5 h-3.5" />
+                              <span>{isExp ? "收起全部选项" : "展开全部选项与解析"}</span>
+                            </button>
+
+                            {isExp && m.options && (
+                              <div className="space-y-1.5 pt-1 border-t border-slate-800/80 text-xs">
+                                {Object.entries(m.options).map(([k, v]) => (
+                                  <div key={k} className={`p-2 rounded-lg ${k === m.answer ? "bg-emerald-950/50 border border-emerald-500/30" : k === m.wrongChoice ? "bg-rose-950/40 border border-rose-500/30" : "bg-slate-900/50"}`}>
+                                    <div className="font-semibold text-slate-200">{k}. {v}</div>
+                                    {m.explanations?.[k] && <div className="text-slate-400 mt-0.5">{m.explanations[k]}</div>}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              MODAL 4: ACCOUNT, PROGRESS & CLOUD SYNC MODAL
+             ================================================================= */}
+          {showAuthModal && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+              <div className="w-full max-w-xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
+                <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Icon name="user" className="w-5 h-5 text-emerald-400" />
+                    <h3 className="font-bold text-lg text-white">账号档案与云端同步</h3>
+                  </div>
+                  <button onClick={() => setShowAuthModal(false)} className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <Icon name="x" className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="px-5 pt-3 border-b border-slate-800 flex gap-4 text-sm font-semibold">
+                  <button onClick={() => setAuthTab("account")} className={`pb-2.5 border-b-2 transition ${authTab === "account" ? "border-emerald-400 text-emerald-400" : "border-transparent text-slate-400"}`}>
+                    注册 / 登录账号
+                  </button>
+                  <button onClick={() => setAuthTab("sync")} className={`pb-2.5 border-b-2 transition ${authTab === "sync" ? "border-sky-400 text-sky-400" : "border-transparent text-slate-400"}`}>
+                    多端云同步 & 存档导入导出
+                  </button>
+                </div>
+
+                <div className="p-5 overflow-y-auto space-y-4">
+                  {authTab === "account" ? (
+                    <div className="space-y-4">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+                        <span className="text-slate-400">当前登录账号：<strong className="text-emerald-400 text-sm">{currentUser === "guest" ? "游客模式 (本地默认)" : currentUser}</strong></span>
+                        {currentUser !== "guest" && (
+                          <button onClick={() => { switchToUser("guest"); setShowAuthModal(false); showToast("已退出至游客模式", "info"); }} className="text-rose-400 hover:underline">
+                            退出登录
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button onClick={() => setAuthMode("login")} className={`flex-1 py-2 rounded-lg text-xs font-bold ${authMode === "login" ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-400"}`}>
+                          登录已有账号
+                        </button>
+                        <button onClick={() => setAuthMode("register")} className={`flex-1 py-2 rounded-lg text-xs font-bold ${authMode === "register" ? "bg-emerald-600 text-slate-950" : "bg-slate-800 text-slate-400"}`}>
+                          注册新账号
+                        </button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={authUsername}
+                          onChange={(e) => setAuthUsername(e.target.value)}
+                          placeholder="输入用户名（如：yangrc）"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-sky-500"
+                        />
+                        <input
+                          type="password"
+                          value={authPassword}
+                          onChange={(e) => setAuthPassword(e.target.value)}
+                          placeholder="输入密码（至少 4 位，SHA-256 加密存储）"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-sky-500"
+                        />
+                        <button onClick={handleAuthSubmit} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-slate-950 font-extrabold text-sm">
+                          {authMode === "register" ? "立即注册并创建独立存档" : "登录并加载我的错题与进度"}
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-slate-400 leading-relaxed">
+                        每个账号独立保存题库、错题本、历史战绩与实时战斗断点进度（关闭网页再打开会自动询问是否继续）。
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5">
+                        <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <Icon name="download" className="w-4 h-4 text-emerald-400" />
+                          <span>跨设备文件存档（PC ↔ iPad 零配置互通）</span>
+                        </div>
+                        <p className="text-[11px] text-slate-400">一键导出包含全量题库、错题本和当前关卡进度的 JSON 存档文件，在另一台设备导入即可无缝续刷。</p>
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          <button onClick={exportFullBackup} className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5">
+                            <Icon name="download" className="w-3.5 h-3.5" /> 导出全量存档 (.json)
+                          </button>
+                          <label className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+                            <Icon name="upload" className="w-3.5 h-3.5 text-sky-400" /> 导入恢复存档
+                            <input type="file" accept=".json" onChange={importFullBackup} className="hidden" />
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5">
+                        <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <Icon name="cloud" className="w-4 h-4 text-sky-400" />
+                          <span>Supabase 真·云端数据库同步（可选）</span>
+                        </div>
+                        <p className="text-[11px] text-slate-400">
+                          在免费 Supabase 项目中新建表 <code className="text-sky-300">medspire_saves (username text primary key, data jsonb)</code> 并填入下方参数，即可实现多端实时云同步：
+                        </p>
+                        <input
+                          type="text"
+                          value={cloudCfg.url}
+                          onChange={(e) => setCloudCfg(c => ({ ...c, url: e.target.value }))}
+                          placeholder="Supabase Project URL (https://xxx.supabase.co)"
+                          className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                        />
+                        <input
+                          type="password"
+                          value={cloudCfg.anonKey}
+                          onChange={(e) => setCloudCfg(c => ({ ...c, anonKey: e.target.value }))}
+                          placeholder="Supabase Anon Key"
+                          className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                        />
+                        <div className="flex gap-2 pt-1">
+                          <button disabled={cloudBusy} onClick={() => syncToSupabase("push")} className="flex-1 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white text-xs font-bold">
+                            {cloudBusy ? "同步中..." : "上传至云端"}
+                          </button>
+                          <button disabled={cloudBusy} onClick={() => syncToSupabase("pull")} className="flex-1 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold">
+                            {cloudBusy ? "同步中..." : "从云端拉取"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              MODAL 5: RESUME PROGRESS POPUP ON STARTUP
+             ================================================================= */}
+          {showResumePrompt && savedActiveRun && screen === "MENU" && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-md bg-slate-900 border border-emerald-500/50 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <Icon name="clock" className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base text-white">是否继续上次的查房进度？</h3>
+                    <p className="text-xs text-slate-400">上次保存：{savedActiveRun.savedAt}</p>
+                  </div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1 text-slate-300">
+                  <div>当前版块：<strong className="text-sky-300">{SYSTEMS.find(s => s.id === savedActiveRun.currentPath)?.label || savedActiveRun.currentPath}</strong></div>
+                  <div>进度状态：第 {savedActiveRun.nodeIndex + 1}/3 节点 · {savedActiveRun.enemy?.name} · 第 {savedActiveRun.turnCount} 回合</div>
+                  <div>医师状态：HP {savedActiveRun.playerHp}/{savedActiveRun.playerMaxHp} · 金币 {savedActiveRun.gold}</div>
+                </div>
+                <div className="flex gap-2.5">
+                  <button onClick={resumeSavedRun} className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm">
+                    继续上次进度
+                  </button>
+                  <button onClick={() => setShowResumePrompt(false)} className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm">
+                    稍后再说
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              MODAL 6: INSTALL AS DESKTOP / IPAD APP GUIDE
+             ================================================================= */}
+          {showInstallModal && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Icon name="monitor" className="w-5 h-5 text-indigo-400" />
+                    <h3 className="font-bold text-lg text-white">将 MedSpire 安装为桌面/平板图标</h3>
+                  </div>
+                  <button onClick={() => setShowInstallModal(false)} className="p-1 text-slate-400 hover:text-white"><Icon name="x" className="w-5 h-5" /></button>
+                </div>
+                <div className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div className="font-bold text-sky-400 mb-1">1. 电脑桌面图标（Windows / Mac）</div>
+                    <p>将本页面部署到免费的 <strong>GitHub Pages / Vercel / Cloudflare Pages</strong> 后，用 Chrome 或 Edge 打开，点击地址栏右侧的<strong>「安装 MedSpire」</strong>图标，即可在桌面生成独立应用图标，双击即开、无浏览器边框。</p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div className="font-bold text-emerald-400 mb-1">2. iPad / iPhone 主屏幕图标</div>
+                    <p>用 Safari 打开部署链接，点击右上角<strong>分享按钮 ➔「添加到主屏幕」</strong>，即可在 iPad 桌面生成全屏 App 图标。</p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div className="font-bold text-amber-400 mb-1">3. 本地单文件直接双击运行</div>
+                    <p>你也可以直接下载本 HTML 文件保存为桌面快捷方式，所有 46 道内置题库与账号存档均可离线永久使用。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>

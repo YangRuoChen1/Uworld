@@ -385,6 +385,9 @@
       const [showQManager, setShowQManager] = useState(false);
       const [qmTab, setQmTab] = useState("json"); // json | manual | pdf | browse
       const [importJsonText, setImportJsonText] = useState("");
+      const [jsonImportStep, setJsonImportStep] = useState("Step 1");
+      const [jsonImportSystem, setJsonImportSystem] = useState(UWORLD_SYSTEMS[0].id);
+      const [jsonForceDeck, setJsonForceDeck] = useState(false);
       const [qmStepFilter, setQmStepFilter] = useState("ALL");
       const [qmSysFilter, setQmSysFilter] = useState("ALL");
 
@@ -660,6 +663,7 @@
       };
 
       const handleSaveManualQuestion = () => {
+        if (!isAdmin) { showToast("仅管理员账号可上传题库", "error"); return; }
         if (!manStem.trim() || !manOpts.A.trim() || !manOpts.B.trim()) {
           showToast("请至少填写题干与 A/B 选项", "error");
           return;
@@ -694,14 +698,16 @@
         showToast("原版题目已保存入库！", "success");
       };
 
-      const handleImportJson = () => {
+      const handleImportJson = (rawOverride = null) => {
+        if (!isAdmin) { showToast("仅管理员账号可上传题库", "error"); return; }
         try {
-          const parsed = JSON.parse(importJsonText.trim());
+          const raw = typeof rawOverride === "string" ? rawOverride : importJsonText;
+          const parsed = JSON.parse(raw.trim());
           const arr = Array.isArray(parsed) ? parsed : [parsed];
           const valid = arr.filter(q => q && q.stem && q.options && q.answer).map((q, idx) => ({
             id: q.id || `q-json-${Date.now()}-${idx}`,
-            step: STEPS.includes(q.step) ? q.step : qmStepFilter === "ALL" ? "Step 1" : qmStepFilter,
-            system: UWORLD_SYSTEMS.some(s => s.id === q.system) ? q.system : "General Principles",
+            step: (!jsonForceDeck && STEPS.includes(q.step)) ? q.step : jsonImportStep,
+            system: (!jsonForceDeck && UWORLD_SYSTEMS.some(s => s.id === q.system)) ? q.system : jsonImportSystem,
             difficulty: ["Easy", "Medium", "Hard"].includes(q.difficulty) ? q.difficulty : "Medium",
             stem: String(q.stem).trim(),
             vignetteImage: q.vignetteImage || undefined,
@@ -715,7 +721,7 @@
           if (valid.length === 0) { showToast("JSON 中没有有效题目", "error"); return; }
           setQuestions(prev => [...valid, ...prev]);
           setImportJsonText("");
-          showToast(`成功批量导入 ${valid.length} 道原版题目！`, "success");
+          showToast(`成功导入 ${valid.length} 题至 ${jsonImportStep} · ${jsonImportSystem}！`, "success");
           setQmTab("browse");
         } catch (e) {
           showToast("JSON 格式错误，请检查括号与引号", "error");
@@ -873,6 +879,36 @@
         }
       };
 
+      const pullGlobalQuestions = async () => {
+        if (!cloudCfg.url || !cloudCfg.anonKey) return;
+        setCloudBusy(true);
+        try {
+          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_questions_v2__&select=data`, {
+            headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey }
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const rows = await res.json();
+          const remoteQs = rows?.[0]?.data?.questions;
+          if (!Array.isArray(remoteQs) || remoteQs.length === 0) {
+            showToast("云端公共题库暂无题目", "info");
+          } else {
+            setQuestions(prev => {
+              const remoteMap = new Map(remoteQs.filter(q => q && q.id).map(q => [q.id, q]));
+              const prevIds = new Set(prev.map(q => q.id));
+              const updatedPrev = prev.map(q => remoteMap.has(q.id) ? remoteMap.get(q.id) : q);
+              const newItems = remoteQs.filter(q => q && q.id && !prevIds.has(q.id));
+              return [...newItems, ...updatedPrev];
+            });
+            showToast(`已同步云端最新题库（共 ${remoteQs.length} 题）`, "success");
+          }
+        } catch (err) {
+          showToast("同步失败，请检查网络", "error");
+        } finally {
+          setCloudBusy(false);
+        }
+      };
+
       const publishGlobalQuestions = async () => {
         if (!isAdmin) { showToast("仅管理员账号可发布公共题库", "error"); return; }
         if (!cloudCfg.url || !cloudCfg.anonKey) return;
@@ -899,6 +935,7 @@
       };
 
       const handlePdfAiImport = async () => {
+        if (!isAdmin) { showToast("仅管理员账号可上传题库", "error"); return; }
         if (!pdfFile || !aiCfg.apiKey.trim() || !window.pdfjsLib) {
           showToast("请先选择 PDF 并填写 API Key", "error");
           return;
@@ -1091,9 +1128,9 @@ Output ONLY valid JSON array.`;
                         <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">{dueMistakes.length} 到期</span>
                       )}
                     </button>
-                    <button onClick={() => setShowQManager(true)} className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold flex items-center gap-1.5 shadow">
+                    <button onClick={() => { if (!isAdmin) setQmTab("browse"); setShowQManager(true); }} className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold flex items-center gap-1.5 shadow">
                       <Icon name="database" className="w-4 h-4" />
-                      <span>导入与题库管理 ({questions.length})</span>
+                      <span>{isAdmin ? `导入与题库管理 (${questions.length})` : `题库浏览与同步 (${questions.length})`}</span>
                     </button>
                   </div>
                 </div>
@@ -1625,26 +1662,56 @@ Output ONLY valid JSON array.`;
                 </div>
 
                 <div className="px-5 pt-3 border-b border-slate-200 flex flex-wrap gap-4 text-sm font-semibold">
-                  <button onClick={() => setQmTab("json")} className={`pb-2.5 border-b-2 ${qmTab === "json" ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500"}`}>JSON 批量导入 (免 API Key)</button>
-                  <button onClick={() => setQmTab("manual")} className={`pb-2.5 border-b-2 ${qmTab === "manual" ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500"}`}>单题录入 (支持 Ctrl+V 贴图)</button>
-                  <button onClick={() => setQmTab("pdf")} className={`pb-2.5 border-b-2 ${qmTab === "pdf" ? "border-purple-600 text-purple-700" : "border-transparent text-slate-500"}`}>PDF + API 导入 (需 Key)</button>
-                  <button onClick={() => setQmTab("browse")} className={`pb-2.5 border-b-2 ${qmTab === "browse" ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500"}`}>题库浏览 ({questions.length})</button>
+                  {isAdmin && (
+                    <>
+                      <button onClick={() => setQmTab("json")} className={`pb-2.5 border-b-2 ${qmTab === "json" ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500"}`}>JSON 批量导入 (免 API Key)</button>
+                      <button onClick={() => setQmTab("manual")} className={`pb-2.5 border-b-2 ${qmTab === "manual" ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500"}`}>单题录入 (支持 Ctrl+V 贴图)</button>
+                      <button onClick={() => setQmTab("pdf")} className={`pb-2.5 border-b-2 ${qmTab === "pdf" ? "border-purple-600 text-purple-700" : "border-transparent text-slate-500"}`}>PDF + API 导入 (需 Key)</button>
+                    </>
+                  )}
+                  <button onClick={() => setQmTab("browse")} className={`pb-2.5 border-b-2 ${qmTab === "browse" ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500"}`}>题库浏览与同步 ({questions.length})</button>
                 </div>
 
                 <div className="p-5 overflow-y-auto flex-1 text-xs">
                   {qmTab === "json" && (
                     <div className="space-y-3">
-                      <p className="text-slate-600 leading-relaxed">
-                        <strong>零成本导入方式：</strong>把 PDF 发给任意对话式 AI（比如我），让其整理成含原文题干、原文解析、独立机制解析、EO 与图片 Base64 的 JSON 数组，直接粘贴到下方即可 1 秒批量入库！
-                      </p>
-                      <textarea rows={10} value={importJsonText} onChange={(e) => setImportJsonText(e.target.value)} className="w-full border border-slate-300 rounded-xl p-3 font-mono" placeholder='[{"step":"Step 1","system":"General Principles","stem":"...","options":{"A":"..."},"answer":"A","explanations":{"A":"..."},"generalExplanation":"...","educationalObjective":"..."}]' />
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                        <div className="font-bold text-slate-700">选择导入目标卡组（Step 板块 & 器官系统）：</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <select value={jsonImportStep} onChange={(e) => setJsonImportStep(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 bg-white font-semibold">
+                            {STEPS.map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                          <select value={jsonImportSystem} onChange={(e) => setJsonImportSystem(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 bg-white">
+                            {UWORLD_SYSTEMS.map(s => <option key={s.id} value={s.id}>{s.id} ({s.cn})</option>)}
+                          </select>
+                        </div>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <label className="flex items-center gap-1.5 text-slate-600 cursor-pointer">
+                            <input type="checkbox" checked={jsonForceDeck} onChange={(e) => setJsonForceDeck(e.target.checked)} className="accent-blue-700" />
+                            <span>强制全部归入上方选定卡组（忽略 JSON 原带分类）</span>
+                          </label>
+                          <label className="px-3 py-1.5 rounded-lg bg-white border border-blue-300 text-blue-700 font-bold cursor-pointer hover:bg-blue-50 flex items-center gap-1.5">
+                            <Icon name="upload" className="w-3.5 h-3.5" />
+                            <span>直接选择 .json 文件导入</span>
+                            <input type="file" accept=".json,application/json" className="hidden" onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (!f) return;
+                              const reader = new FileReader();
+                              reader.onload = (ev) => handleImportJson(String(ev.target?.result || ""));
+                              reader.readAsText(f);
+                              e.target.value = "";
+                            }} />
+                          </label>
+                        </div>
+                      </div>
+                      <textarea rows={9} value={importJsonText} onChange={(e) => setImportJsonText(e.target.value)} className="w-full border border-slate-300 rounded-xl p-3 font-mono" placeholder='或直接在此粘贴 JSON 数组: [{"step":"Step 1","system":"General Principles","stem":"...","options":{"A":"..."},"answer":"A","explanations":{"A":"..."},"generalExplanation":"...","educationalObjective":"..."}]' />
                       <div className="flex justify-between items-center">
-{isAdmin ? (
+                        {isAdmin ? (
                         <button disabled={cloudBusy} onClick={publishGlobalQuestions} className="px-3.5 py-2 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-700 font-bold flex items-center gap-1">
                           <Icon name="cloud" className="w-4 h-4" /> 发布至全端公共库（热更新）
                         </button>
                         ) : (<span className="text-slate-400">仅管理员账号可发布公共库</span>)}
-                        <button onClick={handleImportJson} className="px-5 py-2.5 rounded-xl bg-blue-700 text-white font-bold">批量导入 JSON</button>
+                        <button onClick={() => handleImportJson()} className="px-5 py-2.5 rounded-xl bg-blue-700 text-white font-bold">批量导入 JSON</button>
                       </div>
                     </div>
                   )}
@@ -1728,6 +1795,7 @@ Output ONLY valid JSON array.`;
                           <option value="ALL">全部 22 个系统</option>
                           {UWORLD_SYSTEMS.map(s => <option key={s.id} value={s.id}>{s.id}</option>)}
                         </select>
+                        <button disabled={cloudBusy} onClick={pullGlobalQuestions} className="px-3 py-1.5 rounded-lg bg-blue-700 text-white font-bold">{cloudBusy ? "同步中..." : "同步云端最新题库"}</button>
                         {isAdmin && <button disabled={cloudBusy} onClick={publishGlobalQuestions} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">发布至云端公共库</button>}
                       </div>
                       {questions.filter(q => (qmStepFilter === "ALL" || q.step === qmStepFilter) && (qmSysFilter === "ALL" || q.system === qmSysFilter)).map(q => (
@@ -1736,7 +1804,7 @@ Output ONLY valid JSON array.`;
                             <div className="font-bold text-blue-700">{q.step} · {q.system} · 答案 {q.answer} {q.vignetteImage ? "🖼️" : ""}</div>
                             <p className="text-slate-700 line-clamp-2 mt-0.5">{q.stem}</p>
                           </div>
-                          <button onClick={() => setQuestions(p => p.filter(item => item.id !== q.id))} className="text-slate-400 hover:text-rose-600"><Icon name="trash" className="w-4 h-4" /></button>
+                          {isAdmin && <button onClick={() => setQuestions(p => p.filter(item => item.id !== q.id))} className="text-slate-400 hover:text-rose-600"><Icon name="trash" className="w-4 h-4" /></button>}
                         </div>
                       ))}
                     </div>

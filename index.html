@@ -1548,47 +1548,118 @@
       const syncToSupabase = async (direction) => {
         if (!cloudCfg.url || !cloudCfg.anonKey || currentUser === "guest") return;
         setCloudBusy(true);
-        const totalItems = questions.length + ankiCards.length + medEngCards.length;
+        const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+        const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
+        const chunkArray = (arr, size) => {
+          const res = [];
+          for (let i = 0; i < arr.length; i += size) res.push(arr.slice(i, i + size));
+          return res;
+        };
+
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
           if (direction === "push") {
-            updateSyncProgress("个人全端学习档案 (上传)", Math.round(totalItems * 0.35), Math.max(1, totalItems), "正在打包题库、Anki、医学英语与打卡记录...");
-            const payload = { username: currentUser, data: { questions, mistakes, ankiCards, medEngCards, medEngMistakes, medEngRevLog, attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs, activeBlock: savedBlock, updatedAt: new Date().toISOString() } };
-            const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, { method: "POST", headers, body: JSON.stringify(payload) });
-            if (!res.ok) throw new Error("HTTP " + res.status);
-            finishSyncProgress("个人全端学习档案 (上传)", Math.max(1, totalItems));
-            showToast("全部题库、Anki、医学英语卡片与打卡日历已上传！", "success");
+            const qChunks = chunkArray(questions, 200);
+            const aChunks = chunkArray(ankiCards, 400);
+            const mChunks = chunkArray(medEngCards, 500);
+            const totalItems = Math.max(1, questions.length + ankiCards.length + medEngCards.length + 1);
+            let doneItems = 0;
+
+            const postChunk = async (key, dataObj, label, countAdded) => {
+              updateSyncProgress(label, doneItems, totalItems, `正在上传...`);
+              const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
+                method: "POST",
+                headers,
+                body: JSON.stringify({ username: key, data: dataObj })
+              });
+              if (!r.ok) {
+                const errTxt = await r.text().catch(() => "");
+                throw new Error(`${label} HTTP ${r.status} ${errTxt.slice(0, 60)}`);
+              }
+              doneItems += countAdded;
+              updateSyncProgress(label, Math.min(totalItems, doneItems), totalItems, "上传完成");
+            };
+
+            // 1. Core profile & logs + manifest of chunk counts
+            await postChunk(currentUser, {
+              mistakes, medEngMistakes, medEngRevLog,
+              attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs,
+              activeBlock: savedBlock,
+              chunkMeta: { qChunks: qChunks.length, aChunks: aChunks.length, mChunks: mChunks.length },
+              updatedAt: new Date().toISOString()
+            }, "核心档案与打卡记录", 1);
+
+            // 2. QBank chunks
+            for (let i = 0; i < qChunks.length; i++) {
+              await postChunk(`${currentUser}__q_${i}`, { items: qChunks[i] }, `UWorld 题库 (${i + 1}/${qChunks.length})`, qChunks[i].length);
+            }
+            // 3. Anki chunks
+            for (let i = 0; i < aChunks.length; i++) {
+              await postChunk(`${currentUser}__a_${i}`, { items: aChunks[i] }, `Anki 卡组 (${i + 1}/${aChunks.length})`, aChunks[i].length);
+            }
+            // 4. MedEng full chunks
+            for (let i = 0; i < mChunks.length; i++) {
+              await postChunk(`${currentUser}__m_${i}`, { items: mChunks[i] }, `医学英语全量卡库 (${i + 1}/${mChunks.length})`, mChunks[i].length);
+            }
+
+            finishSyncProgress("全端全量数据上传", totalItems);
+            showToast(`已全量同步：${questions.length} 题、${ankiCards.length} 张 Anki、${medEngCards.length} 张医学英语及全部打卡记录！`, "success");
           } else {
-            updateSyncProgress("个人全端学习档案 (拉取)", 1, 3, "正在从云端获取个人存档...");
+            updateSyncProgress("核心档案与打卡记录", 0, 4, "正在读取云端目录...");
             const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(currentUser)}&select=data`, { headers });
             if (!res.ok) throw new Error("HTTP " + res.status);
             const rows = await res.json();
-            updateSyncProgress("个人全端学习档案 (拉取)", 2, 3, "正在写入本地存储...");
-            if (rows?.[0]?.data) {
-              const d = rows[0].data;
-              if (Array.isArray(d.questions)) setQuestions(d.questions);
-              if (Array.isArray(d.mistakes)) setMistakes(d.mistakes);
-              if (Array.isArray(d.ankiCards)) setAnkiCards(d.ankiCards);
-              if (Array.isArray(d.medEngCards) && d.medEngCards.length > 0) setMedEngCards(d.medEngCards);
-              if (Array.isArray(d.medEngMistakes)) setMedEngMistakes(d.medEngMistakes);
-              if (Array.isArray(d.medEngRevLog)) setMedEngRevLog(d.medEngRevLog);
-              if (d.attemptedMap) setAttemptedMap(d.attemptedMap);
-              if (Array.isArray(d.markedIds)) setMarkedIds(d.markedIds);
-              if (d.notesMap) setNotesMap(d.notesMap);
-              if (d.highlightsMap) setHighlightsMap(d.highlightsMap);
-              if (d.dailyLogs) setDailyLogs(d.dailyLogs);
-              const pulledTotal = (d.questions?.length || 0) + (d.ankiCards?.length || 0) + (d.medEngCards?.length || 0);
-              finishSyncProgress("个人全端学习档案 (拉取)", Math.max(1, pulledTotal));
-              showToast("已从云端拉取全部数据！", "success");
-            } else {
+            const d = rows?.[0]?.data;
+            if (!d) {
               setSyncProgress(null);
               showToast("云端暂无该账号存档", "info");
+              return;
+            }
+
+            if (Array.isArray(d.mistakes)) setMistakes(d.mistakes);
+            if (Array.isArray(d.medEngMistakes)) setMedEngMistakes(d.medEngMistakes);
+            if (Array.isArray(d.medEngRevLog)) setMedEngRevLog(d.medEngRevLog);
+            if (d.attemptedMap) setAttemptedMap(d.attemptedMap);
+            if (Array.isArray(d.markedIds)) setMarkedIds(d.markedIds);
+            if (d.notesMap) setNotesMap(d.notesMap);
+            if (d.highlightsMap) setHighlightsMap(d.highlightsMap);
+            if (d.dailyLogs) setDailyLogs(d.dailyLogs);
+
+            const meta = d.chunkMeta;
+            if (meta) {
+              const totalChunks = 1 + (meta.qChunks || 0) + (meta.aChunks || 0) + (meta.mChunks || 0);
+              let doneChunks = 1;
+              const pullChunks = async (prefix, count, label) => {
+                let all = [];
+                for (let i = 0; i < count; i++) {
+                  updateSyncProgress(`${label} (${i + 1}/${count})`, doneChunks, totalChunks, "正在拉取分片...");
+                  const cr = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(currentUser + prefix + i)}&select=data`, { headers });
+                  if (!cr.ok) throw new Error(`${label} HTTP ${cr.status}`);
+                  const crows = await cr.json();
+                  if (Array.isArray(crows?.[0]?.data?.items)) all = all.concat(crows[0].data.items);
+                  doneChunks++;
+                }
+                return all;
+              };
+              const pulledQs = await pullChunks("__q_", meta.qChunks || 0, "UWorld 题库");
+              const pulledAnki = await pullChunks("__a_", meta.aChunks || 0, "Anki 卡组");
+              const pulledMe = await pullChunks("__m_", meta.mChunks || 0, "医学英语全量卡库");
+              if (meta.qChunks > 0 || Array.isArray(d.questions)) setQuestions(meta.qChunks > 0 ? pulledQs : (d.questions || []));
+              if (meta.aChunks > 0 || Array.isArray(d.ankiCards)) setAnkiCards(meta.aChunks > 0 ? pulledAnki : (d.ankiCards || []));
+              if (meta.mChunks > 0) setMedEngCards(pulledMe);
+              finishSyncProgress("全端全量数据拉取", totalChunks);
+              showToast(`已从云端全量拉取：${pulledQs.length} 题、${pulledAnki.length} 张 Anki、${pulledMe.length} 张医学英语！`, "success");
+            } else {
+              // Legacy single-record fallback
+              if (Array.isArray(d.questions)) setQuestions(d.questions);
+              if (Array.isArray(d.ankiCards)) setAnkiCards(d.ankiCards);
+              if (Array.isArray(d.medEngCards) && d.medEngCards.length > 0) setMedEngCards(d.medEngCards);
+              finishSyncProgress("个人存档拉取", 4);
+              showToast("已从云端拉取全部数据！", "success");
             }
           }
         } catch (err) {
           setSyncProgress(null);
-          showToast("云同步失败", "error");
+          showToast("云同步失败：" + (err?.message || "网络超时或请求异常"), "error");
         } finally {
           setCloudBusy(false);
         }

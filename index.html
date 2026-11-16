@@ -785,7 +785,11 @@
 
       // UI Navigation
       const [view, setView] = useState("DASHBOARD"); // DASHBOARD | TEST | ANKI_STUDY | SUMMARY
-      const [dashMainMode, setDashMainMode] = useState("qbank"); // qbank | anki (equal prominence!)
+      const [dashMainMode, setDashMainMode] = useState("qbank"); // qbank | anki | medeng
+      const [qbankSubMode, setQbankSubMode] = useState("create"); // create | overview
+      const [qbankOverviewClearMode, setQbankOverviewClearMode] = useState(false);
+      const [previewAnkiCard, setPreviewAnkiCard] = useState(null);
+      const [previewAnkiRevealed, setPreviewAnkiRevealed] = useState(false);
       const [toast, setToast] = useState(null);
 
       // Auth states (with Remember Password & Auto Login)
@@ -1032,67 +1036,50 @@
         })();
       }, []);
 
-      // Auto-pull global questions, Anki & MedEng on startup with progress bar
+      // Auto-pull global questions, Anki & MedEng on startup with progress bar (supports chunked global libs)
       useEffect(() => {
         if (!cloudCfg.url || !cloudCfg.anonKey) return;
-        const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-        const hdrs = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey };
         (async () => {
           const totalModules = 3;
-          let doneModules = 0;
-          updateSyncProgress("UWorld 公共题库", 0, totalModules, "正在连接云端...");
+          updateSyncProgress("UWorld 公共题库", 0, totalModules, "正在检查云端题库...");
           try {
-            const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_questions_v3__&select=data`, { headers: hdrs });
-            if (res.ok) {
-              const rows = await res.json();
-              const remoteQs = rows?.[0]?.data?.questions;
-              if (Array.isArray(remoteQs) && remoteQs.length > 0) {
-                setQuestions(prev => {
-                  const remoteMap = new Map(remoteQs.filter(q => q && q.id).map(q => [q.id, q]));
-                  const prevIds = new Set(prev.map(q => q.id));
-                  const addedCount = remoteQs.filter(q => q && q.id && !prevIds.has(q.id)).length;
-                  const updatedPrev = prev.map(q => remoteMap.has(q.id) ? remoteMap.get(q.id) : q);
-                  const newItems = remoteQs.filter(q => q && q.id && !prevIds.has(q.id));
-                  if (addedCount > 0) showToast(`已从云端公共库同步 +${addedCount} 道新题！`, "success");
-                  return [...newItems, ...updatedPrev];
-                });
-              }
+            const remoteQs = await pullGlobalChunked("__global_questions_v3__", "questions", "UWorld 公共题库", false);
+            if (Array.isArray(remoteQs) && remoteQs.length > 0) {
+              setQuestions(prev => {
+                const remoteMap = new Map(remoteQs.filter(q => q && q.id).map(q => [q.id, q]));
+                const prevIds = new Set(prev.map(q => q.id));
+                const addedCount = remoteQs.filter(q => q && q.id && !prevIds.has(q.id)).length;
+                const updatedPrev = prev.map(q => remoteMap.has(q.id) ? remoteMap.get(q.id) : q);
+                const newItems = remoteQs.filter(q => q && q.id && !prevIds.has(q.id));
+                if (addedCount > 0) showToast(`已从云端公共库同步 +${addedCount} 道新题！`, "success");
+                return [...newItems, ...updatedPrev];
+              });
             }
           } catch (e) {}
-          doneModules = 1;
-          updateSyncProgress("Anki 公共卡组", doneModules, totalModules, "正在检查 Anki 更新...");
+          updateSyncProgress("Anki 公共卡组", 1, totalModules, "正在检查 Anki 更新...");
           try {
-            const aRes = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_anki_v1__&select=data`, { headers: hdrs });
-            if (aRes.ok) {
-              const aRows = await aRes.json();
-              const remoteAnki = aRows?.[0]?.data?.ankiCards;
-              if (Array.isArray(remoteAnki) && remoteAnki.length > 0) {
-                setAnkiCards(prev => {
-                  const prevMap = new Map(prev.map(c => [c.id, c]));
-                  const merged = remoteAnki.map(rc => prevMap.has(rc.id) ? { ...rc, fsrs: prevMap.get(rc.id).fsrs } : rc);
-                  const remoteIds = new Set(remoteAnki.map(c => c.id));
-                  const localOnly = prev.filter(c => !remoteIds.has(c.id));
-                  return [...merged, ...localOnly];
-                });
-              }
+            const remoteAnki = await pullGlobalChunked("__global_anki_v1__", "ankiCards", "Anki 公共卡组", false);
+            if (Array.isArray(remoteAnki) && remoteAnki.length > 0) {
+              setAnkiCards(prev => {
+                const prevMap = new Map(prev.map(c => [c.id, c]));
+                const merged = remoteAnki.map(rc => prevMap.has(rc.id) ? { ...rc, fsrs: prevMap.get(rc.id).fsrs } : rc);
+                const remoteIds = new Set(remoteAnki.map(c => c.id));
+                const localOnly = prev.filter(c => !remoteIds.has(c.id));
+                return [...merged, ...localOnly];
+              });
             }
           } catch (e) {}
-          doneModules = 2;
-          updateSyncProgress("医学英语公共词库", doneModules, totalModules, "正在同步 Exploring Medical Language...");
+          updateSyncProgress("医学英语公共词库", 2, totalModules, "正在检查医学英语词库...");
           try {
-            const mRes = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_medeng_v1__&select=data`, { headers: hdrs });
-            if (mRes.ok) {
-              const mRows = await mRes.json();
-              const remoteMe = mRows?.[0]?.data?.medEngCards;
-              if (Array.isArray(remoteMe) && remoteMe.length > 0) {
-                setMedEngCards(prev => {
-                  const prevMap = new Map(prev.map(c => [c.id, c]));
-                  const merged = remoteMe.map(rc => prevMap.has(rc.id) ? { ...rc, fsrs: prevMap.get(rc.id).fsrs } : rc);
-                  const remoteIds = new Set(remoteMe.map(c => c.id));
-                  const localOnly = prev.filter(c => !remoteIds.has(c.id));
-                  return [...merged, ...localOnly];
-                });
-              }
+            const remoteMe = await pullGlobalChunked("__global_medeng_v1__", "medEngCards", "医学英语公共词库", false);
+            if (Array.isArray(remoteMe) && remoteMe.length > 0) {
+              setMedEngCards(prev => {
+                const prevMap = new Map(prev.map(c => [c.id, c]));
+                const merged = remoteMe.map(rc => prevMap.has(rc.id) ? { ...rc, fsrs: prevMap.get(rc.id).fsrs } : rc);
+                const remoteIds = new Set(remoteMe.map(c => c.id));
+                const localOnly = prev.filter(c => !remoteIds.has(c.id));
+                return [...merged, ...localOnly];
+              });
             }
           } catch (e) {}
           finishSyncProgress("全端公共库同步", totalModules);
@@ -1220,6 +1207,54 @@
           sectionTitle: `${activeStep} · ${testMode} · ${qFilterMode}`,
           qIds: picked.map(q => q.id),
           currentIndex: 0,
+          answers: {},
+          submitted: {},
+          struck: {},
+          elapsedSec: 0,
+          startedAt: new Date().toLocaleString("zh-CN", { hour12: false })
+        };
+        setActiveBlock(block);
+        setExpandedExpOpt(null);
+        setView("TEST");
+      };
+
+
+      const resetSingleQuestionStatus = (qid) => {
+        setAttemptedMap(prev => { const n = { ...prev }; delete n[qid]; return n; });
+        setMistakes(prev => prev.filter(m => m.id !== qid));
+        if (activeBlock && activeBlock.qIds.includes(qid)) {
+          setActiveBlock(prev => {
+            if (!prev) return prev;
+            const newSub = { ...prev.submitted }; delete newSub[qid];
+            const newAns = { ...prev.answers }; delete newAns[qid];
+            return { ...prev, submitted: newSub, answers: newAns };
+          });
+        }
+        showToast("已重置该题为未写状态", "info");
+      };
+
+      const resetSystemQuestionsStatus = (sysId) => {
+        const targetIds = new Set(questions.filter(q => (q.step || "Step 1") === activeStep && q.system === sysId).map(q => q.id));
+        if (targetIds.size === 0) return;
+        if (!confirm(`确定要重置「${sysId}」全部 ${targetIds.size} 道题的作答状态（恢复为未写）吗？`)) return;
+        setAttemptedMap(prev => {
+          const n = { ...prev };
+          targetIds.forEach(id => delete n[id]);
+          return n;
+        });
+        setMistakes(prev => prev.filter(m => !targetIds.has(m.id)));
+        showToast(`已重置「${sysId}」全部 ${targetIds.size} 道题状态！`, "success");
+      };
+
+      const startOverviewFromQuestion = (sysQuestions, startIdx, titleLabel) => {
+        if (!sysQuestions || sysQuestions.length === 0) return;
+        const block = {
+          id: `blk-ov-${Date.now()}`,
+          step: activeStep,
+          mode: "Tutor",
+          sectionTitle: `${activeStep} · 总览直选 · ${titleLabel}`,
+          qIds: sysQuestions.map(q => q.id),
+          currentIndex: Math.max(0, Math.min(startIdx, sysQuestions.length - 1)),
           answers: {},
           submitted: {},
           struck: {},
@@ -1550,17 +1585,31 @@
         setCloudBusy(true);
         const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
         const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
-        const chunkArray = (arr, size) => {
+        const chunkByBytes = (arr, maxBytes = 320000, maxCount = 400) => {
           const res = [];
-          for (let i = 0; i < arr.length; i += size) res.push(arr.slice(i, i + size));
+          let cur = [];
+          let curBytes = 0;
+          for (let i = 0; i < arr.length; i++) {
+            const item = arr[i];
+            const sz = JSON.stringify(item).length;
+            if (cur.length > 0 && (curBytes + sz > maxBytes || cur.length >= maxCount)) {
+              res.push(cur);
+              cur = [item];
+              curBytes = sz;
+            } else {
+              cur.push(item);
+              curBytes += sz;
+            }
+          }
+          if (cur.length > 0) res.push(cur);
           return res;
         };
 
         try {
           if (direction === "push") {
-            const qChunks = chunkArray(questions, 200);
-            const aChunks = chunkArray(ankiCards, 400);
-            const mChunks = chunkArray(medEngCards, 500);
+            const qChunks = chunkByBytes(questions, 300000, 60);
+            const aChunks = chunkByBytes(ankiCards, 300000, 200);
+            const mChunks = chunkByBytes(medEngCards, 300000, 500);
             const totalItems = Math.max(1, questions.length + ankiCards.length + medEngCards.length + 1);
             let doneItems = 0;
 
@@ -1665,33 +1714,94 @@
         }
       };
 
+      const chunkItemsByBytes = (arr, maxBytes = 300000, maxCount = 300) => {
+        const res = [];
+        let cur = [];
+        let curBytes = 0;
+        for (let i = 0; i < arr.length; i++) {
+          const item = arr[i];
+          const sz = JSON.stringify(item).length;
+          if (cur.length > 0 && (curBytes + sz > maxBytes || cur.length >= maxCount)) {
+            res.push(cur);
+            cur = [item];
+            curBytes = sz;
+          } else {
+            cur.push(item);
+            curBytes += sz;
+          }
+        }
+        if (cur.length > 0) res.push(cur);
+        return res;
+      };
+
+      const publishGlobalChunked = async (rootKey, items, label, maxCount = 200) => {
+        const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+        const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
+        const chunks = chunkItemsByBytes(items, 300000, maxCount);
+        const totalSteps = chunks.length + 1;
+        for (let i = 0; i < chunks.length; i++) {
+          updateSyncProgress(`${label} (${i + 1}/${chunks.length})`, i, totalSteps, "正在分片上传至公共库...");
+          const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ username: `${rootKey}__c_${i}`, data: { items: chunks[i] } })
+          });
+          if (!r.ok) {
+            const errTxt = await r.text().catch(() => "");
+            throw new Error(`分片 ${i + 1} HTTP ${r.status} ${errTxt.slice(0, 60)}`);
+          }
+        }
+        updateSyncProgress(label, chunks.length, totalSteps, "正在写入公共库索引...");
+        const metaRes = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ username: rootKey, data: { chunkCount: chunks.length, total: items.length, updatedAt: new Date().toISOString() } })
+        });
+        if (!metaRes.ok) {
+          const errTxt = await metaRes.text().catch(() => "");
+          throw new Error(`索引 HTTP ${metaRes.status} ${errTxt.slice(0, 60)}`);
+        }
+        finishSyncProgress(label, totalSteps);
+      };
+
+      const pullGlobalChunked = async (rootKey, legacyField, label, showBar = true) => {
+        const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+        const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey };
+        const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(rootKey)}&select=data`, { headers });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const rows = await res.json();
+        const d = rows?.[0]?.data;
+        if (!d) return [];
+        if (d.chunkCount > 0) {
+          let all = [];
+          for (let i = 0; i < d.chunkCount; i++) {
+            if (showBar) updateSyncProgress(`${label} (${i + 1}/${d.chunkCount})`, i, d.chunkCount, "正在拉取公共库分片...");
+            const cr = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(rootKey + "__c_" + i)}&select=data`, { headers });
+            if (!cr.ok) throw new Error(`分片 ${i + 1} HTTP ${cr.status}`);
+            const crows = await cr.json();
+            if (Array.isArray(crows?.[0]?.data?.items)) all = all.concat(crows[0].data.items);
+          }
+          if (showBar) finishSyncProgress(label, d.chunkCount);
+          return all;
+        }
+        return Array.isArray(d[legacyField]) ? d[legacyField] : [];
+      };
+
       const publishGlobalMedEng = async () => {
         if (!isAdmin) return;
         setCloudBusy(true);
-        updateSyncProgress("医学英语公共词库 (发布)", Math.round(medEngCards.length * 0.3), medEngCards.length, "正在上传全端公共医学英语卡组...");
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
-            method: "POST",
-            headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" },
-            body: JSON.stringify({ username: "__global_medeng_v1__", data: { medEngCards, updatedAt: new Date().toISOString() } })
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          finishSyncProgress("医学英语公共词库 (发布)", medEngCards.length);
+          await publishGlobalChunked("__global_medeng_v1__", medEngCards, "医学英语公共词库 (发布)", 400);
           showToast(`已发布全部 ${medEngCards.length} 张医学英语卡片至全端公共库！`, "success");
-        } catch (e) { setSyncProgress(null); showToast("发布失败", "error"); }
+        } catch (e) { setSyncProgress(null); showToast("发布失败：" + (e?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
       const pullGlobalMedEng = async () => {
         setCloudBusy(true);
-        updateSyncProgress("医学英语公共词库 (同步)", 1, 2, "正在拉取云端医学英语词库...");
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_medeng_v1__&select=data`, { headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey } });
-          const rows = await res.json();
-          const remoteMe = rows?.[0]?.data?.medEngCards;
-          if (!Array.isArray(remoteMe) || remoteMe.length === 0) {
+          const remoteMe = await pullGlobalChunked("__global_medeng_v1__", "medEngCards", "医学英语公共词库 (同步)", true);
+          if (!remoteMe || remoteMe.length === 0) {
             setSyncProgress(null);
             showToast("云端公共医学英语库暂无额外更新", "info");
           } else {
@@ -1702,10 +1812,9 @@
               const localOnly = prev.filter(c => !remoteIds.has(c.id));
               return [...merged, ...localOnly];
             });
-            finishSyncProgress("医学英语公共词库 (同步)", remoteMe.length);
             showToast(`已同步云端医学英语词库（共 ${remoteMe.length} 张）`, "success");
           }
-        } catch (e) { setSyncProgress(null); showToast("同步失败", "error"); }
+        } catch (e) { setSyncProgress(null); showToast("同步失败：" + (e?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
@@ -1713,15 +1822,9 @@
         if (!isAdmin) return;
         setCloudBusy(true);
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
-            method: "POST",
-            headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" },
-            body: JSON.stringify({ username: "__global_questions_v3__", data: { questions, updatedAt: new Date().toISOString() } })
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
+          await publishGlobalChunked("__global_questions_v3__", questions, "UWorld 公共题库 (发布)", 60);
           showToast(`已发布全部 ${questions.length} 题至全端公共库！`, "success");
-        } catch (err) { showToast("发布失败", "error"); }
+        } catch (err) { setSyncProgress(null); showToast("发布失败：" + (err?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
@@ -1729,26 +1832,17 @@
         if (!isAdmin) return;
         setCloudBusy(true);
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
-            method: "POST",
-            headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" },
-            body: JSON.stringify({ username: "__global_anki_v1__", data: { ankiCards, updatedAt: new Date().toISOString() } })
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
+          await publishGlobalChunked("__global_anki_v1__", ankiCards, "Anki 公共卡组 (发布)", 200);
           showToast(`已发布全部 ${ankiCards.length} 张 Anki 卡片至全端公共库！`, "success");
-        } catch (e) { showToast("发布失败", "error"); }
+        } catch (e) { setSyncProgress(null); showToast("发布失败：" + (e?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
       const pullGlobalAnki = async () => {
         setCloudBusy(true);
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_anki_v1__&select=data`, { headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey } });
-          const rows = await res.json();
-          const remoteAnki = rows?.[0]?.data?.ankiCards;
-          if (!Array.isArray(remoteAnki)) showToast("云端公共 Anki 库暂无卡片", "info");
+          const remoteAnki = await pullGlobalChunked("__global_anki_v1__", "ankiCards", "Anki 公共卡组 (同步)", true);
+          if (!remoteAnki || remoteAnki.length === 0) showToast("云端公共 Anki 库暂无卡片", "info");
           else {
             setAnkiCards(prev => {
               const prevMap = new Map(prev.map(c => [c.id, c]));
@@ -1756,18 +1850,15 @@
             });
             showToast(`已同步云端最新 Anki 卡组（共 ${remoteAnki.length} 张）`, "success");
           }
-        } catch (e) { showToast("同步失败", "error"); }
+        } catch (e) { setSyncProgress(null); showToast("同步失败：" + (e?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
       const pullGlobalQuestions = async () => {
         setCloudBusy(true);
         try {
-          const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
-          const res = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.__global_questions_v3__&select=data`, { headers: { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey } });
-          const rows = await res.json();
-          const remoteQs = rows?.[0]?.data?.questions;
-          if (!Array.isArray(remoteQs) || remoteQs.length === 0) showToast("云端公共题库暂无题目", "info");
+          const remoteQs = await pullGlobalChunked("__global_questions_v3__", "questions", "UWorld 公共题库 (同步)", true);
+          if (!remoteQs || remoteQs.length === 0) showToast("云端公共题库暂无题目", "info");
           else {
             setQuestions(prev => {
               const remoteMap = new Map(remoteQs.filter(q => q && q.id).map(q => [q.id, q]));
@@ -1778,7 +1869,7 @@
             });
             showToast(`已同步云端最新题库（共 ${remoteQs.length} 题）`, "success");
           }
-        } catch (err) { showToast("同步失败", "error"); }
+        } catch (err) { setSyncProgress(null); showToast("同步失败：" + (err?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
 
@@ -2050,12 +2141,18 @@
                     {dashMainMode === "qbank" && (
                       <div className="space-y-5">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm">
-                            {STEPS.map(st => (
-                              <button key={st} onClick={() => setActiveStep(st)} className={`px-5 py-2 rounded-lg text-sm font-bold ${activeStep === st ? "bg-blue-700 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>
-                                {st} ({questions.filter(q => (q.step || "Step 1") === st).length} 题)
-                              </button>
-                            ))}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm">
+                              {STEPS.map(st => (
+                                <button key={st} onClick={() => setActiveStep(st)} className={`px-4 py-2 rounded-lg text-sm font-bold ${activeStep === st ? "bg-blue-700 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>
+                                  {st} ({questions.filter(q => (q.step || "Step 1") === st).length} 题)
+                                </button>
+                              ))}
+                            </div>
+                            <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm text-xs font-bold">
+                              <button onClick={() => setQbankSubMode("create")} className={`px-3.5 py-2 rounded-lg ${qbankSubMode === "create" ? "bg-slate-900 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>🎲 自由组卷</button>
+                              <button onClick={() => setQbankSubMode("overview")} className={`px-3.5 py-2 rounded-lg ${qbankSubMode === "overview" ? "bg-emerald-600 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>🗺️ 题库总览 (选号直刷)</button>
+                            </div>
                           </div>
                           <div className="flex flex-wrap gap-2">
                             <button onClick={() => { setMistakeTab("fsrs"); setFsrsRevealed(false); setShowMistakeModal(true); }} className="px-3.5 py-2 rounded-xl bg-white border border-rose-300 text-rose-700 text-xs font-bold hover:bg-rose-50">
@@ -2077,6 +2174,7 @@
                           </div>
                         )}
 
+                        {qbankSubMode === "create" ? (
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
                           <div className="flex justify-between items-center border-b pb-3">
                             <h2 className="text-base sm:text-lg font-bold">{activeStep} · Create Test 自由组卷 ({getSystemsForStep(activeStep).length} 个专属科目)</h2>
@@ -2134,6 +2232,82 @@
                             </button>
                           </div>
                         </div>
+                        ) : (
+                        <div className="space-y-4">
+                          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+                            <div className="flex flex-wrap items-center gap-3">
+                              <span className="font-bold text-sm text-slate-800">{activeStep} · 题库总览（点击题号直接进入）</span>
+                              <span className="flex items-center gap-1"><span className="w-3.5 h-3.5 rounded bg-white border border-slate-300 inline-block" /> 未写</span>
+                              <span className="flex items-center gap-1"><span className="w-3.5 h-3.5 rounded bg-emerald-500 inline-block" /> 写对</span>
+                              <span className="flex items-center gap-1"><span className="w-3.5 h-3.5 rounded bg-rose-500 inline-block" /> 写错</span>
+                            </div>
+                            <button
+                              onClick={() => setQbankOverviewClearMode(v => !v)}
+                              className={`px-3.5 py-2 rounded-xl font-bold border transition ${qbankOverviewClearMode ? "bg-amber-500 text-white border-amber-600 shadow" : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"}`}
+                            >
+                              {qbankOverviewClearMode ? "🧹 单题清除状态中（点击已做题号恢复未写）" : "🧹 单题刷新状态"}
+                            </button>
+                          </div>
+
+                          {getSystemsForStep(activeStep).map(sys => {
+                            const sysQs = stepQuestions.filter(q => q.system === sys.id);
+                            if (sysQs.length === 0) return null;
+                            const doneCnt = sysQs.filter(q => attemptedMap[q.id]).length;
+                            const rightCnt = sysQs.filter(q => attemptedMap[q.id]?.lastCorrect).length;
+                            const acc = doneCnt > 0 ? Math.round((rightCnt / doneCnt) * 100) : 0;
+                            return (
+                              <div key={sys.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-3">
+                                <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-2.5">
+                                  <div>
+                                    <div className="font-bold text-sm text-slate-900">{sys.id} <span className="text-xs font-normal text-slate-400">({sys.cn})</span></div>
+                                    <div className="text-[11px] text-slate-500 mt-0.5">
+                                      已做 <strong>{doneCnt}</strong> / {sysQs.length} 题 · 正确率 <strong className="text-emerald-600">{acc}%</strong>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => resetSystemQuestionsStatus(sys.id)}
+                                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-700 border border-slate-200 text-xs font-bold text-slate-600"
+                                  >
+                                    🔄 重置本系统 ({sysQs.length}题)
+                                  </button>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {sysQs.map((q, idx) => {
+                                    const att = attemptedMap[q.id];
+                                    const cls = !att
+                                      ? "bg-white border-slate-300 text-slate-700 hover:border-blue-500 hover:bg-blue-50"
+                                      : att.lastCorrect
+                                        ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                                        : "bg-rose-500 border-rose-600 text-white hover:bg-rose-600";
+                                    return (
+                                      <button
+                                        key={q.id}
+                                        title={`第${idx + 1}题：${(q.stem || "").slice(0, 60)}...`}
+                                        onClick={() => {
+                                          if (qbankOverviewClearMode) {
+                                            if (att) resetSingleQuestionStatus(q.id);
+                                          } else {
+                                            startOverviewFromQuestion(sysQs, idx, sys.id);
+                                          }
+                                        }}
+                                        className={`w-10 h-10 rounded-xl border-2 text-xs font-extrabold flex items-center justify-center transition ${cls} ${qbankOverviewClearMode && att ? "ring-2 ring-amber-400 cursor-crosshair" : ""}`}
+                                      >
+                                        {idx + 1}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          })}
+
+                          {stepQuestions.length === 0 && (
+                            <div className="bg-white rounded-2xl border p-10 text-center text-sm text-slate-400">
+                              {activeStep} 暂无题目，请先在右上角「题库管理」导入题目。
+                            </div>
+                          )}
+                        </div>
+                        )}
                       </div>
                     )}
 
@@ -2149,6 +2323,14 @@
                             ))}
                           </div>
                           <div className="flex flex-wrap gap-2">
+                            <button onClick={() => {
+                              const pool = ankiStepCards.filter(c => ankiSelectedSystems.includes(c.system));
+                              if (pool.length === 0) { showToast("当前所选系统暂无卡片可预览", "info"); return; }
+                              setAnkiStepFilter(ankiStep); setAnkiSysFilter("ALL");
+                              setPreviewAnkiCard(pool[0]); setPreviewAnkiRevealed(false);
+                            }} className="px-3.5 py-2 rounded-xl bg-white border border-indigo-300 text-indigo-700 text-xs font-bold hover:bg-indigo-50">
+                              👁️ 预览所选卡片
+                            </button>
                             <button onClick={() => setShowAnkiStatsModal(true)} className="px-3.5 py-2 rounded-xl bg-white border border-emerald-400 text-emerald-700 text-xs font-bold hover:bg-emerald-50">
                               📊 Anki 统计
                             </button>
@@ -2355,6 +2537,9 @@
                           <div>Item {activeBlock.currentIndex + 1} of {activeBlock.qIds.length}</div>
                           <div className="text-[10px] text-blue-200 font-mono">{currentQuestion.step} · {formatTime(qSpent)}</div>
                         </div>
+                        <button onClick={() => resetSingleQuestionStatus(qid)} title="清除本题作答记录，恢复为未写状态" className="px-2.5 py-1 rounded border text-xs font-semibold bg-blue-800/70 hover:bg-blue-700 border-blue-500">
+                          🔄 重置本题
+                        </button>
                         <button onClick={() => setMarkedIds(p => p.includes(qid) ? p.filter(i => i !== qid) : [...p, qid])} className={`px-2.5 py-1 rounded border text-xs font-semibold flex items-center gap-1 ${isMarked ? "bg-rose-600 border-rose-400" : "bg-blue-800/70 border-blue-500"}`}>
                           <Icon name="flag" className="w-3.5 h-3.5" /> <span>{isMarked ? "Marked" : "Mark"}</span>
                         </button>
@@ -2849,7 +3034,10 @@
                                     <div className="text-slate-700 line-clamp-2 mt-0.5">{c.type === "io" ? `遮挡框 ${c.masks?.length || 0} 个` : (c.text || "").replace(/<[^>]+>/g, " ")}</div>
                                   </div>
                                 </div>
-                                {isAdmin && <button onClick={() => setAnkiCards(p => p.filter(item => item.id !== c.id))} className="text-slate-400 hover:text-rose-600 shrink-0"><Icon name="trash" className="w-4 h-4" /></button>}
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <button onClick={() => { setPreviewAnkiCard(c); setPreviewAnkiRevealed(false); }} className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold">👁️ 预览</button>
+                                  {isAdmin && <button onClick={() => setAnkiCards(p => p.filter(item => item.id !== c.id))} className="text-slate-400 hover:text-rose-600 p-1"><Icon name="trash" className="w-4 h-4" /></button>}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -3479,6 +3667,90 @@
                   </div>
                 </div>
               )}
+
+
+              {/* MODAL: ANKI CARD PREVIEW (FRONT / REVEALED) */}
+              {previewAnkiCard && (() => {
+                const browseFiltered = ankiCards.filter(c => (ankiStepFilter === "ALL" || c.step === ankiStepFilter) && (ankiSysFilter === "ALL" || c.system === ankiSysFilter));
+                const curIdx = browseFiltered.findIndex(c => c.id === previewAnkiCard.id);
+                return (
+                  <div className="fixed inset-0 z-[60] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+                      <div className="px-5 py-4 bg-indigo-900 text-white flex justify-between items-center">
+                        <div className="text-sm font-bold">
+                          👁️ Anki 卡片效果预览 · <span className="text-indigo-200">{previewAnkiCard.step} · {previewAnkiCard.system}</span>
+                        </div>
+                        <button onClick={() => setPreviewAnkiCard(null)}><Icon name="x" className="w-5 h-5" /></button>
+                      </div>
+
+                      <div className="px-5 py-2.5 bg-slate-50 border-b flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-500">当前预览状态：</span>
+                          <button onClick={() => setPreviewAnkiRevealed(false)} className={`px-3 py-1 rounded-lg font-bold ${!previewAnkiRevealed ? "bg-indigo-700 text-white shadow" : "bg-white border text-slate-600"}`}>正面（未激活/挖空态）</button>
+                          <button onClick={() => setPreviewAnkiRevealed(true)} className={`px-3 py-1 rounded-lg font-bold ${previewAnkiRevealed ? "bg-emerald-600 text-white shadow" : "bg-white border text-slate-600"}`}>激活后（显示答案 + 解析）</button>
+                        </div>
+                        <span className="text-slate-400">{curIdx >= 0 ? `第 ${curIdx + 1} / ${browseFiltered.length} 张` : ""}</span>
+                      </div>
+
+                      <div className="p-6 overflow-y-auto flex-1 space-y-5">
+                        {previewAnkiCard.type === "io" ? (
+                          <div className="flex flex-col items-center space-y-2">
+                            <div className="relative inline-block">
+                              <img src={previewAnkiCard.image} alt="IO" className="max-h-[55vh] rounded-lg border" />
+                              {(previewAnkiCard.masks || []).map((m, i) => {
+                                const targetC = previewAnkiCard.activeCNum || 1;
+                                const isTarget = m.cNum ? m.cNum === targetC : true;
+                                if (previewAnkiRevealed && isTarget) return null;
+                                return (
+                                  <div
+                                    key={i}
+                                    style={{ left: `${m.x}%`, top: `${m.y}%`, width: `${m.w}%`, height: `${m.h}%` }}
+                                    className={`absolute border ${isTarget ? "bg-rose-400/95 border-rose-700" : "bg-amber-200/95 border-amber-700"}`}
+                                  />
+                                );
+                              })}
+                            </div>
+                            {previewAnkiCard.activeCNum && (
+                              <div className="text-[11px] text-slate-400">红色遮挡为当前考察项 (#c{previewAnkiCard.activeCNum})</div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="p-5 rounded-2xl bg-slate-50 border text-base sm:text-lg leading-relaxed font-serif-clinical">
+                            {renderClozeText(previewAnkiCard.text, previewAnkiRevealed)}
+                          </div>
+                        )}
+
+                        {previewAnkiRevealed && previewAnkiCard.extra && (
+                          <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 text-sm anki-html" dangerouslySetInnerHTML={{ __html: previewAnkiCard.extra }} />
+                        )}
+                      </div>
+
+                      <div className="px-5 py-3 border-t bg-slate-50 flex items-center justify-between text-xs">
+                        <button
+                          disabled={curIdx <= 0}
+                          onClick={() => { setPreviewAnkiCard(browseFiltered[curIdx - 1]); setPreviewAnkiRevealed(false); }}
+                          className="px-4 py-2 rounded-lg bg-white border font-bold disabled:opacity-40"
+                        >
+                          ← 上一张
+                        </button>
+                        <button
+                          onClick={() => setPreviewAnkiRevealed(v => !v)}
+                          className="px-5 py-2 rounded-lg bg-indigo-700 text-white font-bold"
+                        >
+                          {previewAnkiRevealed ? "切回正面" : "点击激活答案"}
+                        </button>
+                        <button
+                          disabled={curIdx < 0 || curIdx >= browseFiltered.length - 1}
+                          onClick={() => { setPreviewAnkiCard(browseFiltered[curIdx + 1]); setPreviewAnkiRevealed(false); }}
+                          className="px-4 py-2 rounded-lg bg-white border font-bold disabled:opacity-40"
+                        >
+                          下一张 →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {showAuthModal && (
                 <div className="fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">

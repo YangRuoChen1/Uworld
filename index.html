@@ -1036,6 +1036,7 @@
       const [ankiNewLimit, setAnkiNewLimit] = useState(20);
       const [ankiRevLimit, setAnkiRevLimit] = useState(100);
       const [ankiQueue, setAnkiQueue] = useState([]);
+      const [ankiHistory, setAnkiHistory] = useState([]);
       const [ankiRevealed, setAnkiRevealed] = useState(false);
       const [showAnkiMgrModal, setShowAnkiMgrModal] = useState(false);
       const [ankiMgrTab, setAnkiMgrTab] = useState("addCloze"); // addCloze | addIO | apkg | browse
@@ -1069,6 +1070,7 @@
       const [medEngNewLimit, setMedEngNewLimit] = useState(30);
       const [medEngRevLimit, setMedEngRevLimit] = useState(120);
       const [medEngQueue, setMedEngQueue] = useState([]);
+      const [medEngHistory, setMedEngHistory] = useState([]);
       const [medEngIdx, setMedEngIdx] = useState(0);
       const [medEngRevealed, setMedEngRevealed] = useState(false);
       const [showMedEngManager, setShowMedEngManager] = useState(false);
@@ -1290,6 +1292,7 @@
           return;
         }
         setAnkiQueue(queue.map(c => c.id));
+        setAnkiHistory([]);
         setAnkiRevealed(false);
         setView("ANKI_STUDY");
       };
@@ -1302,6 +1305,7 @@
         }
         const sorted = [...filtered].sort((a, b) => (a.fsrs?.due || 0) - (b.fsrs?.due || 0)).slice(0, Math.max(20, ankiRevLimit));
         setAnkiQueue(sorted.map(c => c.id));
+        setAnkiHistory([]);
         setAnkiRevealed(false);
         setView("ANKI_STUDY");
         showToast(`已开启提前复习模式（共 ${sorted.length} 张）`, "info");
@@ -1312,9 +1316,38 @@
         return ankiCards.find(c => c.id === ankiQueue[0]) || null;
       }, [ankiQueue, ankiCards]);
 
+      const handleAnkiUndo = () => {
+        if (ankiHistory.length === 0) {
+          showToast("暂无可回退的上一张卡片", "info");
+          return;
+        }
+        const last = ankiHistory[ankiHistory.length - 1];
+        setAnkiHistory(prev => prev.slice(0, -1));
+        setAnkiCards(prev => prev.map(c => c.id === last.cardId ? { ...c, fsrs: last.prevFsrs } : c));
+        setAnkiQueue(last.prevQueue);
+        setAnkiRevLog(prev => {
+          const idx = prev.findIndex(l => l.cardId === last.cardId);
+          return idx >= 0 ? [...prev.slice(0, idx), ...prev.slice(idx + 1)] : prev;
+        });
+        setDailyLogs(prev => {
+          const cur = prev[last.dayKey];
+          if (!cur) return prev;
+          return { ...prev, [last.dayKey]: { ...cur, ankiCount: Math.max(0, (cur.ankiCount || 0) - 1) } };
+        });
+        setAnkiRevealed(false);
+        showToast("已回退到上一张卡片 (Ctrl+Z)", "info");
+      };
+
       const handleAnkiStudyRate = (grade) => {
         if (!currentAnkiStudyCard) return;
         const nowMs = Date.now();
+        const dk = getStudyDateKey();
+        setAnkiHistory(prev => [...prev, {
+          cardId: currentAnkiStudyCard.id,
+          prevFsrs: currentAnkiStudyCard.fsrs ? { ...currentAnkiStudyCard.fsrs } : undefined,
+          prevQueue: [...ankiQueue],
+          dayKey: dk
+        }]);
         const nextFsrs = fsrsSchedule(currentAnkiStudyCard.fsrs, grade, targetRetention, nowMs);
         setAnkiCards(prev => prev.map(c => c.id === currentAnkiStudyCard.id ? { ...c, fsrs: nextFsrs } : c));
         setAnkiRevLog(prev => [{
@@ -1327,7 +1360,6 @@
           stateBefore: currentAnkiStudyCard.fsrs?.state || "New",
           ivlAfter: nextFsrs.scheduledDays || 0
         }, ...prev.slice(0, 4999)]);
-        const dk = getStudyDateKey();
         setDailyLogs(prev => {
           const cur = prev[dk] || { studySec: 0, qCount: 0, ankiCount: 0 };
           return { ...prev, [dk]: { ...cur, ankiCount: (cur.ankiCount || 0) + 1 } };
@@ -1480,10 +1512,12 @@
           if (showQManager || showAnkiMgrModal || showMedEngManager || showAuthModal || showPerfModal || showNotebookModal || previewAnkiCard || editingAnkiCard || editingMedEngCard) return;
 
           if (view === "ANKI_STUDY" && currentAnkiStudyCard) {
-            if (e.code === "Space") { e.preventDefault(); if (!ankiRevealed) setAnkiRevealed(true); }
+            if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === "z" || e.key === "ArrowLeft")) { e.preventDefault(); handleAnkiUndo(); }
+            else if (e.code === "Space") { e.preventDefault(); if (!ankiRevealed) setAnkiRevealed(true); }
             else if (ankiRevealed && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); handleAnkiStudyRate(Number(e.key)); }
           } else if (view === "MEDENG_STUDY" && currentMedEngCard) {
-            if (e.code === "Space") { e.preventDefault(); if (!medEngRevealed) setMedEngRevealed(true); }
+            if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === "z" || e.key === "ArrowLeft")) { e.preventDefault(); handleMedEngUndo(); }
+            else if (e.code === "Space") { e.preventDefault(); if (!medEngRevealed) setMedEngRevealed(true); }
             else if (medEngRevealed && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); handleMedEngRate(Number(e.key)); }
           } else if (view === "TEST" && activeBlock && currentQuestion) {
             const qid = currentQuestion.id;
@@ -1501,7 +1535,7 @@
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-      }, [view, activeBlock, currentQuestion, ankiRevealed, currentAnkiStudyCard, medEngRevealed, currentMedEngCard, showQManager, showAnkiMgrModal, showMedEngManager, showAuthModal, showPerfModal, showNotebookModal, previewAnkiCard, editingAnkiCard, editingMedEngCard]);
+      }, [view, activeBlock, currentQuestion, ankiRevealed, currentAnkiStudyCard, ankiHistory, medEngRevealed, currentMedEngCard, medEngHistory, showQManager, showAnkiMgrModal, showMedEngManager, showAuthModal, showPerfModal, showNotebookModal, previewAnkiCard, editingAnkiCard, editingMedEngCard]);
 
       const startOverviewFromQuestion = (sysQuestions, startIdx, titleLabel) => {
         if (!sysQuestions || sysQuestions.length === 0) return;
@@ -1616,6 +1650,7 @@
         const q = [...pickedRev, ...pickedNew].map(c => c.id);
         if (q.length === 0) { showToast("当前筛选条件暂无到期或未学医学英语卡片！", "info"); return; }
         setMedEngQueue(q);
+        setMedEngHistory([]);
         setMedEngIdx(0);
         setMedEngRevealed(false);
         setView("MEDENG_STUDY");
@@ -1626,6 +1661,7 @@
         if (active.length === 0) { showToast("请先勾选至少一个章节或词库", "info"); return; }
         const q = active.slice(0, Math.max(1, medEngNewLimit + medEngRevLimit)).map(c => c.id);
         setMedEngQueue(q);
+        setMedEngHistory([]);
         setMedEngIdx(0);
         setMedEngRevealed(false);
         setView("MEDENG_STUDY");
@@ -1636,8 +1672,36 @@
         return medEngCards.find(c => c.id === medEngQueue[medEngIdx]) || null;
       }, [view, medEngQueue, medEngIdx, medEngCards]);
 
+      const handleMedEngUndo = () => {
+        if (medEngHistory.length === 0) {
+          showToast("暂无可回退的上一张卡片", "info");
+          return;
+        }
+        const last = medEngHistory[medEngHistory.length - 1];
+        setMedEngHistory(prev => prev.slice(0, -1));
+        setMedEngCards(prev => prev.map(c => c.id === last.cardId ? last.prevCard : c));
+        setMedEngMistakes(last.prevMistakes);
+        setMedEngRevLog(prev => prev.slice(0, -1));
+        setDailyLogs(prev => {
+          const cur = prev[last.dayKey];
+          if (!cur) return prev;
+          return { ...prev, [last.dayKey]: { ...cur, medEngCount: Math.max(0, (cur.medEngCount || 0) - 1) } };
+        });
+        setMedEngIdx(last.prevIdx);
+        setMedEngRevealed(false);
+        showToast("已回退到上一张卡片 (Ctrl+Z)", "info");
+      };
+
       const handleMedEngRate = (grade) => {
         if (!currentMedEngCard) return;
+        const dk = getStudyDateKey();
+        setMedEngHistory(prev => [...prev, {
+          cardId: currentMedEngCard.id,
+          prevCard: { ...currentMedEngCard, fsrs: currentMedEngCard.fsrs ? { ...currentMedEngCard.fsrs } : undefined },
+          prevIdx: medEngIdx,
+          prevMistakes: [...medEngMistakes],
+          dayKey: dk
+        }]);
         const nextFsrs = fsrsSchedule(currentMedEngCard.fsrs, grade, targetRetention);
         const updatedCard = { ...currentMedEngCard, fsrs: nextFsrs };
         setMedEngCards(prev => prev.map(c => c.id === currentMedEngCard.id ? updatedCard : c));
@@ -1653,7 +1717,6 @@
           setMedEngMistakes(prev => prev.filter(m => m.id !== updatedCard.id));
         }
 
-        const dk = getStudyDateKey();
         setDailyLogs(prev => {
           const cur = prev[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
           return { ...prev, [dk]: { ...cur, medEngCount: (cur.medEngCount || 0) + 1 } };
@@ -2969,6 +3032,7 @@
                       Anki FSRS 复习 · 剩余 {ankiQueue.length} 张 · <span className="text-indigo-200">{currentAnkiStudyCard.step} · {currentAnkiStudyCard.system}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button disabled={ankiHistory.length === 0} onClick={handleAnkiUndo} title="回退到上一张 (快捷键 Ctrl+Z)" className="px-3 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 disabled:opacity-40 border border-indigo-400 text-xs font-bold">↩️ 上一张 (Ctrl+Z)</button>
                       <button onClick={() => setEditingAnkiCard({ ...currentAnkiStudyCard })} className="px-3 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-xs font-bold">✏️ 编辑此卡</button>
                       <button onClick={() => setView("DASHBOARD")} className="px-3 py-1 rounded-lg bg-indigo-800 hover:bg-indigo-700 text-xs font-bold">返回主页</button>
                     </div>
@@ -3041,6 +3105,7 @@
                       <span className="ml-1.5 px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[11px]">{currentMedEngCard.direction}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button disabled={medEngHistory.length === 0} onClick={handleMedEngUndo} title="回退到上一张 (快捷键 Ctrl+Z)" className="px-3 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-40 border border-teal-400 text-xs font-bold">↩️ 上一张 (Ctrl+Z)</button>
                       <button onClick={() => setEditingMedEngCard({ ...currentMedEngCard })} className="px-3 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-600 border border-teal-400 text-xs font-bold">✏️ 编辑此卡</button>
                       <button onClick={() => setView("DASHBOARD")} className="px-3 py-1.5 rounded-lg bg-teal-800 hover:bg-teal-700 text-xs font-bold">返回主页</button>
                     </div>

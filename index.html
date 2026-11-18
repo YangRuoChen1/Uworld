@@ -4609,10 +4609,65 @@
                     <div className="px-5 py-3 border-t bg-slate-50 flex justify-end gap-2 text-xs">
                       <button onClick={() => setEditingAnkiCard(null)} className="px-4 py-2 rounded-lg bg-white border font-bold">取消</button>
                       <button onClick={() => {
-                        setAnkiCards(prev => prev.map(c => c.id === editingAnkiCard.id ? editingAnkiCard : c));
-                        if (previewAnkiCard && previewAnkiCard.id === editingAnkiCard.id) setPreviewAnkiCard(editingAnkiCard);
+                        const rawTxt = String(editingAnkiCard.text || "");
+                        const origCard = ankiCards.find(c => c.id === editingAnkiCard.id);
+                        const origTxt = origCard?.text || "";
+                        const nums = [];
+                        if (editingAnkiCard.type !== "io") {
+                          const re = /\{\{c(\d+)::/g;
+                          let m;
+                          while ((m = re.exec(rawTxt)) !== null) {
+                            const n = Number(m[1]);
+                            if (!nums.includes(n)) nums.push(n);
+                          }
+                          nums.sort((a, b) => a - b);
+                        }
+                        if (editingAnkiCard.type === "io" || nums.length === 0) {
+                          setAnkiCards(prev => prev.map(c => c.id === editingAnkiCard.id ? editingAnkiCard : c));
+                          if (previewAnkiCard && previewAnkiCard.id === editingAnkiCard.id) setPreviewAnkiCard(editingAnkiCard);
+                          setEditingAnkiCard(null);
+                          showToast("Anki 卡片修改已保存！", "success");
+                          return;
+                        }
+                        const existingCNums = new Set();
+                        ankiCards.forEach(c => {
+                          if (c.id === editingAnkiCard.id || (origTxt && c.type === "cloze" && c.text === origTxt)) {
+                            existingCNums.add(c.activeCNum || 1);
+                          }
+                        });
+                        const nowId = Date.now();
+                        const spawned = nums.filter(n => !existingCNums.has(n)).map((n, idx) => ({
+                          id: `ac-edit-${nowId}-c${n}-${idx}`,
+                          type: "cloze",
+                          step: editingAnkiCard.step,
+                          system: editingAnkiCard.system,
+                          text: rawTxt,
+                          extra: editingAnkiCard.extra,
+                          activeCNum: n,
+                          suspended: false,
+                          flag: 0,
+                          fsrs: createInitialFSRS()
+                        }));
+                        setAnkiCards(prev => {
+                          const updated = prev.map(c => {
+                            if (c.id === editingAnkiCard.id || (origTxt && c.type === "cloze" && c.text === origTxt)) {
+                              return {
+                                ...c,
+                                type: "cloze",
+                                step: editingAnkiCard.step,
+                                system: editingAnkiCard.system,
+                                text: rawTxt,
+                                extra: editingAnkiCard.extra,
+                                activeCNum: c.activeCNum || 1
+                              };
+                            }
+                            return c;
+                          });
+                          return [...spawned, ...updated];
+                        });
+                        if (previewAnkiCard && previewAnkiCard.id === editingAnkiCard.id) setPreviewAnkiCard({ ...editingAnkiCard, type: "cloze" });
                         setEditingAnkiCard(null);
-                        showToast("Anki 卡片修改已保存！", "success");
+                        showToast(spawned.length > 0 ? `已保存修改，并自动新生成 ${spawned.map(s => "#c"+s.activeCNum).join("/")} 共 ${spawned.length} 张卡片！` : "Anki 卡片修改已保存（已同步同笔记所有卡片）！", "success");
                       }} className="px-5 py-2 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white font-bold">保存修改</button>
                     </div>
                   </div>

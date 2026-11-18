@@ -589,20 +589,28 @@
 
     function renderClozeText(text, revealed = false, activeCNum = null) {
       if (!text) return null;
-      const parts = text.split(/(\{\{c\d+::[\s\S]*?\}\})/g);
-      return parts.map((part, idx) => {
-        const m = part.match(/^\{\{c(\d+)::([\s\S]*?)(?:::([\s\S]*?))?\}\}$/);
-        if (!m) return <span key={idx} className="anki-html" dangerouslySetInnerHTML={{ __html: part }} />;
-        const cNum = Number(m[1]), ans = m[2], hint = m[3];
+      // Single-pass HTML string replacement preserves <table>/<ul>/<li> structure when multiple cX appear!
+      const processedHtml = String(text).replace(/\{\{\s*[cC](\d+)\s*::([\s\S]*?)\}\}/g, (_, numStr, body) => {
+        const cNum = Number(numStr);
+        // Split optional ::hint (outside HTML tags)
+        const sepIdx = body.lastIndexOf("::");
+        let ans = body, hint = "";
+        if (sepIdx !== -1) {
+          const possibleHint = body.slice(sepIdx + 2);
+          if (!possibleHint.includes("<") && !possibleHint.includes(">")) {
+            ans = body.slice(0, sepIdx);
+            hint = possibleHint.trim();
+          }
+        }
         const isTarget = !activeCNum || cNum === Number(activeCNum);
-        if (!isTarget) {
-          return <span key={idx} className="anki-html" dangerouslySetInnerHTML={{ __html: ans }} />;
-        }
+        if (!isTarget) return ans;
         if (!revealed) {
-          return <span key={idx} className="inline-block px-2 py-0.5 mx-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300 font-bold">[{hint || "..."}]</span>;
+          const safeHint = (hint || "...").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          return `<span class="inline-block px-2 py-0.5 mx-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300 font-bold">[${safeHint}]</span>`;
         }
-        return <span key={idx} className="inline-block px-1.5 py-0.5 mx-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-400 font-bold" dangerouslySetInnerHTML={{ __html: ans }} />;
+        return `<span class="inline-block px-1.5 py-0.5 mx-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-400 font-bold">${ans}</span>`;
       });
+      return <div className="anki-html" dangerouslySetInnerHTML={{ __html: processedHtml }} />;
     }
 
 
@@ -620,7 +628,7 @@
       const out = [...cards];
       groups.forEach((idxs, txt) => {
         const nums = [];
-        const re = /\{\{c(\d+)::/g;
+        const re = /\{\{\s*[cC](\d+)\s*::/g;
         let m;
         while ((m = re.exec(txt)) !== null) {
           const n = Number(m[1]);
@@ -843,7 +851,7 @@
               fsrs
             });
           } else {
-            const isCloze = /\{\{c\d+::/.test(front);
+            const isCloze = /\{\{\s*[cC]\d+\s*::/.test(front);
             imported.push({
               id: `apkg-${cid}-${Date.now()}-${idx}`,
               type: isCloze ? "cloze" : "basic",
@@ -3712,7 +3720,7 @@
                             const rawTxt = clozeText.trim();
                             if (!rawTxt) return;
                             const nums = [];
-                            const re = /\{\{c(\d+)::/g;
+                            const re = /\{\{\s*[cC](\d+)\s*::/g;
                             let m;
                             while ((m = re.exec(rawTxt)) !== null) {
                               const n = Number(m[1]);
@@ -4614,7 +4622,7 @@
                         const origTxt = origCard?.text || "";
                         const nums = [];
                         if (editingAnkiCard.type !== "io") {
-                          const re = /\{\{c(\d+)::/g;
+                          const re = /\{\{\s*[cC](\d+)\s*::/g;
                           let m;
                           while ((m = re.exec(rawTxt)) !== null) {
                             const n = Number(m[1]);

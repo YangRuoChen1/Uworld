@@ -587,32 +587,113 @@
       return parts.map((part, idx) => highlights.includes(part) ? <mark key={idx} className="uw-hl">{part}</mark> : <React.Fragment key={idx}>{part}</React.Fragment>);
     }
 
-    function renderClozeText(text, revealed = false, activeCNum = null) {
-      if (!text) return null;
-      // Single-pass HTML string replacement preserves <table>/<ul>/<li> structure when multiple cX appear!
-      const processedHtml = String(text).replace(/\{\{\s*[cC](\d+)\s*::([\s\S]*?)\}\}/g, (_, numStr, body) => {
-        const cNum = Number(numStr);
-        // Split optional ::hint (outside HTML tags)
+    function parseAndReplaceCloze(text, revealed = false, activeCNum = null) {
+      if (!text) return "";
+      const src = String(text);
+      let out = "";
+      let i = 0;
+      const openRe = /\{\{\s*[cC](\d+)\s*::/g;
+      while (i < src.length) {
+        openRe.lastIndex = i;
+        const m = openRe.exec(src);
+        if (!m) {
+          out += src.slice(i);
+          break;
+        }
+        out += src.slice(i, m.index);
+        const cNum = Number(m[1]);
+        let j = openRe.lastIndex;
+        let depth = 2; // we already consumed "{{"
+        while (j < src.length && depth > 0) {
+          if (src[j] === "{") depth++;
+          else if (src[j] === "}") depth--;
+          j++;
+        }
+        if (depth > 0) {
+          // Unclosed, emit rest as-is
+          out += src.slice(m.index);
+          break;
+        }
+        // Body is between openRe.lastIndex and j - 2 (closing "}}")
+        const body = src.slice(openRe.lastIndex, j - 2);
         const sepIdx = body.lastIndexOf("::");
         let ans = body, hint = "";
         if (sepIdx !== -1) {
           const possibleHint = body.slice(sepIdx + 2);
-          if (!possibleHint.includes("<") && !possibleHint.includes(">")) {
+          if (!possibleHint.includes("<") && !possibleHint.includes(">") && !possibleHint.includes("$")) {
             ans = body.slice(0, sepIdx);
             hint = possibleHint.trim();
           }
         }
         const isTarget = !activeCNum || cNum === Number(activeCNum);
-        if (!isTarget) return ans;
-        if (!revealed) {
+        if (!isTarget) {
+          out += ans;
+        } else if (!revealed) {
           const safeHint = (hint || "...").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          return `<span class="inline-block px-2 py-0.5 mx-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300 font-bold">[${safeHint}]</span>`;
+          out += `<span class="inline-block px-2 py-0.5 mx-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300 font-bold">[${safeHint}]</span>`;
+        } else {
+          out += `<span class="inline-block px-1.5 py-0.5 mx-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-400 font-bold">${ans}</span>`;
         }
-        return `<span class="inline-block px-1.5 py-0.5 mx-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-400 font-bold">${ans}</span>`;
-      });
-      return <div className="anki-html" dangerouslySetInnerHTML={{ __html: processedHtml }} />;
+        i = j;
+      }
+      return out;
     }
 
+    function renderMarkdownWithLatex(rawHtmlOrMd) {
+      const s = String(rawHtmlOrMd || "");
+      const maths = [];
+      const protect = (str) => str.replace(/(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$[^\n$]+?\$)/g, (m) => {
+        const idx = maths.length;
+        maths.push(m);
+        return `@@MATH_${idx}@@`;
+      });
+      const restore = (str) => str.replace(/@@MATH_(\d+)@@/g, (_, idx) => maths[Number(idx)] || "");
+      let processed = protect(s);
+      if (window.marked) {
+        // If content looks like pure HTML from .apkg (starts with <div or <table or <ul), keep linebreaks cleanly
+        processed = window.marked.parse(processed, { breaks: true });
+      }
+      return restore(processed);
+    }
+
+    function AnkiRichBox({ htmlContent, onZoomImage, className = "anki-html" }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        if (!ref.current) return;
+        try {
+          ref.current.innerHTML = renderMarkdownWithLatex(htmlContent);
+          if (window.renderMathInElement) {
+            window.renderMathInElement(ref.current, {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+              ],
+              throwOnError: false
+            });
+          }
+        } catch (e) {}
+      }, [htmlContent]);
+      return (
+        <div
+          ref={ref}
+          onClick={(e) => {
+            if (e.target && e.target.tagName === "IMG" && onZoomImage) {
+              e.stopPropagation();
+              onZoomImage(e.target.src);
+            }
+          }}
+          className={`${className} prose prose-sm max-w-none`}
+        />
+      );
+    }
+
+    function renderClozeText(text, revealed = false, activeCNum = null, onZoomImage = null) {
+      if (!text) return null;
+      const clozeReplaced = parseAndReplaceCloze(text, revealed, activeCNum);
+      return <AnkiRichBox htmlContent={clozeReplaced} onZoomImage={onZoomImage} />;
+    }
 
     function normalizeAnkiClozeActiveNum(cards) {
       if (!Array.isArray(cards) || cards.length === 0) return cards || [];
@@ -1135,7 +1216,9 @@
       const [ankiQueue, setAnkiQueue] = useState([]);
       const [ankiRevealed, setAnkiRevealed] = useState(false);
       const [showAnkiMgrModal, setShowAnkiMgrModal] = useState(false);
-      const [ankiMgrTab, setAnkiMgrTab] = useState("addCloze"); // addCloze | addIO | apkg | browse
+      const [ankiMgrTab, setAnkiMgrTab] = useState("addCloze");
+      const [clozeFrontImgs, setClozeFrontImgs] = useState([]);
+      const [clozeExtraImgs, setClozeExtraImgs] = useState([]); // addCloze | addIO | apkg | browse
       const [clozeStep, setClozeStep] = useState("Step 1");
       const [clozeSystem, setClozeSystem] = useState(STEP1_SYSTEMS[0].id);
       const [clozeText, setClozeText] = useState("");
@@ -3336,13 +3419,31 @@
                           )}
                         </div>
                       ) : (
-                        <div className="text-base sm:text-lg leading-relaxed font-serif-clinical">
-                          {renderClozeText(currentAnkiStudyCard.text, ankiRevealed, currentAnkiStudyCard.activeCNum)}
+                        <div className="space-y-4">
+                          <div className="text-base sm:text-lg leading-relaxed font-serif-clinical">
+                            {renderClozeText(currentAnkiStudyCard.text, ankiRevealed, currentAnkiStudyCard.activeCNum, setZoomImage)}
+                          </div>
+                          {Array.isArray(currentAnkiStudyCard.images) && currentAnkiStudyCard.images.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                              {currentAnkiStudyCard.images.map((src, i) => (
+                                <img key={i} src={src} alt="" onClick={() => setZoomImage(src)} className="rounded-xl border max-h-72 mx-auto cursor-zoom-in shadow-sm" />
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
 
-                      {ankiRevealed && currentAnkiStudyCard.extra && (
-                        <div className="p-4 rounded-xl bg-slate-50 border text-sm anki-html" dangerouslySetInnerHTML={{ __html: currentAnkiStudyCard.extra }} />
+                      {ankiRevealed && (currentAnkiStudyCard.extra || (Array.isArray(currentAnkiStudyCard.extraImages) && currentAnkiStudyCard.extraImages.length > 0)) && (
+                        <div className="p-4 rounded-xl bg-slate-50 border text-sm space-y-3">
+                          {currentAnkiStudyCard.extra && <AnkiRichBox htmlContent={currentAnkiStudyCard.extra} onZoomImage={setZoomImage} />}
+                          {Array.isArray(currentAnkiStudyCard.extraImages) && currentAnkiStudyCard.extraImages.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              {currentAnkiStudyCard.extraImages.map((src, i) => (
+                                <img key={i} src={src} alt="" onClick={() => setZoomImage(src)} className="rounded-xl border max-h-64 mx-auto cursor-zoom-in" />
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       )}
 
                       {!ankiRevealed ? (
@@ -3710,15 +3811,88 @@
                             <select value={clozeStep} onChange={(e) => { setClozeStep(e.target.value); setClozeSystem(getSystemsForStep(e.target.value)[0].id); }} className="border rounded-lg px-3 py-2 font-semibold">{STEPS.map(s => <option key={s}>{s}</option>)}</select>
                             <select value={clozeSystem} onChange={(e) => setClozeSystem(e.target.value)} className="border rounded-lg px-3 py-2">{getSystemsForStep(clozeStep).map(s => <option key={s.id} value={s.id}>{s.id} ({s.cn})</option>)}</select>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-slate-500">语法：{"{{c1::答案}}"}</span>
-                            <button onClick={() => setClozeText(t => t + " {{c1::填空内容}} ")} className="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 font-bold">+ 插入填空</button>
+                          <div className="flex flex-wrap justify-between items-center gap-2">
+                            <span className="text-slate-500">支持 Markdown、$LaTeX$、{"{{c1::答案}}"} 及直接 <strong>Ctrl+V</strong> 贴图</span>
+                            <div className="flex gap-1.5">
+                              <button onClick={() => setClozeText(t => t + " {{c1::填空内容}} ")} className="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 font-bold">+ 插入填空</button>
+                              <label className="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold cursor-pointer">
+                                🖼️ 正面插图
+                                <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                                  Array.from(e.target.files || []).forEach(f => {
+                                    const r = new FileReader(); r.onload = (ev) => setClozeFrontImgs(p => [...p, ev.target.result]); r.readAsDataURL(f);
+                                  }); e.target.value = "";
+                                }} />
+                              </label>
+                            </div>
                           </div>
-                          <textarea rows={5} value={clozeText} onChange={(e) => setClozeText(e.target.value)} className="w-full border rounded-xl p-3 font-mono" placeholder="输入含 {{c1::...}} 的知识卡片..." />
-                          <textarea rows={3} value={clozeExtra} onChange={(e) => setClozeExtra(e.target.value)} className="w-full border rounded-xl p-3" placeholder="背面补充解析 (Extra)..." />
+                          <textarea
+                            rows={5}
+                            value={clozeText}
+                            onChange={(e) => setClozeText(e.target.value)}
+                            onPaste={(e) => {
+                              const items = e.clipboardData?.items;
+                              if (!items) return;
+                              for (let i = 0; i < items.length; i++) {
+                                if (items[i].type.indexOf("image") !== -1) {
+                                  e.preventDefault();
+                                  const r = new FileReader(); r.onload = (ev) => setClozeFrontImgs(p => [...p, ev.target.result]); r.readAsDataURL(items[i].getAsFile());
+                                }
+                              }
+                            }}
+                            className="w-full border rounded-xl p-3 font-mono"
+                            placeholder="输入含 {{c1::...}} / Markdown / $LaTeX$ 的知识卡片（可直接 Ctrl+V 粘贴正面照片）..."
+                          />
+                          {clozeFrontImgs.length > 0 && (
+                            <div className="flex flex-wrap gap-2 p-2 rounded-xl bg-slate-50 border">
+                              {clozeFrontImgs.map((src, idx) => (
+                                <div key={idx} className="relative">
+                                  <img src={src} alt="" className="h-20 rounded border" />
+                                  <button onClick={() => setClozeFrontImgs(p => p.filter((_, i) => i !== idx))} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <div className="flex justify-between items-center">
+                            <span className="text-slate-500">背面解析 (支持 Markdown、$LaTeX$ 与 Ctrl+V 贴图)：</span>
+                            <label className="px-2.5 py-1 rounded bg-sky-50 text-sky-700 border border-sky-200 font-bold cursor-pointer">
+                              🖼️ 背面插图
+                              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                                Array.from(e.target.files || []).forEach(f => {
+                                  const r = new FileReader(); r.onload = (ev) => setClozeExtraImgs(p => [...p, ev.target.result]); r.readAsDataURL(f);
+                                }); e.target.value = "";
+                              }} />
+                            </label>
+                          </div>
+                          <textarea
+                            rows={3}
+                            value={clozeExtra}
+                            onChange={(e) => setClozeExtra(e.target.value)}
+                            onPaste={(e) => {
+                              const items = e.clipboardData?.items;
+                              if (!items) return;
+                              for (let i = 0; i < items.length; i++) {
+                                if (items[i].type.indexOf("image") !== -1) {
+                                  e.preventDefault();
+                                  const r = new FileReader(); r.onload = (ev) => setClozeExtraImgs(p => [...p, ev.target.result]); r.readAsDataURL(items[i].getAsFile());
+                                }
+                              }
+                            }}
+                            className="w-full border rounded-xl p-3 font-mono"
+                            placeholder="背面补充解析 (Extra)..."
+                          />
+                          {clozeExtraImgs.length > 0 && (
+                            <div className="flex flex-wrap gap-2 p-2 rounded-xl bg-slate-50 border">
+                              {clozeExtraImgs.map((src, idx) => (
+                                <div key={idx} className="relative">
+                                  <img src={src} alt="" className="h-20 rounded border" />
+                                  <button onClick={() => setClozeExtraImgs(p => p.filter((_, i) => i !== idx))} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           <button onClick={() => {
                             const rawTxt = clozeText.trim();
-                            if (!rawTxt) return;
+                            if (!rawTxt && clozeFrontImgs.length === 0) return;
                             const nums = [];
                             const re = /\{\{\s*[cC](\d+)\s*::/g;
                             let m;
@@ -3735,12 +3909,14 @@
                               step: clozeStep,
                               system: clozeSystem,
                               text: rawTxt,
+                              images: clozeFrontImgs.length > 0 ? [...clozeFrontImgs] : undefined,
                               extra: clozeExtra.trim(),
+                              extraImages: clozeExtraImgs.length > 0 ? [...clozeExtraImgs] : undefined,
                               activeCNum: cn,
                               fsrs: createInitialFSRS()
                             }));
                             setAnkiCards(p => [...created, ...p]);
-                            setClozeText(""); setClozeExtra("");
+                            setClozeText(""); setClozeExtra(""); setClozeFrontImgs([]); setClozeExtraImgs([]);
                             showToast(`已自动识别 ${cNums.map(n => "c"+n).join("/")}，生成 ${created.length} 张填空卡！`, "success");
                           }} className="w-full py-2.5 rounded-xl bg-indigo-700 text-white font-bold">保存至 {clozeStep} · {clozeSystem}</button>
                         </div>
@@ -4399,13 +4575,29 @@
                             )}
                           </div>
                         ) : (
-                          <div className="p-5 rounded-2xl bg-slate-50 border text-base sm:text-lg leading-relaxed font-serif-clinical">
-                            {renderClozeText(previewAnkiCard.text, previewAnkiRevealed, previewAnkiCard.activeCNum)}
+                          <div className="p-5 rounded-2xl bg-slate-50 border text-base sm:text-lg leading-relaxed font-serif-clinical space-y-3">
+                            {renderClozeText(previewAnkiCard.text, previewAnkiRevealed, previewAnkiCard.activeCNum, setZoomImage)}
+                            {Array.isArray(previewAnkiCard.images) && previewAnkiCard.images.length > 0 && (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                                {previewAnkiCard.images.map((src, i) => (
+                                  <img key={i} src={src} alt="" onClick={() => setZoomImage(src)} className="rounded-xl border max-h-56 mx-auto cursor-zoom-in" />
+                                ))}
+                              </div>
+                            )}
                           </div>
                         )}
 
-                        {previewAnkiRevealed && previewAnkiCard.extra && (
-                          <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 text-sm anki-html" dangerouslySetInnerHTML={{ __html: previewAnkiCard.extra }} />
+                        {previewAnkiRevealed && (previewAnkiCard.extra || (Array.isArray(previewAnkiCard.extraImages) && previewAnkiCard.extraImages.length > 0)) && (
+                          <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 text-sm space-y-3">
+                            {previewAnkiCard.extra && <AnkiRichBox htmlContent={previewAnkiCard.extra} onZoomImage={setZoomImage} />}
+                            {Array.isArray(previewAnkiCard.extraImages) && previewAnkiCard.extraImages.length > 0 && (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {previewAnkiCard.extraImages.map((src, i) => (
+                                  <img key={i} src={src} alt="" onClick={() => setZoomImage(src)} className="rounded-xl border max-h-52 mx-auto cursor-zoom-in" />
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
 
@@ -4604,14 +4796,84 @@
                         </select>
                       </div>
                       {editingAnkiCard.type !== "io" && (
-                        <div>
-                          <label className="block font-bold text-slate-700 mb-1">卡片正面 / 填空内容（支持 HTML 与 {'{{c1::...}}'}）</label>
-                          <textarea rows={6} value={editingAnkiCard.text || ""} onChange={(e) => setEditingAnkiCard(p => ({ ...p, text: e.target.value }))} className="w-full border rounded-xl p-3 font-mono text-xs" />
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <label className="font-bold text-slate-700">卡片正面（支持 Markdown、$LaTeX$、{'{{c1::...}}'}、Ctrl+V 贴图）</label>
+                            <label className="px-2 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold cursor-pointer">
+                              🖼️ 添加正面图
+                              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                                Array.from(e.target.files || []).forEach(f => {
+                                  const r = new FileReader(); r.onload = (ev) => setEditingAnkiCard(p => ({ ...p, images: [...(p.images || []), ev.target.result] })); r.readAsDataURL(f);
+                                }); e.target.value = "";
+                              }} />
+                            </label>
+                          </div>
+                          <textarea
+                            rows={6}
+                            value={editingAnkiCard.text || ""}
+                            onChange={(e) => setEditingAnkiCard(p => ({ ...p, text: e.target.value }))}
+                            onPaste={(e) => {
+                              const items = e.clipboardData?.items;
+                              if (!items) return;
+                              for (let i = 0; i < items.length; i++) {
+                                if (items[i].type.indexOf("image") !== -1) {
+                                  e.preventDefault();
+                                  const r = new FileReader(); r.onload = (ev) => setEditingAnkiCard(p => ({ ...p, images: [...(p.images || []), ev.target.result] })); r.readAsDataURL(items[i].getAsFile());
+                                }
+                              }
+                            }}
+                            className="w-full border rounded-xl p-3 font-mono text-xs"
+                          />
+                          {Array.isArray(editingAnkiCard.images) && editingAnkiCard.images.length > 0 && (
+                            <div className="flex flex-wrap gap-2 p-2 rounded-xl bg-slate-50 border">
+                              {editingAnkiCard.images.map((src, idx) => (
+                                <div key={idx} className="relative">
+                                  <img src={src} alt="" className="h-20 rounded border" />
+                                  <button onClick={() => setEditingAnkiCard(p => ({ ...p, images: (p.images || []).filter((_, i) => i !== idx) }))} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
-                      <div>
-                        <label className="block font-bold text-slate-700 mb-1">背面解析 / 补充笔记 (Extra)</label>
-                        <textarea rows={5} value={editingAnkiCard.extra || ""} onChange={(e) => setEditingAnkiCard(p => ({ ...p, extra: e.target.value }))} className="w-full border rounded-xl p-3 font-mono text-xs" />
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <label className="font-bold text-slate-700">背面解析 / 补充笔记 (支持 Markdown、$LaTeX$、Ctrl+V 贴图)</label>
+                          <label className="px-2 py-1 rounded bg-sky-50 text-sky-700 border border-sky-200 font-bold cursor-pointer">
+                            🖼️ 添加背面图
+                            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                              Array.from(e.target.files || []).forEach(f => {
+                                const r = new FileReader(); r.onload = (ev) => setEditingAnkiCard(p => ({ ...p, extraImages: [...(p.extraImages || []), ev.target.result] })); r.readAsDataURL(f);
+                              }); e.target.value = "";
+                            }} />
+                          </label>
+                        </div>
+                        <textarea
+                          rows={5}
+                          value={editingAnkiCard.extra || ""}
+                          onChange={(e) => setEditingAnkiCard(p => ({ ...p, extra: e.target.value }))}
+                          onPaste={(e) => {
+                            const items = e.clipboardData?.items;
+                            if (!items) return;
+                            for (let i = 0; i < items.length; i++) {
+                              if (items[i].type.indexOf("image") !== -1) {
+                                e.preventDefault();
+                                const r = new FileReader(); r.onload = (ev) => setEditingAnkiCard(p => ({ ...p, extraImages: [...(p.extraImages || []), ev.target.result] })); r.readAsDataURL(items[i].getAsFile());
+                              }
+                            }
+                          }}
+                          className="w-full border rounded-xl p-3 font-mono text-xs"
+                        />
+                        {Array.isArray(editingAnkiCard.extraImages) && editingAnkiCard.extraImages.length > 0 && (
+                          <div className="flex flex-wrap gap-2 p-2 rounded-xl bg-slate-50 border">
+                            {editingAnkiCard.extraImages.map((src, idx) => (
+                              <div key={idx} className="relative">
+                                <img src={src} alt="" className="h-20 rounded border" />
+                                <button onClick={() => setEditingAnkiCard(p => ({ ...p, extraImages: (p.extraImages || []).filter((_, i) => i !== idx) }))} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold">✕</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="px-5 py-3 border-t bg-slate-50 flex justify-end gap-2 text-xs">
@@ -4650,7 +4912,9 @@
                           step: editingAnkiCard.step,
                           system: editingAnkiCard.system,
                           text: rawTxt,
+                          images: editingAnkiCard.images,
                           extra: editingAnkiCard.extra,
+                          extraImages: editingAnkiCard.extraImages,
                           activeCNum: n,
                           suspended: false,
                           flag: 0,
@@ -4665,7 +4929,9 @@
                                 step: editingAnkiCard.step,
                                 system: editingAnkiCard.system,
                                 text: rawTxt,
+                                images: editingAnkiCard.images,
                                 extra: editingAnkiCard.extra,
+                                extraImages: editingAnkiCard.extraImages,
                                 activeCNum: c.activeCNum || 1
                               };
                             }

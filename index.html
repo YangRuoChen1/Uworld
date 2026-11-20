@@ -313,6 +313,31 @@
       return `${y}-${m}-${d}`;
     }
 
+    function getStudyDayStartMs(nowMs = Date.now()) {
+      const shifted = new Date(nowMs - 3 * 3600 * 1000);
+      return new Date(shifted.getFullYear(), shifted.getMonth(), shifted.getDate(), 3, 0, 0, 0).getTime();
+    }
+
+    function getStudyDayEndMs(nowMs = Date.now()) {
+      const shifted = new Date(nowMs - 3 * 3600 * 1000);
+      return new Date(shifted.getFullYear(), shifted.getMonth(), shifted.getDate() + 1, 3, 0, 0, 0).getTime();
+    }
+
+    function addStudyDaysStartMs(nowMs, days) {
+      const shifted = new Date(nowMs - 3 * 3600 * 1000);
+      return new Date(shifted.getFullYear(), shifted.getMonth(), shifted.getDate() + days, 3, 0, 0, 0).getTime();
+    }
+
+    function isCardDue(fsrs, nowMs = Date.now()) {
+      if (!fsrs || (fsrs.reps || 0) === 0) return true;
+      const due = fsrs.due || 0;
+      const isDayInterval = fsrs.state === "Review" || (fsrs.scheduledDays || 0) >= 1;
+      if (isDayInterval) {
+        return due < getStudyDayEndMs(nowMs);
+      }
+      return due <= nowMs;
+    }
+
     function computeCheckInStats(dailyLogs) {
       // dailyLogs = { "2026-11-15": { studySec: 1900, qCount: 12, ankiCount: 25 } }
       const checkedKeys = Object.keys(dailyLogs || {})
@@ -403,12 +428,12 @@
             dueMs = nowMs + 10 * 60 * 1000;
           } else {
             nextState = "Review"; nextStepIdx = 2; nextS = 1.2; nextDays = 1;
-            dueMs = nowMs + 1 * 86400000;
+            dueMs = addStudyDaysStartMs(nowMs, 1);
           }
         } else {
           // Easy: Graduate immediately (3 days)
           nextState = "Review"; nextStepIdx = 2; nextS = 3.0; nextDays = 3;
-          dueMs = nowMs + 3 * 86400000;
+          dueMs = addStudyDaysStartMs(nowMs, 3);
         }
       } else if (f.state === "Relearning") {
         // Relearning a lapsed Review card
@@ -422,7 +447,7 @@
           nextState = "Review";
           nextDays = grade === 4 ? Math.max(2, Math.min(7, Math.round((f.scheduledDays || 2) * 0.6))) : 1;
           nextS = Math.max(1.0, nextDays);
-          dueMs = nowMs + nextDays * 86400000;
+          dueMs = addStudyDaysStartMs(nowMs, nextDays);
         }
       } else {
         // Mature / Young Review Card
@@ -445,7 +470,7 @@
           nextState = "Review";
           nextDays = fsrsNextIntervalDays(nextS, targetRetention);
           if (grade === 2) nextDays = Math.max(1, Math.min(nextDays, Math.round((f.scheduledDays || 1) * 1.2)));
-          dueMs = nowMs + nextDays * 86400000;
+          dueMs = addStudyDaysStartMs(nowMs, nextDays);
         }
       }
 
@@ -466,14 +491,14 @@
     function formatFsrsInterval(nextFsrs) {
       if (!nextFsrs) return "1天";
       const diffMs = Math.max(0, (nextFsrs.due || 0) - (nextFsrs.lastReview || Date.now()));
-      if (nextFsrs.scheduledDays === 0 || diffMs < 3600 * 1000) {
-        const mins = Math.max(1, Math.round(diffMs / 60000));
-        return `< ${mins} 分钟`;
-      }
-      if (diffMs < 86400000) {
+      if ((nextFsrs.scheduledDays || 0) < 1) {
+        if (diffMs < 3600 * 1000) {
+          const mins = Math.max(1, Math.round(diffMs / 60000));
+          return `< ${mins} 分钟`;
+        }
         return `${Math.max(1, Math.round(diffMs / 3600000))} 小时`;
       }
-      const d = nextFsrs.scheduledDays || Math.max(1, Math.round(diffMs / 86400000));
+      const d = nextFsrs.scheduledDays;
       if (d < 30) return `${d} 天`;
       if (d < 365) return `${(d / 30).toFixed(1)} 个月`;
       return `${(d / 365).toFixed(1)} 年`;
@@ -877,7 +902,7 @@
               cardState = "Learning";
               realDueMs = Number(cdue) * 1000;
             } else if (Number(cqueue) === 2 || Number(ctype) === 2) {
-              realDueMs = (colCrtSec + Number(cdue) * 86400) * 1000;
+              realDueMs = getStudyDayStartMs((colCrtSec + Number(cdue) * 86400) * 1000);
             }
           }
           const fsrs = {
@@ -1081,6 +1106,7 @@
           if (Array.isArray(idbMeM) && idbMeM.length > 0) setMedEngMistakes(idbMeM);
           if (Array.isArray(idbMeL) && idbMeL.length > 0) setMedEngRevLog(idbMeL);
           idbHydratedUserRef.current = u;
+          setTimeout(() => { isHydratingRef.current = false; }, 300);
         })();
         return () => { cancelled = true; };
       }, [currentUser]);
@@ -1101,7 +1127,7 @@
         if (isHydratingRef.current) return;
         if (currentUser !== "guest") setHasUnsynced(true);
       }, [questions, mistakes, ankiCards, medEngCards, medEngMistakes, attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs]);
-      useEffect(() => { const t = setTimeout(() => { isHydratingRef.current = false; }, 1200); return () => clearTimeout(t); }, [currentUser]);
+      useEffect(() => { isHydratingRef.current = true; setHasUnsynced(false); }, [currentUser]);
 
       // UI Navigation
       const [view, setView] = useState("DASHBOARD"); // DASHBOARD | TEST | ANKI_STUDY | SUMMARY
@@ -1336,14 +1362,29 @@
       const todayStats = dailyLogs[todayKey] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
       const checkInStats = useMemo(() => computeCheckInStats(dailyLogs), [dailyLogs]);
 
-      // Helper to show front-page sync progress bar
-      const updateSyncProgress = (label, done, total, detail = "") => {
-        const pct = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
-        setSyncProgress({ active: true, label, done, total, pct, detail });
+      const formatBytes = (b) => {
+        const n = Number(b || 0);
+        if (n < 1024) return `${n} B`;
+        if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+        return `${(n / (1024 * 1024)).toFixed(2)} MB`;
       };
-      const finishSyncProgress = (label, total) => {
-        setSyncProgress({ active: true, label, done: total, total, pct: 100, detail: "同步完成" });
-        setTimeout(() => setSyncProgress(null), 1600);
+      const formatSpeed = (bps) => {
+        const n = Number(bps || 0);
+        if (n <= 0) return "计算中...";
+        if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB/s`;
+        return `${(n / (1024 * 1024)).toFixed(2)} MB/s`;
+      };
+
+      // Helper to show front-page sync progress bar with Byte Volume & Transfer Speed
+      const updateSyncProgress = (label, done, total, detail = "", bytesDone = null, bytesTotal = null, speedBps = null) => {
+        const pct = (bytesTotal && bytesTotal > 0)
+          ? Math.min(100, Math.round((bytesDone / bytesTotal) * 100))
+          : (total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0);
+        setSyncProgress({ active: true, label, done, total, pct, detail, bytesDone, bytesTotal, speedBps });
+      };
+      const finishSyncProgress = (label, total, bytesTotal = null, avgSpeedBps = null) => {
+        setSyncProgress({ active: true, label, done: total, total, pct: 100, detail: "同步完成", bytesDone: bytesTotal, bytesTotal, speedBps: avgSpeedBps });
+        setTimeout(() => setSyncProgress(null), 1800);
       };
 
       // Auto-login on startup if enabled
@@ -1551,7 +1592,7 @@
         const filtered = ankiStepCards.filter(c => ankiSelectedSystems.includes(c.system));
         const activeFiltered = filtered.filter(c => !c.suspended);
         const newCards = activeFiltered.filter(c => !c.fsrs || c.fsrs.reps === 0);
-        const revCards = activeFiltered.filter(c => c.fsrs && c.fsrs.reps > 0 && (c.fsrs.due || 0) <= now);
+        const revCards = activeFiltered.filter(c => c.fsrs && c.fsrs.reps > 0 && isCardDue(c.fsrs, now));
         return { total: filtered.length, newCards, revCards };
       }, [ankiStepCards, ankiSelectedSystems]);
 
@@ -1625,7 +1666,7 @@
       const dueMistakes = useMemo(() => {
         const now = Date.now();
         const qIdSet = new Set(questions.map(q => q.id));
-        return mistakes.filter(m => qIdSet.has(m.id) && (!m.fsrs || (m.fsrs.due || 0) <= now)).sort((a, b) => (a.fsrs?.due || 0) - (b.fsrs?.due || 0));
+        return mistakes.filter(m => qIdSet.has(m.id) && (!m.fsrs || isCardDue(m.fsrs, now))).sort((a, b) => (a.fsrs?.due || 0) - (b.fsrs?.due || 0));
       }, [mistakes, questions]);
       const currentFsrsCard = dueMistakes[0] || null;
 
@@ -1877,13 +1918,13 @@
         const now = Date.now();
         const active = medEngFilteredAll.filter(c => !c.suspended);
         const newCards = active.filter(c => !c.fsrs || c.fsrs.reps === 0);
-        const revCards = active.filter(c => c.fsrs && c.fsrs.reps > 0 && (c.fsrs.due || 0) <= now);
+        const revCards = active.filter(c => c.fsrs && c.fsrs.reps > 0 && isCardDue(c.fsrs, now));
         return { newCards, revCards, total: active.length };
       }, [medEngFilteredAll]);
 
       const dueMedEngMistakes = useMemo(() => {
         const now = Date.now();
-        return medEngMistakes.filter(m => !m.fsrs || (m.fsrs.due || 0) <= now);
+        return medEngMistakes.filter(m => !m.fsrs || isCardDue(m.fsrs, now));
       }, [medEngMistakes]);
 
       const startMedEngSession = () => {
@@ -2172,48 +2213,56 @@
             const medEngChanged = medEngCards.filter(c => !/^me-\d+-[fb]$/.test(String(c.id || "")) || c.suspended || c._edited || (c.fsrs && (c.fsrs.reps > 0 || c.fsrs.lapses > 0)));
             const mChunks = chunkByBytes(medEngChanged, 300000, 500);
             const totalItems = Math.max(1, questions.length + ankiCards.length + medEngChanged.length + 1);
-            let doneItems = 0;
+            const tasks = [];
+            tasks.push({
+              key: currentUser,
+              label: "核心档案与打卡记录",
+              count: 1,
+              body: JSON.stringify({
+                username: currentUser,
+                data: {
+                  mistakes, medEngMistakes, medEngRevLog, ankiRevLog,
+                  attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs,
+                  activeBlock: savedBlock,
+                  chunkMeta: { qChunks: qChunks.length, aChunks: aChunks.length, mChunks: mChunks.length },
+                  updatedAt: new Date().toISOString()
+                }
+              })
+            });
+            for (let i = 0; i < qChunks.length; i++) {
+              tasks.push({ key: `${currentUser}__q_${i}`, label: `UWorld 题库 (${i + 1}/${qChunks.length})`, count: qChunks[i].length, body: JSON.stringify({ username: `${currentUser}__q_${i}`, data: { items: qChunks[i] } }) });
+            }
+            for (let i = 0; i < aChunks.length; i++) {
+              tasks.push({ key: `${currentUser}__a_${i}`, label: `Anki 卡组 (${i + 1}/${aChunks.length})`, count: aChunks[i].length, body: JSON.stringify({ username: `${currentUser}__a_${i}`, data: { items: aChunks[i] } }) });
+            }
+            for (let i = 0; i < mChunks.length; i++) {
+              tasks.push({ key: `${currentUser}__m_${i}`, label: `医学英语增量卡库 (${i + 1}/${mChunks.length})`, count: mChunks[i].length, body: JSON.stringify({ username: `${currentUser}__m_${i}`, data: { items: mChunks[i] } }) });
+            }
 
-            const postChunk = async (key, dataObj, label, countAdded) => {
-              updateSyncProgress(label, doneItems, totalItems, `正在上传...`);
-              const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
-                method: "POST",
-                headers,
-                body: JSON.stringify({ username: key, data: dataObj })
-              });
+            const totalBytes = tasks.reduce((acc, t) => acc + new Blob([t.body]).size, 0);
+            let doneItems = 0;
+            let doneBytes = 0;
+            const startMs = Date.now();
+
+            for (const t of tasks) {
+              const bLen = new Blob([t.body]).size;
+              const curSpeed = doneBytes > 0 ? doneBytes / Math.max(0.15, (Date.now() - startMs) / 1000) : 0;
+              updateSyncProgress(t.label, doneItems, totalItems, `本片 ${formatBytes(bLen)}`, doneBytes, totalBytes, curSpeed);
+              const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, { method: "POST", headers, body: t.body });
               if (!r.ok) {
                 const errTxt = await r.text().catch(() => "");
-                throw new Error(`${label} HTTP ${r.status} ${errTxt.slice(0, 60)}`);
+                throw new Error(`${t.label} HTTP ${r.status} ${errTxt.slice(0, 60)}`);
               }
-              doneItems += countAdded;
-              updateSyncProgress(label, Math.min(totalItems, doneItems), totalItems, "上传完成");
-            };
-
-            // 1. Core profile & logs + manifest of chunk counts
-            await postChunk(currentUser, {
-              mistakes, medEngMistakes, medEngRevLog,
-              attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs,
-              activeBlock: savedBlock,
-              chunkMeta: { qChunks: qChunks.length, aChunks: aChunks.length, mChunks: mChunks.length },
-              updatedAt: new Date().toISOString()
-            }, "核心档案与打卡记录", 1);
-
-            // 2. QBank chunks
-            for (let i = 0; i < qChunks.length; i++) {
-              await postChunk(`${currentUser}__q_${i}`, { items: qChunks[i] }, `UWorld 题库 (${i + 1}/${qChunks.length})`, qChunks[i].length);
-            }
-            // 3. Anki chunks
-            for (let i = 0; i < aChunks.length; i++) {
-              await postChunk(`${currentUser}__a_${i}`, { items: aChunks[i] }, `Anki 卡组 (${i + 1}/${aChunks.length})`, aChunks[i].length);
-            }
-            // 4. MedEng full chunks
-            for (let i = 0; i < mChunks.length; i++) {
-              await postChunk(`${currentUser}__m_${i}`, { items: mChunks[i] }, `医学英语全量卡库 (${i + 1}/${mChunks.length})`, mChunks[i].length);
+              doneItems += t.count;
+              doneBytes += bLen;
+              const avgSpeed = doneBytes / Math.max(0.1, (Date.now() - startMs) / 1000);
+              updateSyncProgress(t.label, Math.min(totalItems, doneItems), totalItems, "上传完成", doneBytes, totalBytes, avgSpeed);
             }
 
+            const finalSpeed = totalBytes / Math.max(0.1, (Date.now() - startMs) / 1000);
             safeSetStorage(getUserKey(currentUser, "lastSyncAt"), new Date().toISOString());
             setHasUnsynced(false);
-            finishSyncProgress("全端全量数据上传", totalItems);
+            finishSyncProgress("个人全端存档上传", totalItems, totalBytes, finalSpeed);
             showToast(`已全量同步：${questions.length} 题、${ankiCards.length} 张 Anki、${medEngCards.length} 张医学英语及全部打卡记录！`, "success");
           } else {
             updateSyncProgress("云端版本比对", 0, 4, "正在检查云端是否有新改动...");
@@ -2251,13 +2300,18 @@
             if (meta) {
               const totalChunks = 1 + (meta.qChunks || 0) + (meta.aChunks || 0) + (meta.mChunks || 0);
               let doneChunks = 1;
+              let pullBytes = 0;
+              const pullStartMs = Date.now();
               const pullChunks = async (prefix, count, label) => {
                 let all = [];
                 for (let i = 0; i < count; i++) {
-                  updateSyncProgress(`${label} (${i + 1}/${count})`, doneChunks, totalChunks, "正在拉取分片...");
+                  const spd = pullBytes > 0 ? pullBytes / Math.max(0.15, (Date.now() - pullStartMs) / 1000) : 0;
+                  updateSyncProgress(`${label} (${i + 1}/${count})`, doneChunks, totalChunks, "正在拉取分片...", pullBytes, null, spd);
                   const cr = await fetch(`${baseUrl}/rest/v1/medspire_saves?username=eq.${encodeURIComponent(currentUser + prefix + i)}&select=data`, { headers });
                   if (!cr.ok) throw new Error(`${label} HTTP ${cr.status}`);
-                  const crows = await cr.json();
+                  const txt = await cr.text();
+                  pullBytes += new Blob([txt]).size;
+                  const crows = JSON.parse(txt);
                   if (Array.isArray(crows?.[0]?.data?.items)) all = all.concat(crows[0].data.items);
                   doneChunks++;
                 }
@@ -2323,20 +2377,24 @@
         const baseUrl = cloudCfg.url.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
         const headers = { "apikey": cloudCfg.anonKey, "Authorization": "Bearer " + cloudCfg.anonKey, "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" };
         const chunks = chunkItemsByBytes(items, 300000, maxCount);
+        const bodies = chunks.map((ch, i) => JSON.stringify({ username: `${rootKey}__c_${i}`, data: { items: ch } }));
+        const totalBytes = bodies.reduce((acc, b) => acc + new Blob([b]).size, 0);
         const totalSteps = chunks.length + 1;
+        let doneBytes = 0;
+        const startMs = Date.now();
         for (let i = 0; i < chunks.length; i++) {
-          updateSyncProgress(`${label} (${i + 1}/${chunks.length})`, i, totalSteps, "正在分片上传至公共库...");
-          const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ username: `${rootKey}__c_${i}`, data: { items: chunks[i] } })
-          });
+          const bLen = new Blob([bodies[i]]).size;
+          const spd = doneBytes > 0 ? doneBytes / Math.max(0.15, (Date.now() - startMs) / 1000) : 0;
+          updateSyncProgress(`${label} (${i + 1}/${chunks.length})`, i, totalSteps, `本片 ${formatBytes(bLen)}`, doneBytes, totalBytes, spd);
+          const r = await fetch(`${baseUrl}/rest/v1/medspire_saves`, { method: "POST", headers, body: bodies[i] });
           if (!r.ok) {
             const errTxt = await r.text().catch(() => "");
             throw new Error(`分片 ${i + 1} HTTP ${r.status} ${errTxt.slice(0, 60)}`);
           }
+          doneBytes += bLen;
         }
-        updateSyncProgress(label, chunks.length, totalSteps, "正在写入公共库索引...");
+        const finalSpd = totalBytes / Math.max(0.1, (Date.now() - startMs) / 1000);
+        updateSyncProgress(label, chunks.length, totalSteps, "正在写入公共库索引...", doneBytes, totalBytes, finalSpd);
         const metaRes = await fetch(`${baseUrl}/rest/v1/medspire_saves`, {
           method: "POST",
           headers,
@@ -2346,7 +2404,7 @@
           const errTxt = await metaRes.text().catch(() => "");
           throw new Error(`索引 HTTP ${metaRes.status} ${errTxt.slice(0, 60)}`);
         }
-        finishSyncProgress(label, totalSteps);
+        finishSyncProgress(label, totalSteps, totalBytes, finalSpd);
       };
 
       const pullGlobalChunked = async (rootKey, legacyField, label, showBar = true) => {
@@ -2588,7 +2646,7 @@
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
 
-                        <button onClick={() => syncToSupabase("push")} disabled={cloudBusy} className={`px-3 py-1.5 rounded-lg text-xs font-bold border flex items-center gap-1.5 ${hasUnsynced ? "bg-amber-400 text-slate-950 border-amber-300 animate-pulse" : "bg-emerald-700/80 text-white border-emerald-500"}`}>
+                        <button onClick={() => { if (!hasUnsynced) { showToast("✅ 当前已与云端同步，无未保存改动", "success"); return; } syncToSupabase("push"); }} disabled={cloudBusy} className={`px-3 py-1.5 rounded-lg text-xs font-bold border flex items-center gap-1.5 ${hasUnsynced ? "bg-amber-400 text-slate-950 border-amber-300 animate-pulse" : "bg-emerald-700/80 text-white border-emerald-500"}`}>
                           <Icon name="cloud" className="w-3.5 h-3.5" />
                           <span>{hasUnsynced ? "有未同步进度 (点此上传)" : "已同步"}</span>
                         </button>
@@ -2610,8 +2668,17 @@
                             <span>目前正在同步：{syncProgress.label}</span>
                             {syncProgress.detail && <span className="text-slate-400 font-normal">({syncProgress.detail})</span>}
                           </div>
-                          <div className="font-mono font-bold text-slate-700">
-                            已完成 {syncProgress.done} / 总共 {syncProgress.total} ({syncProgress.pct}%)
+                          <div className="font-mono font-bold text-slate-700 flex flex-wrap items-center gap-2">
+                            {syncProgress.bytesTotal ? (
+                              <span>{formatBytes(syncProgress.bytesDone || 0)} / {formatBytes(syncProgress.bytesTotal)} ({syncProgress.pct}%)</span>
+                            ) : syncProgress.bytesDone ? (
+                              <span>已拉取 {formatBytes(syncProgress.bytesDone)} ({syncProgress.pct}%)</span>
+                            ) : (
+                              <span>已完成 {syncProgress.done} / 总共 {syncProgress.total} ({syncProgress.pct}%)</span>
+                            )}
+                            {syncProgress.speedBps > 0 && (
+                              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">{formatSpeed(syncProgress.speedBps)}</span>
+                            )}
                           </div>
                         </div>
                         <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
@@ -3059,7 +3126,7 @@
                                 const sysCards = ankiStepCards.filter(c => c.system === sys.id);
                                 const nowMs = Date.now();
                                 const newCnt = sysCards.filter(c => !c.suspended && (!c.fsrs || c.fsrs.reps === 0)).length;
-                                const dueCnt = sysCards.filter(c => !c.suspended && c.fsrs && c.fsrs.reps > 0 && (c.fsrs.due || 0) <= nowMs).length;
+                                const dueCnt = sysCards.filter(c => !c.suspended && c.fsrs && c.fsrs.reps > 0 && isCardDue(c.fsrs, nowMs)).length;
                                 const chk = ankiSelectedSystems.includes(sys.id);
                                 return (
                                   <label key={sys.id} className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer text-xs ${chk ? "bg-indigo-50/70 border-indigo-400 font-semibold" : "bg-slate-50 border-slate-200 text-slate-500"}`}>
@@ -3163,7 +3230,7 @@
                                 const sysCards = medEngCards.filter(c => c.system === sys.id && (medEngCategoryFilter === "ALL" || c.category === medEngCategoryFilter) && (medEngDirFilter === "ALL" || c.direction === medEngDirFilter));
                                 const nowMs = Date.now();
                                 const newCnt = sysCards.filter(c => !c.suspended && (!c.fsrs || c.fsrs.reps === 0)).length;
-                                const dueCnt = sysCards.filter(c => !c.suspended && c.fsrs && c.fsrs.reps > 0 && (c.fsrs.due || 0) <= nowMs).length;
+                                const dueCnt = sysCards.filter(c => !c.suspended && c.fsrs && c.fsrs.reps > 0 && isCardDue(c.fsrs, nowMs)).length;
                                 const chk = medEngSelectedSystems.includes(sys.id);
                                 return (
                                   <label key={sys.id} className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer text-xs ${chk ? "bg-teal-50/70 border-teal-400 font-semibold" : "bg-slate-50 border-slate-200 text-slate-500"}`}>
@@ -3737,8 +3804,13 @@
                                     <input type="text" value={ankiDueDaysInput} onChange={(e) => setAnkiDueDaysInput(e.target.value)} placeholder="0=今天, 3=3天后" className="w-24 border rounded px-2 py-1 bg-white" />
                                     <button onClick={() => {
                                       if (selectedAnkiMoveIds.length === 0) { showToast("请先勾选卡片", "error"); return; }
-                                      const days = parseInt(ankiDueDaysInput, 10);
-                                      const targetDue = !isNaN(days) ? Date.now() + days * 86400000 : new Date(ankiDueDaysInput).getTime();
+                                      const trimmedDue = ankiDueDaysInput.trim();
+                                      const isIntDays = /^-?\d+$/.test(trimmedDue);
+                                      const targetDue = isIntDays
+                                        ? addStudyDaysStartMs(Date.now(), parseInt(trimmedDue, 10))
+                                        : /^\d{4}-\d{2}-\d{2}$/.test(trimmedDue)
+                                          ? (() => { const [yy, mm, dd] = trimmedDue.split("-").map(Number); return new Date(yy, mm - 1, dd, 3, 0, 0, 0).getTime(); })()
+                                          : getStudyDayStartMs(new Date(trimmedDue).getTime());
                                       if (isNaN(targetDue)) { showToast("请输入天数(如 0 或 3)或日期(2026-11-20)", "error"); return; }
                                       const idSet = new Set(selectedAnkiMoveIds);
                                       setAnkiCards(p => p.map(c => idSet.has(c.id) ? { ...c, fsrs: { ...(c.fsrs || createInitialFSRS()), state: "Review", reps: Math.max(1, c.fsrs?.reps || 1), due: targetDue } } : c));
@@ -3788,7 +3860,7 @@
                                       {c.suspended ? <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px]">已暂停</span> :
                                        (!c.fsrs || c.fsrs.reps === 0) ? <span className="px-1.5 py-0.2 rounded bg-sky-100 text-sky-800 text-[10px]">新卡</span> :
                                        <span className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-mono">
-                                         到期: {(c.fsrs.due || 0) <= Date.now() ? "今日到期" : new Date(c.fsrs.due).toLocaleDateString()} · 间隔{c.fsrs.scheduledDays}天
+                                         到期: {isCardDue(c.fsrs) ? "今日到期" : new Date(c.fsrs.due).toLocaleDateString()} · 间隔{c.fsrs.scheduledDays}天
                                        </span>}
                                     </div>
                                     <div className="text-slate-700 line-clamp-2 mt-0.5">{c.type === "io" ? `遮挡框 ${c.masks?.length || 0} 个` : (c.text || "").replace(/<[^>]+>/g, " ")}</div>
@@ -3981,7 +4053,7 @@
                             {apkgPreview && (
                               <div className="p-4 rounded-xl border-2 border-indigo-400 bg-indigo-50/50 space-y-3 mt-2">
                                 <div className="flex justify-between items-center font-bold text-indigo-800">
-                                  <span>预览 .apkg：共 {apkgPreview.imported.length} 张（新卡 {apkgPreview.imported.filter(c => !c.fsrs?.reps).length} · 今日到期 {apkgPreview.imported.filter(c => c.fsrs?.reps > 0 && c.fsrs.due <= Date.now()).length}）· 含 {apkgPreview.mediaCount} 个媒体</span>
+                                  <span>预览 .apkg：共 {apkgPreview.imported.length} 张（新卡 {apkgPreview.imported.filter(c => !c.fsrs?.reps).length} · 今日到期 {apkgPreview.imported.filter(c => c.fsrs?.reps > 0 && isCardDue(c.fsrs)).length}）· 含 {apkgPreview.mediaCount} 个媒体</span>
                                   <button onClick={() => setApkgPreview(null)} className="text-slate-500 hover:text-rose-600">取消</button>
                                 </div>
                                 <div className="max-h-52 overflow-y-auto space-y-2">
@@ -4054,14 +4126,20 @@
                 const cntSusp = scopedCards.filter(c => c.suspended).length;
                 const totalC = scopedCards.length || 1;
 
-                // Future Due Forecast (0..statsForecastDays)
+                // Future Due Forecast (0..statsForecastDays, aligned to 03:00 AM study day)
                 const forecastBins = Array.from({ length: statsForecastDays + 1 }, (_, d) => 0);
                 let overdueCount = 0;
+                const todayStudyStart = getStudyDayStartMs(nowMs);
                 scopedCards.forEach(c => {
                   if (c.suspended || !c.fsrs || c.fsrs.reps === 0) return;
-                  const diffDays = Math.floor(((c.fsrs.due || nowMs) - nowMs) / 86400000);
-                  if (diffDays <= 0) overdueCount++;
-                  else if (diffDays <= statsForecastDays) forecastBins[diffDays]++;
+                  if (isCardDue(c.fsrs, nowMs)) {
+                    overdueCount++;
+                  } else {
+                    const cardStudyStart = getStudyDayStartMs(c.fsrs.due || nowMs);
+                    const diffDays = Math.round((cardStudyStart - todayStudyStart) / 86400000);
+                    if (diffDays <= 0) overdueCount++;
+                    else if (diffDays <= statsForecastDays) forecastBins[diffDays]++;
+                  }
                 });
                 forecastBins[0] = overdueCount;
                 const maxForecast = Math.max(1, ...forecastBins);
@@ -4444,7 +4522,7 @@
                                       <button onClick={() => { const s = new Set(medEngSelectedIds); setMedEngCards(p => p.map(c => s.has(c.id) ? { ...c, suspended: true } : c)); setMedEngSelectedIds([]); showToast("已暂停选中卡片", "info"); }} className="px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-bold">暂停</button>
                                       <button onClick={() => { const s = new Set(medEngSelectedIds); setMedEngCards(p => p.map(c => s.has(c.id) ? { ...c, suspended: false } : c)); setMedEngSelectedIds([]); showToast("已恢复选中卡片", "success"); }} className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-bold">恢复</button>
                                       <input type="text" value={medEngDueDaysInput} onChange={(e) => setMedEngDueDaysInput(e.target.value)} className="w-12 border rounded px-1.5 py-0.5 text-center" title="天数" />
-                                      <button onClick={() => { const d = parseInt(medEngDueDaysInput, 10) || 0; const due = Date.now() + d * 86400000; const s = new Set(medEngSelectedIds); setMedEngCards(p => p.map(c => s.has(c.id) ? { ...c, fsrs: { ...(c.fsrs || createInitialFSRS()), reps: Math.max(1, c.fsrs?.reps || 1), due } } : c)); setMedEngSelectedIds([]); showToast(`已调整到期为 +${d} 天`, "success"); }} className="px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-bold">改到期</button>
+                                      <button onClick={() => { const d = parseInt(medEngDueDaysInput, 10) || 0; const due = addStudyDaysStartMs(Date.now(), d); const s = new Set(medEngSelectedIds); setMedEngCards(p => p.map(c => s.has(c.id) ? { ...c, fsrs: { ...(c.fsrs || createInitialFSRS()), reps: Math.max(1, c.fsrs?.reps || 1), due } } : c)); setMedEngSelectedIds([]); showToast(`已调整到期为 +${d} 天`, "success"); }} className="px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-bold">改到期</button>
                                       {isAdmin && (
                                         <>
                                           <select value={medEngMoveTargetSys} onChange={(e) => setMedEngMoveTargetSys(e.target.value)} className="border rounded px-2 py-1 bg-white max-w-[160px]">
@@ -4633,7 +4711,7 @@
               {showMedEngStatsModal && (() => {
                 const nowMs = Date.now();
                 const dayMs = 86400000;
-                const todayStartMs = new Date().setHours(3, 0, 0, 0) - (new Date().getHours() < 3 ? dayMs : 0);
+                const todayStartMs = getStudyDayStartMs(nowMs);
                 const todayLogs = medEngRevLog.filter(l => l.ts >= todayStartMs);
                 const cntNew = medEngCards.filter(c => !c.suspended && (!c.fsrs || c.fsrs.reps === 0)).length;
                 const cntLearn = medEngCards.filter(c => !c.suspended && c.fsrs && c.fsrs.reps > 0 && c.fsrs.state === "Learning").length;
@@ -4643,8 +4721,12 @@
                 const bins = Array.from({ length: 30 }, () => 0);
                 medEngCards.forEach(c => {
                   if (c.suspended || !c.fsrs || c.fsrs.reps === 0) return;
-                  const diff = Math.max(0, Math.floor(((c.fsrs.due || nowMs) - nowMs) / dayMs));
-                  if (diff < 30) bins[diff]++;
+                  if (isCardDue(c.fsrs, nowMs)) {
+                    bins[0]++;
+                  } else {
+                    const diff = Math.max(0, Math.round((getStudyDayStartMs(c.fsrs.due || nowMs) - todayStartMs) / dayMs));
+                    if (diff < 30) bins[diff]++;
+                  }
                 });
                 const maxB = Math.max(1, ...bins);
                 const passRate = (arr) => arr.length ? `${Math.round((arr.filter(l => l.grade > 1).length / arr.length) * 1000) / 10}%` : "—";

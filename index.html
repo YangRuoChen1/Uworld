@@ -287,16 +287,76 @@
       ]}
     ];
 
-    function speakEnglish(text) {
+    function speakEnglish(text, accent = "en-US", audioUrl = "") {
+      if (audioUrl) {
+        try {
+          const a = new Audio(audioUrl);
+          a.play().catch(() => speakEnglish(text, accent, ""));
+          return;
+        } catch (e) {}
+      }
       if (!window.speechSynthesis || !text) return;
       try {
         window.speechSynthesis.cancel();
         const clean = String(text).replace(/\//g, " ").replace(/\([^)]*\)/g, "").trim();
         const u = new SpeechSynthesisUtterance(clean);
-        u.lang = "en-US";
+        u.lang = accent;
         u.rate = 0.92;
         window.speechSynthesis.speak(u);
       } catch (e) {}
+    }
+
+    function findCandidateQuestionsForAnki(card, questionsList) {
+      if (!card || !Array.isArray(questionsList) || questionsList.length === 0) return [];
+      const raw = ((card.text || "") + " " + (card.extra || ""))
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\{\{\s*[cC]\d+\s*::(.*?)\}\}/g, " $1 ")
+        .toLowerCase();
+      const tokens = Array.from(new Set(
+        (raw.match(/[a-z0-9]{4,}|[\u4e00-\u9fa5]{2,}/g) || [])
+          .filter(w => !["this","that","with","from","which","have","been","were","they","their","when","what","where","into","only","also","more","than","most","some","such","will","would","could","should","about","after","before","between","during","under","above","other","there","these","those","because","patient","presents","year","old","history","shows","associated","increased","decreased","normal"].includes(w))
+      )).slice(0, 28);
+      const scored = questionsList.map(q => {
+        let score = 0;
+        if (card.step && q.step === card.step) score += 12;
+        if (card.system && q.system === card.system) score += 20;
+        const qBlob = ((q.stem || "") + " " + (q.educationalObjective || "") + " " + (q.generalExplanation || "") + " " + Object.values(q.options || {}).join(" ")).toLowerCase();
+        let hits = 0;
+        tokens.forEach(t => { if (qBlob.includes(t)) hits++; });
+        const hitRatio = tokens.length > 0 ? hits / Math.min(tokens.length, 12) : 0;
+        score += Math.round(hitRatio * 68);
+        return { q, score, hits };
+      }).filter(x => x.hits > 0 || x.score >= 32).sort((a, b) => b.score - a.score);
+      return scored.slice(0, 6);
+    }
+
+    function computeSpellingDiff(userStr, targetStr) {
+      const a = String(userStr || "").trim();
+      const b = String(targetStr || "").trim();
+      const n = a.length, m = b.length;
+      const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
+      for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= m; j++) {
+          dp[i][j] = a[i - 1].toLowerCase() === b[j - 1].toLowerCase()
+            ? dp[i - 1][j - 1] + 1
+            : Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+      const ops = [];
+      let i = n, j = m;
+      while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && a[i - 1].toLowerCase() === b[j - 1].toLowerCase()) {
+          ops.unshift({ type: "ok", ch: b[j - 1] });
+          i--; j--;
+        } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+          ops.unshift({ type: "miss", ch: b[j - 1] });
+          j--;
+        } else {
+          ops.unshift({ type: "extra", ch: a[i - 1] });
+          i--;
+        }
+      }
+      return ops;
     }
 
     // Clean empty question bank as requested
@@ -1079,6 +1139,8 @@
       const [savedBlock, setSavedBlock] = useState(() => safeGetStorage(getUserKey(currentUser, "activeBlock"), null));
       const [targetRetention, setTargetRetention] = useState(() => safeGetStorage(getUserKey(currentUser, "retention"), 0.90));
       const [dailyLogs, setDailyLogs] = useState(() => safeGetStorage(getUserKey(currentUser, "dailyLogs"), {}));
+      const [vocabBook, setVocabBook] = useState(() => safeGetStorage(getUserKey(currentUser, "vocabBook"), []));
+      const [examGoal, setExamGoal] = useState(() => safeGetStorage(getUserKey(currentUser, "examGoal"), { name: "USMLE Step 1", date: "2027-06-01" }));
 
       useEffect(() => safeSetStorage(ACCOUNT_STORAGE.CURRENT_USER, currentUser), [currentUser]);
       useEffect(() => safeSetStorage(ACCOUNT_STORAGE.CLOUD_CFG, cloudCfg), [cloudCfg]);
@@ -1123,6 +1185,8 @@
       useEffect(() => safeSetStorage(getUserKey(currentUser, "highlights"), highlightsMap), [highlightsMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "retention"), targetRetention), [targetRetention, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "dailyLogs"), dailyLogs), [dailyLogs, currentUser]);
+      useEffect(() => safeSetStorage(getUserKey(currentUser, "vocabBook"), vocabBook), [vocabBook, currentUser]);
+      useEffect(() => safeSetStorage(getUserKey(currentUser, "examGoal"), examGoal), [examGoal, currentUser]);
       useEffect(() => {
         if (isHydratingRef.current) return;
         if (currentUser !== "guest") setHasUnsynced(true);
@@ -1277,6 +1341,7 @@
       const [medEngQueue, setMedEngQueue] = useState([]);
       const [medEngIdx, setMedEngIdx] = useState(0);
       const [medEngRevealed, setMedEngRevealed] = useState(false);
+      const [medEngUndoStack, setMedEngUndoStack] = useState([]);
       const [showMedEngManager, setShowMedEngManager] = useState(false);
       const [medEngMgrTab, setMedEngMgrTab] = useState("browse"); // addCard | json | browse
       const [medEngSearch, setMedEngSearch] = useState("");
@@ -1312,7 +1377,27 @@
       const [textSize, setTextSize] = useState(1);
       const [highlightMode, setHighlightMode] = useState(false);
       const [showLabModal, setShowLabModal] = useState(false);
+      const [labModalTab, setLabModalTab] = useState("values"); // values | calc
+      const [labSearch, setLabSearch] = useState("");
+      const [calcNa, setCalcNa] = useState("140");
+      const [calcCl, setCalcCl] = useState("102");
+      const [calcHco3, setCalcHco3] = useState("24");
+      const [calcGlu, setCalcGlu] = useState("100");
+      const [calcBun, setCalcBun] = useState("14");
+      const [calcCa, setCalcCa] = useState("9.2");
+      const [calcAlb, setCalcAlb] = useState("4.0");
       const [showNotesModal, setShowNotesModal] = useState(false);
+      const [showVocabModal, setShowVocabModal] = useState(false);
+      const [vocabSearch, setVocabSearch] = useState("");
+      const [dictPopup, setDictPopup] = useState(null); // { word, contextSentence, sourceQuestionId, sourceStep, sourceSystem, loading, ukPhonetic, usPhonetic, ukAudio, usAudio, zhMeaning, enDef, dictExample, localRoots }
+      const [linkedQModal, setLinkedQModal] = useState(null); // { question, ankiCard }
+      const [linkAnkiModal, setLinkAnkiModal] = useState(null); // { ankiCard, search }
+      const [showExamGoalEdit, setShowExamGoalEdit] = useState(false);
+      const [medEngDictQueue, setMedEngDictQueue] = useState([]);
+      const [medEngDictIdx, setMedEngDictIdx] = useState(0);
+      const [medEngDictInput, setMedEngDictInput] = useState("");
+      const [medEngDictResult, setMedEngDictResult] = useState(null);
+      const [medEngDictUndoStack, setMedEngDictUndoStack] = useState([]);
       const [expandedExpOpt, setExpandedExpOpt] = useState(null);
       const [zoomImage, setZoomImage] = useState(null);
 
@@ -1334,7 +1419,7 @@
       // Study Time Tracker (03:00 AM - 03:00 AM boundary, counts BOTH QBank TEST & ANKI_STUDY!)
       useEffect(() => {
         if (currentUser === "guest") return;
-        if (view !== "TEST" && view !== "ANKI_STUDY" && view !== "MEDENG_STUDY") return;
+        if (view !== "TEST" && view !== "ANKI_STUDY" && view !== "MEDENG_STUDY" && view !== "MEDENG_DICTATION") return;
         const timer = setInterval(() => {
           const dk = getStudyDateKey();
           setDailyLogs(prev => {
@@ -1778,6 +1863,7 @@
           type: "cloze",
           step: q.step || activeStep,
           system: q.system,
+          sourceQuestionId: q.id,
           text: promptCore,
           extra: extraHtml,
           activeCNum: 1,
@@ -1802,6 +1888,7 @@
           } else if (view === "MEDENG_STUDY" && currentMedEngCard) {
             if (e.code === "Space") { e.preventDefault(); if (!medEngRevealed) setMedEngRevealed(true); }
             else if (medEngRevealed && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); handleMedEngRate(Number(e.key)); }
+            else if (e.key.toLowerCase() === "z" || e.key === "ArrowLeft") { e.preventDefault(); handleMedEngUndo(); }
           } else if (view === "TEST" && activeBlock && currentQuestion) {
             const qid = currentQuestion.id;
             const isSub = Boolean(activeBlock.submitted[qid]);
@@ -1935,6 +2022,7 @@
         setMedEngQueue(q);
         setMedEngIdx(0);
         setMedEngRevealed(false);
+        setMedEngUndoStack([]);
         setView("MEDENG_STUDY");
       };
 
@@ -1945,7 +2033,165 @@
         setMedEngQueue(q);
         setMedEngIdx(0);
         setMedEngRevealed(false);
+        setMedEngUndoStack([]);
         setView("MEDENG_STUDY");
+      };
+
+      const startMedEngDictationSession = () => {
+        const active = medEngFilteredAll.filter(c => !c.suspended);
+        if (active.length === 0) { showToast("请先勾选至少一个章节或词库", "info"); return; }
+        // Deduplicate by target English medical term so each term is tested once in dictation
+        const seen = new Set();
+        const picked = [];
+        for (const c of active) {
+          const term = c.direction === "正→反" ? c.front : c.back;
+          const key = term.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            picked.push(c.id);
+          }
+          if (picked.length >= Math.max(10, medEngNewLimit + medEngRevLimit)) break;
+        }
+        setMedEngDictQueue(picked);
+        setMedEngDictIdx(0);
+        setMedEngDictInput("");
+        setMedEngDictResult(null);
+        setMedEngDictUndoStack([]);
+        setView("MEDENG_DICTATION");
+        const firstCard = medEngCards.find(c => c.id === picked[0]);
+        if (firstCard) {
+          const term = firstCard.direction === "正→反" ? firstCard.front : firstCard.back;
+          setTimeout(() => speakEnglish(term, "en-US"), 150);
+        }
+      };
+
+      const currentDictCard = useMemo(() => {
+        if (view !== "MEDENG_DICTATION" || !medEngDictQueue[medEngDictIdx]) return null;
+        return medEngCards.find(c => c.id === medEngDictQueue[medEngDictIdx]) || null;
+      }, [view, medEngDictQueue, medEngDictIdx, medEngCards]);
+
+      const lookupSelectionInDict = async (rawSelection, sourceText, qObj) => {
+        const sel = String(rawSelection || "").trim().replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9-]+$/g, "");
+        if (!sel || sel.length < 2) { showToast("请先在题干或选项中划选英文单词或短语", "info"); return; }
+        // Extract surrounding sentence from sourceText
+        let ctxSentence = "";
+        if (sourceText) {
+          const sentences = String(sourceText).split(/(?<=[.!?])\s+/);
+          ctxSentence = sentences.find(st => st.toLowerCase().includes(sel.toLowerCase())) || String(sourceText).slice(0, 220);
+        }
+        // Check local MedEng root matches
+        const lowSel = sel.toLowerCase();
+        const localRoots = medEngCards.filter(c => {
+          if (c.direction !== "正→反") return false;
+          const stem = c.front.replace(/\//g, "").replace(/-/g, "").toLowerCase();
+          return stem.length >= 3 && (lowSel.includes(stem) || stem === lowSel);
+        }).slice(0, 4);
+
+        const initPopup = {
+          word: sel,
+          contextSentence: ctxSentence,
+          sourceQuestionId: qObj?.id || "",
+          sourceStep: qObj?.step || "",
+          sourceSystem: qObj?.system || "",
+          loading: true,
+          ukPhonetic: "",
+          usPhonetic: "",
+          ukAudio: "",
+          usAudio: "",
+          zhMeaning: "",
+          enDef: "",
+          dictExample: "",
+          localRoots
+        };
+        setDictPopup(initPopup);
+
+        let ukPhonetic = "", usPhonetic = "", ukAudio = "", usAudio = "", enDef = "", dictExample = "", zhMeaning = "";
+        const singleWord = sel.split(/\s+/)[0].toLowerCase();
+        try {
+          if (!sel.includes(" ")) {
+            const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(singleWord)}`);
+            if (r.ok) {
+              const data = await r.json();
+              const entry = data?.[0];
+              if (entry) {
+                (entry.phonetics || []).forEach(p => {
+                  if (p.audio && p.audio.includes("-uk")) { ukAudio = p.audio; if (p.text) ukPhonetic = p.text; }
+                  else if (p.audio && p.audio.includes("-us")) { usAudio = p.audio; if (p.text) usPhonetic = p.text; }
+                  if (!ukPhonetic && p.text) ukPhonetic = p.text;
+                  if (!usPhonetic && p.text) usPhonetic = p.text;
+                });
+                const m0 = entry.meanings?.[0];
+                if (m0) {
+                  const d0 = m0.definitions?.[0];
+                  enDef = `(${m0.partOfSpeech || ""}) ${d0?.definition || ""}`;
+                  dictExample = d0?.example || "";
+                }
+              }
+            }
+          }
+        } catch (e) {}
+
+        try {
+          const tr = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sel)}&langpair=en|zh-CN`);
+          if (tr.ok) {
+            const td = await tr.json();
+            zhMeaning = td?.responseData?.translatedText || "";
+          }
+        } catch (e) {}
+
+        setDictPopup(prev => prev && prev.word === sel ? {
+          ...prev,
+          loading: false,
+          ukPhonetic,
+          usPhonetic,
+          ukAudio,
+          usAudio,
+          zhMeaning: zhMeaning || (localRoots[0]?.back || ""),
+          enDef,
+          dictExample
+        } : prev);
+      };
+
+      const openAnkiLinkedQuestion = (card) => {
+        if (!card) return;
+        if (card.sourceQuestionId) {
+          const found = questions.find(q => q.id === card.sourceQuestionId);
+          if (found) {
+            setLinkedQModal({ question: found, ankiCard: card });
+            return;
+          }
+        }
+        setLinkAnkiModal({ ankiCard: card, search: "" });
+      };
+
+      const bindAnkiToQuestion = (card, q) => {
+        setAnkiCards(prev => prev.map(c =>
+          (c.id === card.id || (card.text && c.text === card.text))
+            ? { ...c, sourceQuestionId: q.id }
+            : c
+        ));
+        if (previewAnkiCard && previewAnkiCard.id === card.id) {
+          setPreviewAnkiCard(p => ({ ...p, sourceQuestionId: q.id }));
+        }
+        setLinkAnkiModal(null);
+        setLinkedQModal({ question: q, ankiCard: { ...card, sourceQuestionId: q.id } });
+        showToast("已永久关联该原题！", "success");
+      };
+
+      const batchAutoLinkAnkiQuestions = () => {
+        if (questions.length === 0) { showToast("当前题库为空，无法自动匹配", "error"); return; }
+        let linkedCnt = 0;
+        setAnkiCards(prev => prev.map(c => {
+          if (c.sourceQuestionId) return c;
+          const cands = findCandidateQuestionsForAnki(c, questions);
+          if (cands[0] && cands[0].score >= 48) {
+            linkedCnt++;
+            return { ...c, sourceQuestionId: cands[0].q.id };
+          }
+          return c;
+        }));
+        if (linkedCnt > 0) showToast(`已智能为 ${linkedCnt} 张旧 Anki 卡片自动关联原题！`, "success");
+        else showToast("未发现高置信度匹配，可在单张卡片点击「🔗 原题」手动检索绑定", "info");
       };
 
       const currentMedEngCard = useMemo(() => {
@@ -1953,8 +2199,40 @@
         return medEngCards.find(c => c.id === medEngQueue[medEngIdx]) || null;
       }, [view, medEngQueue, medEngIdx, medEngCards]);
 
+      const handleMedEngUndo = () => {
+        if (medEngUndoStack.length === 0) {
+          showToast("当前没有可回退的卡片", "info");
+          return;
+        }
+        const snap = medEngUndoStack[medEngUndoStack.length - 1];
+        setMedEngUndoStack(prev => prev.slice(0, -1));
+        setMedEngCards(prev => prev.map(c => c.id === snap.cardId ? { ...c, fsrs: snap.prevFsrs } : c));
+        setMedEngMistakes(snap.prevMistakes);
+        setMedEngRevLog(prev => prev.slice(0, snap.revLogLen));
+        setDailyLogs(prev => {
+          const cur = prev[snap.dayKey];
+          if (!cur) return prev;
+          return { ...prev, [snap.dayKey]: { ...cur, medEngCount: Math.max(0, (cur.medEngCount || 0) - 1) } };
+        });
+        setMedEngQueue(snap.prevQueue);
+        setMedEngIdx(snap.prevIdx);
+        setMedEngRevealed(true);
+        showToast("已回退至上一张卡片，可重新评分", "info");
+      };
+
       const handleMedEngRate = (grade) => {
         if (!currentMedEngCard) return;
+        const dk = getStudyDateKey();
+        const snap = {
+          cardId: currentMedEngCard.id,
+          prevFsrs: currentMedEngCard.fsrs ? { ...currentMedEngCard.fsrs } : createInitialFSRS(),
+          prevQueue: [...medEngQueue],
+          prevIdx: medEngIdx,
+          prevMistakes: [...medEngMistakes],
+          revLogLen: medEngRevLog.length,
+          dayKey: dk
+        };
+        setMedEngUndoStack(prev => [...prev.slice(-29), snap]);
         const nextFsrs = fsrsSchedule(currentMedEngCard.fsrs, grade, targetRetention);
         const updatedCard = { ...currentMedEngCard, fsrs: nextFsrs };
         setMedEngCards(prev => prev.map(c => c.id === currentMedEngCard.id ? updatedCard : c));
@@ -1970,7 +2248,6 @@
           setMedEngMistakes(prev => prev.filter(m => m.id !== updatedCard.id));
         }
 
-        const dk = getStudyDateKey();
         setDailyLogs(prev => {
           const cur = prev[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
           return { ...prev, [dk]: { ...cur, medEngCount: (cur.medEngCount || 0) + 1 } };
@@ -2090,6 +2367,8 @@
         setNotesMap(safeGetStorage(getUserKey(uname, "notes"), {}));
         setHighlightsMap(safeGetStorage(getUserKey(uname, "highlights"), {}));
         setDailyLogs(safeGetStorage(getUserKey(uname, "dailyLogs"), {}));
+        setVocabBook(safeGetStorage(getUserKey(uname, "vocabBook"), []));
+        setExamGoal(safeGetStorage(getUserKey(uname, "examGoal"), { name: "USMLE Step 1", date: "2027-06-01" }));
         setSavedBlock(safeGetStorage(getUserKey(uname, "activeBlock"), null));
         setView("DASHBOARD");
       };
@@ -2223,6 +2502,7 @@
                 data: {
                   mistakes, medEngMistakes, medEngRevLog, ankiRevLog,
                   attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs,
+                  vocabBook, examGoal,
                   activeBlock: savedBlock,
                   chunkMeta: { qChunks: qChunks.length, aChunks: aChunks.length, mChunks: mChunks.length },
                   updatedAt: new Date().toISOString()
@@ -2289,6 +2569,8 @@
             if (d.notesMap) setNotesMap(d.notesMap);
             if (d.highlightsMap) setHighlightsMap(d.highlightsMap);
             if (d.dailyLogs) setDailyLogs(d.dailyLogs);
+            if (Array.isArray(d.vocabBook)) setVocabBook(d.vocabBook);
+            if (d.examGoal) setExamGoal(d.examGoal);
             if (d.medEngFsrsMap) {
               setMedEngCards(prev => prev.map(c => d.medEngFsrsMap[c.id] ? { ...c, fsrs: d.medEngFsrsMap[c.id].fsrs, suspended: d.medEngFsrsMap[c.id].suspended } : c));
             }
@@ -2836,6 +3118,57 @@
                       </div>
                     </div>
 
+                    {/* EXAM COUNTDOWN & PACE PROJECTION BAR */}
+                    {(() => {
+                      const targetMs = new Date((examGoal?.date || "2027-06-01") + "T03:00:00").getTime();
+                      const daysLeft = Math.max(1, Math.ceil((targetMs - Date.now()) / 86400000));
+                      const unusedQs = questions.filter(q => !attemptedMap[q.id]).length;
+                      const newAnki = ankiCards.filter(c => !c.suspended && (!c.fsrs || c.fsrs.reps === 0)).length;
+                      const newMedEng = medEngCards.filter(c => !c.suspended && (!c.fsrs || c.fsrs.reps === 0)).length;
+                      const reqQ = Math.ceil(unusedQs / daysLeft);
+                      const reqA = Math.ceil(newAnki / daysLeft);
+                      const reqMe = Math.ceil(newMedEng / daysLeft);
+                      // Recent 7-day actual pace
+                      let q7 = 0, a7 = 0, m7 = 0;
+                      for (let i = 0; i < 7; i++) {
+                        const dk = getStudyDateKey(Date.now() - i * 86400000);
+                        q7 += dailyLogs[dk]?.qCount || 0;
+                        a7 += dailyLogs[dk]?.ankiCount || 0;
+                        m7 += dailyLogs[dk]?.medEngCount || 0;
+                      }
+                      const avgQ7 = (q7 / 7).toFixed(1);
+                      const avgA7 = (a7 / 7).toFixed(1);
+                      const onTrack = unusedQs === 0 || Number(avgQ7) >= reqQ;
+                      return (
+                        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <div className="px-3 py-2 rounded-xl bg-blue-900 text-white font-extrabold flex items-center gap-2">
+                              <span>🎯 {examGoal?.name || "目标考试"}</span>
+                              <span className="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-black">倒计时 {daysLeft} 天</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2 text-slate-600">
+                              <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">未做题库 <strong>{unusedQs}</strong> → 需 <strong>{reqQ}</strong> 题/天 <span className="text-slate-400">(近7天均 {avgQ7})</span></span>
+                              <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">Anki新卡 <strong>{newAnki}</strong> → 需 <strong>{reqA}</strong> 张/天 <span className="text-slate-400">(近7天均 {avgA7})</span></span>
+                              <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">医学英语新卡 <strong>{newMedEng}</strong> → 需 <strong>{reqMe}</strong> 张/天</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className={`px-2.5 py-1 rounded-full font-bold ${onTrack ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-800 border border-amber-200"}`}>
+                              {onTrack ? "✅ 节奏达标" : "⚡ 建议适当提速"}
+                            </span>
+                            <button onClick={() => setShowExamGoalEdit(v => !v)} className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">设置目标</button>
+                          </div>
+                          {showExamGoalEdit && (
+                            <div className="w-full pt-3 border-t flex flex-wrap items-center gap-2">
+                              <input type="text" value={examGoal?.name || ""} onChange={(e) => setExamGoal(g => ({ ...g, name: e.target.value }))} placeholder="考试名称 (如 USMLE Step 1)" className="border rounded-lg px-2.5 py-1.5 font-semibold" />
+                              <input type="date" value={examGoal?.date || ""} onChange={(e) => setExamGoal(g => ({ ...g, date: e.target.value }))} className="border rounded-lg px-2.5 py-1.5 font-semibold" />
+                              <button onClick={() => setShowExamGoalEdit(false)} className="px-3 py-1.5 rounded-lg bg-blue-700 text-white font-bold">保存</button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
                     {/* EQUAL-PROMINENCE THREE-WAY MODE SWITCHER: QBank vs Anki vs MedEng */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <button onClick={() => setDashMainMode("qbank")} className={`p-4 rounded-2xl border-2 text-left transition flex items-center justify-between ${dashMainMode === "qbank" ? "bg-blue-700 text-white border-blue-700 shadow-lg" : "bg-white text-slate-700 border-slate-200 hover:border-blue-300"}`}>
@@ -2887,6 +3220,9 @@
                           <div className="flex flex-wrap gap-2">
                             <button onClick={() => setShowPerfModal(true)} className="px-3.5 py-2 rounded-xl bg-white border border-emerald-400 text-emerald-700 text-xs font-bold hover:bg-emerald-50">
                               📊 正确率分析
+                            </button>
+                            <button onClick={() => setShowVocabModal(true)} className="px-3.5 py-2 rounded-xl bg-white border border-sky-400 text-sky-800 text-xs font-bold hover:bg-sky-50">
+                              📖 生词本 ({vocabBook.length})
                             </button>
                             <button onClick={() => setShowNotebookModal(true)} className="px-3.5 py-2 rounded-xl bg-white border border-amber-400 text-amber-800 text-xs font-bold hover:bg-amber-50">
                               📒 我的笔记本 ({Object.values(notesMap).filter(v => v && v.trim()).length})
@@ -3266,6 +3602,9 @@
                                   提前复习 / 自由刷卡
                                 </button>
                               )}
+                              <button onClick={startMedEngDictationSession} className="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow flex items-center gap-2">
+                                <span>✍️ 听写拼词模式</span>
+                              </button>
                               <button onClick={startMedEngSession} className="px-7 py-3 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-extrabold text-sm shadow-lg flex items-center gap-2">
                                 <Icon name="play" className="w-4 h-4" /> <span>开始医学英语 FSRS 复习</span>
                               </button>
@@ -3310,6 +3649,11 @@
                         <button disabled={activeBlock.currentIndex >= activeBlock.qIds.length - 1} onClick={() => { setActiveBlock(p => ({ ...p, currentIndex: p.currentIndex + 1 })); setExpandedExpOpt(null); }} className="px-2.5 py-1 rounded bg-blue-800 disabled:opacity-40 text-xs font-semibold">Next</button>
                       </div>
                       <div className="flex items-center gap-1 text-xs">
+                        <button onClick={() => {
+                          const sel = window.getSelection()?.toString().trim();
+                          if (sel) lookupSelectionInDict(sel, currentQuestion.stem + " " + Object.values(currentQuestion.options || {}).join(" "), currentQuestion);
+                          else setShowVocabModal(true);
+                        }} className="px-2 py-1 rounded bg-sky-500/80 hover:bg-sky-400 font-bold">📖 查词/生词本</button>
                         <button onClick={() => setHighlightMode(!highlightMode)} className={`px-2 py-1 rounded ${highlightMode ? "bg-yellow-400 text-slate-950 font-bold" : "hover:bg-blue-800"}`}>荧光笔</button>
                         <button onClick={() => setShowLabModal(true)} className="px-2 py-1 rounded hover:bg-blue-800">Lab</button>
                         <button onClick={() => setShowNotesModal(v => !v)} className={`px-2 py-1 rounded font-semibold ${showNotesModal ? "bg-amber-400 text-slate-950" : "hover:bg-blue-800"}`}>📒 Notes</button>
@@ -3329,10 +3673,16 @@
                         <div className="max-w-4xl mx-auto space-y-6 pb-12">
                           <div className="flex justify-between items-center text-xs text-slate-400">
                             <span>{currentQuestion.step} · <strong className={darkMode ? "text-sky-300" : "text-blue-700"}>{currentQuestion.system}</strong></span>
-                            <button onClick={() => {
-                              const sel = window.getSelection()?.toString().trim();
-                              if (sel && sel.length >= 2) setHighlightsMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] }));
-                            }} className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-900 border border-yellow-300">高亮选中文字</button>
+                            <div className="flex items-center gap-1.5">
+                              <button onClick={() => {
+                                const sel = window.getSelection()?.toString().trim();
+                                lookupSelectionInDict(sel, currentQuestion.stem + " " + Object.values(currentQuestion.options || {}).join(" "), currentQuestion);
+                              }} className="px-2.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 border border-sky-300 font-bold">📖 划词翻译 / 加入生词本</button>
+                              <button onClick={() => {
+                                const sel = window.getSelection()?.toString().trim();
+                                if (sel && sel.length >= 2) setHighlightsMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] }));
+                              }} className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-900 border border-yellow-300">高亮选中文字</button>
+                            </div>
                           </div>
 
                           <p onMouseUp={() => { if (!highlightMode) return; const sel = window.getSelection()?.toString().trim(); if (sel && sel.length >= 2) setHighlightsMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] })); }} className={`font-serif-clinical leading-relaxed whitespace-pre-line ${fontSizeCls}`}>
@@ -3458,6 +3808,9 @@
                       Anki FSRS 复习 · 剩余 {ankiQueue.length} 张 · <span className="text-indigo-200">{currentAnkiStudyCard.step} · {currentAnkiStudyCard.system}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button onClick={() => openAnkiLinkedQuestion(currentAnkiStudyCard)} className="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold">
+                        {currentAnkiStudyCard.sourceQuestionId ? "🔗 查看原题" : "🔗 关联原题"}
+                      </button>
                       <button onClick={() => setEditingAnkiCard({ ...currentAnkiStudyCard })} className="px-3 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-xs font-bold">✏️ 编辑此卡</button>
                       <button onClick={() => setView("DASHBOARD")} className="px-3 py-1 rounded-lg bg-indigo-800 hover:bg-indigo-700 text-xs font-bold">返回主页</button>
                     </div>
@@ -3548,6 +3901,14 @@
                       <span className="ml-1.5 px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[11px]">{currentMedEngCard.direction}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleMedEngUndo}
+                        disabled={medEngUndoStack.length === 0}
+                        title="回退上一张卡片 (快捷键 Z / ←)"
+                        className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:bg-teal-800/60 disabled:text-teal-300/60 disabled:border-teal-700 text-slate-950 border border-amber-300 text-xs font-bold transition"
+                      >
+                        ↩️ 回退上一张{medEngUndoStack.length > 0 ? ` (${medEngUndoStack.length})` : ""}
+                      </button>
                       <button onClick={() => setEditingMedEngCard({ ...currentMedEngCard })} className="px-3 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-600 border border-teal-400 text-xs font-bold">✏️ 编辑此卡</button>
                       <button onClick={() => setView("DASHBOARD")} className="px-3 py-1.5 rounded-lg bg-teal-800 hover:bg-teal-700 text-xs font-bold">返回主页</button>
                     </div>
@@ -3598,6 +3959,137 @@
                   </main>
                 </div>
               )}
+
+              {/* VIEW 3C: MEDENG DICTATION & SPELLING CHECK */}
+              {view === "MEDENG_DICTATION" && currentDictCard && (() => {
+                const targetTerm = currentDictCard.direction === "正→反" ? currentDictCard.front : currentDictCard.back;
+                const promptMeaning = currentDictCard.direction === "正→反" ? currentDictCard.back : currentDictCard.front;
+                const submitDictation = () => {
+                  const cleanU = medEngDictInput.trim().toLowerCase();
+                  const cleanT = targetTerm.trim().toLowerCase();
+                  const isExact = cleanU === cleanT;
+                  const diffOps = computeSpellingDiff(medEngDictInput, targetTerm);
+                  setMedEngDictResult({ isExact, diffOps, targetTerm });
+                };
+                const advanceDictation = (grade) => {
+                  setMedEngDictUndoStack(prev => [...prev.slice(-29), { idx: medEngDictIdx, input: medEngDictInput, result: medEngDictResult }]);
+                  const nextFsrs = fsrsSchedule(currentDictCard.fsrs, grade, targetRetention);
+                  setMedEngCards(prev => prev.map(c => c.id === currentDictCard.id ? { ...c, fsrs: nextFsrs } : c));
+                  const dk = getStudyDateKey();
+                  setDailyLogs(prev => {
+                    const cur = prev[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
+                    return { ...prev, [dk]: { ...cur, medEngCount: (cur.medEngCount || 0) + 1 } };
+                  });
+                  if (medEngDictIdx + 1 >= medEngDictQueue.length) {
+                    showToast("🎉 本轮医学英语听写拼词已完成！", "success");
+                    setView("DASHBOARD");
+                    return;
+                  }
+                  const nxtIdx = medEngDictIdx + 1;
+                  setMedEngDictIdx(nxtIdx);
+                  setMedEngDictInput("");
+                  setMedEngDictResult(null);
+                  const nxtCard = medEngCards.find(c => c.id === medEngDictQueue[nxtIdx]);
+                  if (nxtCard) {
+                    const nxtTerm = nxtCard.direction === "正→反" ? nxtCard.front : nxtCard.back;
+                    setTimeout(() => speakEnglish(nxtTerm, "en-US"), 150);
+                  }
+                };
+                return (
+                  <div className="flex-1 flex flex-col min-h-screen bg-slate-100">
+                    <header className="bg-amber-600 text-white px-4 py-3 flex items-center justify-between shadow">
+                      <div className="text-xs sm:text-sm font-bold">
+                        <span>✍️ 医学英语听写拼词 · 第 {medEngDictIdx + 1} / {medEngDictQueue.length} 题</span>
+                        <span className="ml-2 px-2 py-0.5 rounded bg-amber-800 text-amber-100 text-[11px]">{currentDictCard.category}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          disabled={medEngDictUndoStack.length === 0}
+                          onClick={() => {
+                            const snap = medEngDictUndoStack[medEngDictUndoStack.length - 1];
+                            setMedEngDictUndoStack(p => p.slice(0, -1));
+                            setMedEngDictIdx(snap.idx);
+                            setMedEngDictInput(snap.input);
+                            setMedEngDictResult(snap.result);
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-white text-slate-900 disabled:opacity-40 text-xs font-bold"
+                        >
+                          ↩️ 上一题
+                        </button>
+                        <button onClick={() => setView("DASHBOARD")} className="px-3 py-1.5 rounded-lg bg-amber-800 hover:bg-amber-700 text-xs font-bold">返回主页</button>
+                      </div>
+                    </header>
+                    <main className="flex-1 flex items-center justify-center p-4 sm:p-8">
+                      <div className="w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-10 space-y-6">
+                        <div className="flex justify-between items-center text-xs text-slate-500 border-b pb-3">
+                          <span className="font-bold text-teal-700">{currentDictCard.system}</span>
+                          <span>{currentDictCard.partType || currentDictCard.category}</span>
+                        </div>
+                        <div className="text-center space-y-3">
+                          <div className="text-xs font-bold text-slate-400">释义提示（请拼写出对应的医学英语词缀/缩写/术语）</div>
+                          <div className="text-xl sm:text-2xl font-extrabold text-slate-900">{promptMeaning}</div>
+                          <button type="button" onClick={() => speakEnglish(targetTerm, "en-US")} className="px-4 py-1.5 rounded-full bg-teal-50 border border-teal-300 text-teal-800 text-xs font-bold hover:bg-teal-100">
+                            🔊 再听一遍发音
+                          </button>
+                        </div>
+
+                        <div className="space-y-3">
+                          <input
+                            type="text"
+                            autoFocus
+                            disabled={Boolean(medEngDictResult)}
+                            value={medEngDictInput}
+                            onChange={(e) => setMedEngDictInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                if (!medEngDictResult) submitDictation();
+                                else advanceDictation(medEngDictResult.isExact ? 3 : 1);
+                              }
+                            }}
+                            placeholder="在此输入英文拼写，按 Enter 核对..."
+                            className="w-full border-2 border-slate-300 focus:border-teal-600 rounded-2xl px-4 py-3.5 text-center text-xl font-mono font-bold focus:outline-none"
+                          />
+                          {!medEngDictResult && (
+                            <button onClick={submitDictation} className="w-full py-3.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-extrabold text-sm shadow">
+                              核对拼写 (Enter)
+                            </button>
+                          )}
+                        </div>
+
+                        {medEngDictResult && (
+                          <div className="space-y-4">
+                            <div className={`p-5 rounded-2xl border-2 text-center space-y-2 ${medEngDictResult.isExact ? "bg-emerald-50 border-emerald-400" : "bg-rose-50 border-rose-300"}`}>
+                              <div className={`font-extrabold text-base ${medEngDictResult.isExact ? "text-emerald-700" : "text-rose-700"}`}>
+                                {medEngDictResult.isExact ? "✅ 拼写完全正确！" : "❌ 拼写有差异，请对照红绿高亮修正："}
+                              </div>
+                              {!medEngDictResult.isExact && (
+                                <div className="flex flex-wrap justify-center gap-0.5 text-xl font-mono font-extrabold pt-1">
+                                  {medEngDictResult.diffOps.map((op, i) => (
+                                    <span key={i} className={
+                                      op.type === "ok" ? "text-emerald-700" :
+                                      op.type === "extra" ? "text-rose-600 line-through bg-rose-100 px-0.5 rounded" :
+                                      "text-amber-700 underline decoration-2 bg-amber-100 px-0.5 rounded"
+                                    }>{op.ch === " " ? "␣" : op.ch}</span>
+                                  ))}
+                                </div>
+                              )}
+                              <div className="text-sm text-slate-700 pt-1">标准拼写：<strong className="font-mono text-lg text-slate-950">{medEngDictResult.targetTerm}</strong></div>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                              {[[1, "Again 重来", "bg-rose-600"], [2, "Hard 困难", "bg-amber-600"], [3, "Good 良好", "bg-emerald-600"], [4, "Easy 简单", "bg-sky-600"]].map(([g, label, cls]) => (
+                                <button key={g} onClick={() => advanceDictation(g)} className={`${cls} text-white rounded-xl py-2.5 text-xs font-bold shadow`}>
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </main>
+                  </div>
+                );
+              })()}
 
               {/* VIEW 4: BLOCK SUMMARY */}
               {view === "SUMMARY" && activeBlock && (
@@ -3771,6 +4263,7 @@
                             <div className="flex flex-wrap gap-2 items-center">
                               <select value={ankiStepFilter} onChange={(e) => setAnkiStepFilter(e.target.value)} className="border rounded-lg px-2.5 py-1.5"><option value="ALL">全部 Step</option>{STEPS.map(s => <option key={s}>{s}</option>)}</select>
                               <select value={ankiSysFilter} onChange={(e) => setAnkiSysFilter(e.target.value)} className="border rounded-lg px-2.5 py-1.5 flex-1"><option value="ALL">全部系统</option>{ALL_SYSTEMS_UNIQUE.map(s => <option key={s.id} value={s.id}>{s.id}</option>)}</select>
+                              <button onClick={batchAutoLinkAnkiQuestions} className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold">⚡ 批量智能关联原题</button>
                               <button disabled={cloudBusy} onClick={pullGlobalAnki} className="px-3 py-1.5 rounded-lg bg-indigo-700 text-white font-bold">同步云端 Anki 库</button>
                               {isAdmin && <button disabled={cloudBusy} onClick={publishGlobalAnki} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">发布 Anki 公共库</button>}
                             </div>
@@ -4365,25 +4858,328 @@
                 </div>
               )}
 
-              {showLabModal && (
-                <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
-                  <div className="w-full max-w-2xl bg-white rounded-2xl p-5 max-h-[80vh] overflow-y-auto space-y-3 text-xs">
-                    <div className="flex flex-wrap justify-between items-center gap-2 font-bold text-sm border-b pb-2">
-                      <div className="flex items-center gap-2">
-                        <span>Lab Values</span>
-                        <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-[11px]">
-                          <button onClick={() => setLabUnitMode("US")} className={`px-2.5 py-1 rounded-md font-bold ${labUnitMode === "US" ? "bg-blue-700 text-white" : "text-slate-600"}`}>🇺🇸 US 传统单位</button>
-                          <button onClick={() => setLabUnitMode("UK")} className={`px-2.5 py-1 rounded-md font-bold ${labUnitMode === "UK" ? "bg-teal-700 text-white" : "text-slate-600"}`}>🇬🇧 UK SI 国际单位</button>
+              {showLabModal && (() => {
+                const lq = labSearch.trim().toLowerCase();
+                const labList = (labUnitMode === "UK" ? LAB_VALUES_SI : LAB_VALUES).map(sec => ({
+                  ...sec,
+                  items: sec.items.filter(([k, v]) => !lq || k.toLowerCase().includes(lq) || v.toLowerCase().includes(lq) || sec.cat.toLowerCase().includes(lq))
+                })).filter(sec => sec.items.length > 0);
+                const na = parseFloat(calcNa) || 0, cl = parseFloat(calcCl) || 0, hco3 = parseFloat(calcHco3) || 0;
+                const glu = parseFloat(calcGlu) || 0, bun = parseFloat(calcBun) || 0, ca = parseFloat(calcCa) || 0, alb = parseFloat(calcAlb) || 0;
+                const ag = (na - (cl + hco3)).toFixed(1);
+                const corrNa16 = (na + 0.016 * (glu - 100)).toFixed(1);
+                const corrNa24 = (na + 0.024 * (glu - 100)).toFixed(1);
+                const corrCa = (ca + 0.8 * (4.0 - alb)).toFixed(2);
+                const winterMid = (1.5 * hco3 + 8).toFixed(1);
+                const osm = (2 * na + glu / 18 + bun / 2.8).toFixed(1);
+                return (
+                  <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
+                    <div className="w-full max-w-2xl bg-white rounded-2xl p-5 max-h-[85vh] overflow-y-auto space-y-3 text-xs">
+                      <div className="flex flex-wrap justify-between items-center gap-2 font-bold text-sm border-b pb-2.5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs">
+                            <button onClick={() => setLabModalTab("values")} className={`px-3 py-1 rounded-md font-bold ${labModalTab === "values" ? "bg-blue-700 text-white" : "text-slate-600"}`}>📋 检验参考值</button>
+                            <button onClick={() => setLabModalTab("calc")} className={`px-3 py-1 rounded-md font-bold ${labModalTab === "calc" ? "bg-indigo-700 text-white" : "text-slate-600"}`}>🧮 临床公式计算器</button>
+                          </div>
+                          {labModalTab === "values" && (
+                            <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-[11px]">
+                              <button onClick={() => setLabUnitMode("US")} className={`px-2 py-1 rounded-md font-bold ${labUnitMode === "US" ? "bg-blue-700 text-white" : "text-slate-600"}`}>🇺🇸 US</button>
+                              <button onClick={() => setLabUnitMode("UK")} className={`px-2 py-1 rounded-md font-bold ${labUnitMode === "UK" ? "bg-teal-700 text-white" : "text-slate-600"}`}>🇬🇧 UK SI</button>
+                            </div>
+                          )}
+                        </div>
+                        <button onClick={() => setShowLabModal(false)}><Icon name="x" className="w-4 h-4" /></button>
+                      </div>
+
+                      {labModalTab === "values" ? (
+                        <div className="space-y-3">
+                          <input type="text" value={labSearch} onChange={(e) => setLabSearch(e.target.value)} placeholder="🔍 搜索检验项目（如 Sodium、Lactate、PaCO2）..." className="w-full border rounded-xl px-3 py-2 bg-slate-50" />
+                          {labList.length === 0 ? <div className="text-center py-6 text-slate-400">未找到匹配的检验项目</div> : labList.map(sec => (
+                            <div key={sec.cat}>
+                              <div className="font-bold text-blue-700 mb-1">{sec.cat}</div>
+                              {sec.items.map(([k, v]) => <div key={k} className="flex justify-between py-1 border-b border-slate-100"><span>{k}</span><span className="font-mono font-semibold">{v}</span></div>)}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 rounded-xl bg-slate-50 border">
+                            <label className="space-y-1"><span className="font-bold text-slate-600">Na⁺ (mEq/L)</span><input type="number" value={calcNa} onChange={(e) => setCalcNa(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">Cl⁻ (mEq/L)</span><input type="number" value={calcCl} onChange={(e) => setCalcCl(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">HCO₃⁻ (mEq/L)</span><input type="number" value={calcHco3} onChange={(e) => setCalcHco3(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">Glucose (mg/dL)</span><input type="number" value={calcGlu} onChange={(e) => setCalcGlu(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">BUN (mg/dL)</span><input type="number" value={calcBun} onChange={(e) => setCalcBun(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">Ca²⁺ (mg/dL)</span><input type="number" step="0.1" value={calcCa} onChange={(e) => setCalcCa(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                            <label className="space-y-1"><span className="font-bold text-slate-600">Albumin (g/dL)</span><input type="number" step="0.1" value={calcAlb} onChange={(e) => setCalcAlb(e.target.value)} className="w-full border rounded-lg px-2 py-1 bg-white font-mono" /></label>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div className="p-3 rounded-xl border bg-blue-50/60">
+                              <div className="font-bold text-blue-900">Anion Gap (阴离子间隙)</div>
+                              <div className="text-xl font-black text-blue-700 font-mono mt-1">{ag} mEq/L</div>
+                              <div className="text-[11px] text-slate-500">公式: Na - (Cl + HCO₃) · 正常 8–12</div>
+                            </div>
+                            <div className="p-3 rounded-xl border bg-indigo-50/60">
+                              <div className="font-bold text-indigo-900">Winter's Formula (代酸预期 PaCO₂)</div>
+                              <div className="text-xl font-black text-indigo-700 font-mono mt-1">{winterMid} ± 2 mm Hg</div>
+                              <div className="text-[11px] text-slate-500">公式: 1.5 × HCO₃ + 8 ± 2</div>
+                            </div>
+                            <div className="p-3 rounded-xl border bg-emerald-50/60">
+                              <div className="font-bold text-emerald-900">Corrected Na⁺ (高血糖校正钠)</div>
+                              <div className="text-lg font-black text-emerald-700 font-mono mt-1">{corrNa16} <span className="text-xs font-normal text-slate-500">(Glu&gt;400用 {corrNa24})</span></div>
+                              <div className="text-[11px] text-slate-500">Na + 0.016(或0.024) × (Glucose - 100)</div>
+                            </div>
+                            <div className="p-3 rounded-xl border bg-amber-50/60">
+                              <div className="font-bold text-amber-900">Corrected Ca²⁺ & 血浆渗透压</div>
+                              <div className="text-sm font-black text-amber-800 font-mono mt-1">校正 Ca: {corrCa} mg/dL · Osm: {osm} mOsm/kg</div>
+                              <div className="text-[11px] text-slate-500">Ca+0.8(4-Alb) · 2Na+Glu/18+BUN/2.8</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+
+
+              {/* EMBEDDED DICTIONARY POPUP */}
+              {dictPopup && (
+                <div className="fixed inset-0 z-[75] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+                  <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-5 space-y-3.5 text-xs">
+                    <div className="flex justify-between items-start border-b pb-2.5">
+                      <div>
+                        <div className="text-lg font-black text-slate-900">{dictPopup.word}</div>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                          <button onClick={() => speakEnglish(dictPopup.word, "en-GB", dictPopup.ukAudio)} className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 font-bold">🇬🇧 英音 🔊 {dictPopup.ukPhonetic}</button>
+                          <button onClick={() => speakEnglish(dictPopup.word, "en-US", dictPopup.usAudio)} className="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-800 font-bold">🇺🇸 美音 🔊 {dictPopup.usPhonetic}</button>
                         </div>
                       </div>
-                      <button onClick={() => setShowLabModal(false)}><Icon name="x" className="w-4 h-4" /></button>
+                      <button onClick={() => setDictPopup(null)}><Icon name="x" className="w-5 h-5 text-slate-400" /></button>
                     </div>
-                    {(labUnitMode === "UK" ? LAB_VALUES_SI : LAB_VALUES).map(s => <div key={s.cat}><div className="font-bold text-blue-700 mb-1">{s.cat}</div>{s.items.map(([k, v]) => <div key={k} className="flex justify-between py-0.5 border-b border-slate-50"><span>{k}</span><span className="font-mono">{v}</span></div>)}</div>)}
+
+                    {dictPopup.loading && <div className="text-blue-600 font-semibold animate-pulse">正在查询英汉词典与音标...</div>}
+
+                    <div className="space-y-2">
+                      <label className="block font-bold text-slate-700">中文释义 / 本题语境释义（可微调）：</label>
+                      <input type="text" value={dictPopup.zhMeaning} onChange={(e) => setDictPopup(p => ({ ...p, zhMeaning: e.target.value }))} placeholder="输入或编辑中文释义..." className="w-full border rounded-xl px-3 py-2 text-sm font-semibold" />
+                    </div>
+
+                    {dictPopup.enDef && (
+                      <div className="p-2.5 rounded-xl bg-slate-50 border">
+                        <div className="font-bold text-slate-500">英文释义：</div>
+                        <div className="text-slate-800 mt-0.5">{dictPopup.enDef}</div>
+                      </div>
+                    )}
+                    {dictPopup.dictExample && (
+                      <div className="p-2.5 rounded-xl bg-slate-50 border">
+                        <div className="font-bold text-slate-500">词典例句：</div>
+                        <div className="text-slate-700 italic mt-0.5">"{dictPopup.dictExample}"</div>
+                      </div>
+                    )}
+                    {dictPopup.contextSentence && (
+                      <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200">
+                        <div className="font-bold text-amber-800">原题 / 原选项例句：</div>
+                        <div className="text-slate-800 mt-0.5">{dictPopup.contextSentence}</div>
+                      </div>
+                    )}
+                    {dictPopup.localRoots?.length > 0 && (
+                      <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-200">
+                        <div className="font-bold text-teal-800">本地医学词根命中：</div>
+                        {dictPopup.localRoots.map(r => <div key={r.id} className="text-teal-900">• <strong>{r.front}</strong> = {r.back}</div>)}
+                      </div>
+                    )}
+
+                    <div className="flex justify-end gap-2 pt-2 border-t">
+                      <button onClick={() => setDictPopup(null)} className="px-4 py-2 rounded-xl bg-slate-100 font-bold">关闭</button>
+                      <button onClick={() => {
+                        const entry = {
+                          id: `vb-${Date.now()}`,
+                          word: dictPopup.word,
+                          ukPhonetic: dictPopup.ukPhonetic,
+                          usPhonetic: dictPopup.usPhonetic,
+                          ukAudio: dictPopup.ukAudio,
+                          usAudio: dictPopup.usAudio,
+                          zhMeaning: dictPopup.zhMeaning,
+                          enDef: dictPopup.enDef,
+                          dictExample: dictPopup.dictExample,
+                          contextSentence: dictPopup.contextSentence,
+                          sourceQuestionId: dictPopup.sourceQuestionId,
+                          sourceStep: dictPopup.sourceStep,
+                          sourceSystem: dictPopup.sourceSystem,
+                          addedAt: new Date().toLocaleDateString()
+                        };
+                        setVocabBook(prev => [entry, ...prev.filter(v => v.word.toLowerCase() !== dictPopup.word.toLowerCase())]);
+                        setDictPopup(null);
+                        showToast(`已将「${entry.word}」加入生词本！`, "success");
+                      }} className="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold shadow">⭐ 加入生词本</button>
+                    </div>
                   </div>
                 </div>
               )}
 
+              {/* MODAL: VOCABULARY BOOK (生词本) */}
+              {showVocabModal && (() => {
+                const vq = vocabSearch.trim().toLowerCase();
+                const list = vocabBook.filter(v => !vq || v.word.toLowerCase().includes(vq) || (v.zhMeaning || "").toLowerCase().includes(vq) || (v.contextSentence || "").toLowerCase().includes(vq));
+                return (
+                  <div className="fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-4">
+                    <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden">
+                      <div className="px-5 py-4 bg-sky-800 text-white flex justify-between items-center">
+                        <h3 className="font-bold text-base">📖 临床生词本 (共 {vocabBook.length} 词)</h3>
+                        <button onClick={() => setShowVocabModal(false)}><Icon name="x" className="w-5 h-5" /></button>
+                      </div>
+                      <div className="p-4 border-b bg-slate-50">
+                        <input type="text" value={vocabSearch} onChange={(e) => setVocabSearch(e.target.value)} placeholder="🔍 搜索生词、中文释义或原题例句..." className="w-full border rounded-xl px-3.5 py-2 text-xs bg-white" />
+                      </div>
+                      <div className="p-5 overflow-y-auto space-y-3 text-xs">
+                        {list.length === 0 ? (
+                          <div className="text-center py-10 text-slate-400">暂无生词，做题时划选英文即可查词并加入生词本。</div>
+                        ) : list.map(v => (
+                          <div key={v.id} className="p-4 rounded-xl border border-sky-200 bg-sky-50/30 space-y-2">
+                            <div className="flex flex-wrap justify-between items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-base font-black text-slate-900">{v.word}</span>
+                                <button onClick={() => speakEnglish(v.word, "en-GB", v.ukAudio)} className="px-2 py-0.5 rounded-full bg-white border text-blue-700 font-bold">🇬🇧 英 {v.ukPhonetic} 🔊</button>
+                                <button onClick={() => speakEnglish(v.word, "en-US", v.usAudio)} className="px-2 py-0.5 rounded-full bg-white border text-indigo-700 font-bold">🇺🇸 美 {v.usPhonetic} 🔊</button>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {v.sourceQuestionId && questions.some(q => q.id === v.sourceQuestionId) && (
+                                  <button onClick={() => {
+                                    const fq = questions.find(q => q.id === v.sourceQuestionId);
+                                    if (fq) setLinkedQModal({ question: fq, ankiCard: null });
+                                  }} className="px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold">🔗 查看原题</button>
+                                )}
+                                <button onClick={() => setVocabBook(p => p.filter(item => item.id !== v.id))} className="text-slate-400 hover:text-rose-600"><Icon name="trash" className="w-4 h-4" /></button>
+                              </div>
+                            </div>
+                            {v.zhMeaning && <div className="font-bold text-slate-800 text-sm">释义：{v.zhMeaning}</div>}
+                            {v.enDef && <div className="text-slate-600">{v.enDef}</div>}
+                            {v.dictExample && <div className="text-slate-500 italic">词典例句："{v.dictExample}"</div>}
+                            {v.contextSentence && (
+                              <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-slate-800">
+                                <span className="font-bold text-amber-800">原题语境：</span>{v.contextSentence}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
+              {/* MODAL: LINKED ORIGINAL QUESTION VIEWER */}
+              {linkedQModal && linkedQModal.question && (
+                <div className="fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+                  <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+                    <div className="px-5 py-4 bg-blue-900 text-white flex flex-wrap justify-between items-center gap-2">
+                      <h3 className="font-bold text-sm">🔗 关联原题：{linkedQModal.question.step} · {linkedQModal.question.system}</h3>
+                      <div className="flex items-center gap-2">
+                        {linkedQModal.ankiCard && (
+                          <>
+                            <button
+                              onClick={() => {
+                                const card = linkedQModal.ankiCard;
+                                setLinkedQModal(null);
+                                setLinkAnkiModal({ ankiCard: card, search: "" });
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold"
+                            >
+                              🔄 换绑原题
+                            </button>
+                            <button
+                              onClick={() => {
+                                const card = linkedQModal.ankiCard;
+                                setAnkiCards(prev => prev.map(c =>
+                                  (c.id === card.id || (card.text && c.text === card.text))
+                                    ? { ...c, sourceQuestionId: undefined }
+                                    : c
+                                ));
+                                setLinkedQModal(null);
+                                showToast("已解除原题关联", "info");
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold"
+                            >
+                              🔓 解除关联
+                            </button>
+                          </>
+                        )}
+                        <button onClick={() => setLinkedQModal(null)}><Icon name="x" className="w-5 h-5" /></button>
+                      </div>
+                    </div>
+                    <div className="p-5 overflow-y-auto space-y-4 text-xs sm:text-sm">
+                      <p className="font-serif-clinical leading-relaxed whitespace-pre-line">{linkedQModal.question.stem}</p>
+                      <div className="space-y-1.5">
+                        {Object.entries(linkedQModal.question.options || {}).map(([k, val]) => (
+                          <div key={k} className={`px-3 py-2 rounded-lg border ${k === linkedQModal.question.answer ? "bg-emerald-50 border-emerald-500 font-bold" : "bg-slate-50 border-slate-200"}`}>
+                            {k}. {val} {k === linkedQModal.question.answer ? " ✓" : ""}
+                          </div>
+                        ))}
+                      </div>
+                      {linkedQModal.question.educationalObjective && (
+                        <div className="p-3 rounded-xl bg-amber-50 border border-amber-300">
+                          <div className="font-bold text-amber-800 text-xs mb-1">Educational Objective</div>
+                          <div>{linkedQModal.question.educationalObjective}</div>
+                        </div>
+                      )}
+                      {linkedQModal.question.generalExplanation && (
+                        <div className="p-3 rounded-xl bg-slate-50 border">
+                          <div className="font-bold text-blue-800 text-xs mb-1">解析</div>
+                          <div className="whitespace-pre-line">{linkedQModal.question.generalExplanation}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* MODAL: LINK OLD ANKI CARD TO QUESTION (FUZZY MATCH + SEARCH) */}
+              {linkAnkiModal && linkAnkiModal.ankiCard && (() => {
+                const cands = findCandidateQuestionsForAnki(linkAnkiModal.ankiCard, questions);
+                const sq = linkAnkiModal.search.trim().toLowerCase();
+                const searchHits = sq ? questions.filter(q => (q.stem || "").toLowerCase().includes(sq) || (q.educationalObjective || "").toLowerCase().includes(sq)).slice(0, 8) : [];
+                return (
+                  <div className="fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden">
+                      <div className="px-5 py-4 bg-indigo-900 text-white flex justify-between items-center">
+                        <h3 className="font-bold text-sm">🔗 为旧 Anki 卡片关联原题</h3>
+                        <button onClick={() => setLinkAnkiModal(null)}><Icon name="x" className="w-5 h-5" /></button>
+                      </div>
+                      <div className="p-5 overflow-y-auto space-y-4 text-xs">
+                        <input type="text" value={linkAnkiModal.search} onChange={(e) => setLinkAnkiModal(p => ({ ...p, search: e.target.value }))} placeholder="🔍 手动输入原题关键词搜索（留空则显示智能推荐）..." className="w-full border rounded-xl px-3 py-2 bg-slate-50" />
+                        {sq ? (
+                          <div className="space-y-2">
+                            <div className="font-bold text-slate-600">搜索结果 ({searchHits.length})：</div>
+                            {searchHits.map(q => (
+                              <div key={q.id} className="p-3 rounded-xl border flex justify-between items-start gap-2">
+                                <div className="min-w-0">
+                                  <div className="font-bold text-blue-700">{q.step} · {q.system}</div>
+                                  <p className="text-slate-700 line-clamp-2 mt-0.5">{q.stem}</p>
+                                </div>
+                                <button onClick={() => bindAnkiToQuestion(linkAnkiModal.ankiCard, q)} className="px-3 py-1.5 rounded-lg bg-indigo-700 text-white font-bold shrink-0">绑定并查看</button>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            <div className="font-bold text-indigo-800">⚡ 智能匹配候选原题（按系统与关键词相似度）：</div>
+                            {cands.length === 0 ? <div className="text-slate-400 py-4 text-center">暂无高匹配候选题，请在上方输入关键词搜索</div> : cands.map(({ q, score }) => (
+                              <div key={q.id} className="p-3 rounded-xl border bg-indigo-50/40 flex justify-between items-start gap-2">
+                                <div className="min-w-0">
+                                  <div className="font-bold text-indigo-800">匹配度 {Math.min(99, score)}% · {q.step} · {q.system}</div>
+                                  <p className="text-slate-700 line-clamp-2 mt-0.5">{q.stem}</p>
+                                </div>
+                                <button onClick={() => bindAnkiToQuestion(linkAnkiModal.ankiCard, q)} className="px-3 py-1.5 rounded-lg bg-indigo-700 text-white font-bold shrink-0">绑定并查看</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {zoomImage && <div onClick={() => setZoomImage(null)} className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"><img src={zoomImage} alt="" className="max-w-full max-h-[90vh] rounded-lg" /></div>}
 
@@ -5101,7 +5897,7 @@
                           exportedAt: new Date().toISOString(),
                           user: currentUser,
                           questions, mistakes, ankiCards, medEngCards, medEngMistakes, medEngRevLog, ankiRevLog,
-                          attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs
+                          attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs, vocabBook, examGoal
                         };
                         const blob = new Blob([JSON.stringify(backup)], { type: "application/json" });
                         const url = URL.createObjectURL(blob);
@@ -5134,6 +5930,8 @@
                               if (d.notesMap) setNotesMap(d.notesMap);
                               if (d.highlightsMap) setHighlightsMap(d.highlightsMap);
                               if (d.dailyLogs) setDailyLogs(d.dailyLogs);
+                              if (Array.isArray(d.vocabBook)) setVocabBook(d.vocabBook);
+                              if (d.examGoal) setExamGoal(d.examGoal);
                               showToast("已从本地备份完整恢复全部数据！", "success");
                             } catch { showToast("备份文件格式无效", "error"); }
                           };

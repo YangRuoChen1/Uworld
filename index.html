@@ -59,6 +59,14 @@
       padding: 0 2px;
       border-radius: 2px;
     }
+    mark.uw-clue {
+      background-color: #d1fae5;
+      color: #064e3b;
+      border-bottom: 2px solid #059669;
+      padding: 0 3px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
     .anki-html img {
       max-height: 260px;
       margin: 8px auto;
@@ -663,13 +671,63 @@
 
     const getUserKey = (uname, suffix) => `uw_v3_u_${uname || "guest"}_${suffix}`;
 
-    function renderHighlightedStem(stem, highlights = []) {
+    function extractAutoKeyClues(q) {
+      if (!q || !q.stem) return [];
+      if (Array.isArray(q.keyClues) && q.keyClues.length > 0) return q.keyClues;
+      const stem = String(q.stem);
+      const clues = [];
+      // 1. High-yield clinical patterns in stem
+      const patterns = [
+        /\b\d{1,3}-year-old\s+(?:man|woman|boy|girl|male|female|infant|child)\b/i,
+        /(?:blood pressure|BP)\s+(?:is|of)?\s*\d{2,3}\/\d{2,3}\s*mm\s*Hg/i,
+        /(?:temperature|temp)\s+(?:is|of)?\s*\d{2,3}(?:\.\d)?\s*°?[CF]/i,
+        /(?:pulse|heart rate|HR)\s+(?:is|of)?\s*\d{2,3}(?:\/min|\s*bpm)?/i,
+        /(?:pH|PaCO2|HCO3-|creatinine|potassium|sodium|hemoglobin|WBC|platelets)\s*(?:is|of|:|=)?\s*[\d.,]+(?:\s*(?:mEq\/L|mg\/dL|g\/dL|mm\s*Hg|\/mm3))?/i
+      ];
+      patterns.forEach(re => {
+        const m = stem.match(re);
+        if (m && m[0] && !clues.includes(m[0])) clues.push(m[0]);
+      });
+      // 2. Discriminating phrases from Educational Objective / Correct Answer appearing in stem
+      const eoWords = ((q.educationalObjective || "") + " " + (q.options?.[q.answer] || ""))
+        .toLowerCase()
+        .match(/[a-z]{5,}/g) || [];
+      const stop = new Set(["which","patient","diagnosis","treatment","mechanism","associated","increased","decreased","following","most","likely","causes","cause","syndrome","disease"]);
+      const uniqueEo = Array.from(new Set(eoWords)).filter(w => !stop.has(w));
+      const sentences = stem.split(/(?<=[.!?])\s+/);
+      sentences.forEach(sent => {
+        if (clues.length >= 4) return;
+        const low = sent.toLowerCase();
+        const hit = uniqueEo.some(w => low.includes(w));
+        if (hit && sent.length <= 140 && !clues.some(c => sent.includes(c))) {
+          clues.push(sent.trim());
+        }
+      });
+      // Fallback: pick 2 key finding clauses
+      if (clues.length < 2) {
+        const findingRe = /(?:reveals?|shows?|demonstrates?|auscultation|biopsy|ECG|CT|MRI|radiograph)[^.;,]{8,75}/gi;
+        let fm;
+        while ((fm = findingRe.exec(stem)) !== null && clues.length < 3) {
+          if (!clues.includes(fm[0].trim())) clues.push(fm[0].trim());
+        }
+      }
+      return clues.slice(0, 4);
+    }
+
+    function renderHighlightedStem(stem, highlights = [], clues = [], showClues = false) {
       if (!stem) return null;
-      if (!highlights || highlights.length === 0) return stem;
-      const escaped = highlights.filter(Boolean).map(h => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      const activeClues = showClues ? (clues || []).filter(Boolean) : [];
+      const activeHls = (highlights || []).filter(Boolean);
+      const all = [...activeClues, ...activeHls];
+      if (all.length === 0) return stem;
+      const escaped = all.map(h => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).sort((a, b) => b.length - a.length);
       if (escaped.length === 0) return stem;
       const parts = stem.split(new RegExp(`(${escaped.join("|")})`, "g"));
-      return parts.map((part, idx) => highlights.includes(part) ? <mark key={idx} className="uw-hl">{part}</mark> : <React.Fragment key={idx}>{part}</React.Fragment>);
+      return parts.map((part, idx) => {
+        if (activeClues.includes(part)) return <mark key={idx} className="uw-clue" title="关键题眼 (Key Clue)">{part}</mark>;
+        if (activeHls.includes(part)) return <mark key={idx} className="uw-hl">{part}</mark>;
+        return <React.Fragment key={idx}>{part}</React.Fragment>;
+      });
     }
 
     function parseAndReplaceCloze(text, revealed = false, activeCNum = null) {
@@ -1183,6 +1241,7 @@
       useEffect(() => safeSetStorage(getUserKey(currentUser, "marked"), markedIds), [markedIds, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "notes"), notesMap), [notesMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "highlights"), highlightsMap), [highlightsMap, currentUser]);
+      useEffect(() => safeSetStorage(getUserKey(currentUser, "keyClues"), customKeyCluesMap), [customKeyCluesMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "retention"), targetRetention), [targetRetention, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "dailyLogs"), dailyLogs), [dailyLogs, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "vocabBook"), vocabBook), [vocabBook, currentUser]);
@@ -1305,6 +1364,7 @@
       const [ankiRevLimit, setAnkiRevLimit] = useState(100);
       const [ankiQueue, setAnkiQueue] = useState([]);
       const [ankiRevealed, setAnkiRevealed] = useState(false);
+      const [ankiUndoStack, setAnkiUndoStack] = useState([]);
       const [showAnkiMgrModal, setShowAnkiMgrModal] = useState(false);
       const [ankiMgrTab, setAnkiMgrTab] = useState("addCloze");
       const [clozeFrontImgs, setClozeFrontImgs] = useState([]);
@@ -1399,7 +1459,21 @@
       const [medEngDictResult, setMedEngDictResult] = useState(null);
       const [medEngDictUndoStack, setMedEngDictUndoStack] = useState([]);
       const [expandedExpOpt, setExpandedExpOpt] = useState(null);
+      const [showKeyClues, setShowKeyClues] = useState(false);
+      const [customKeyCluesMap, setCustomKeyCluesMap] = useState(() => safeGetStorage(getUserKey(currentUser, "keyClues"), {}));
       const [zoomImage, setZoomImage] = useState(null);
+      const [caliperMode, setCaliperMode] = useState(false);
+      const [calipers, setCalipers] = useState([]); // [{ x1, y1, x2, y2 }] in % (0..100)
+      const [caliperStart, setCaliperStart] = useState(null); // { x, y }
+      const [caliperPreview, setCaliperPreview] = useState(null); // { x, y }
+      const [caliperCalib, setCaliperCalib] = useState(null); // { pxNorm, value, unit } e.g. 200 ms or 10 mm
+
+      useEffect(() => {
+        setCalipers([]);
+        setCaliperStart(null);
+        setCaliperPreview(null);
+        setCaliperCalib(null);
+      }, [zoomImage]);
 
       const showToast = useCallback((msg, type = "info") => setToast({ msg, type, id: Date.now() }), []);
       useEffect(() => {
@@ -1691,6 +1765,7 @@
         }
         setAnkiQueue(queue.map(c => c.id));
         setAnkiRevealed(false);
+        setAnkiUndoStack([]);
         setView("ANKI_STUDY");
       };
 
@@ -1703,6 +1778,7 @@
         const sorted = [...filtered].sort((a, b) => (a.fsrs?.due || 0) - (b.fsrs?.due || 0)).slice(0, Math.max(20, ankiRevLimit));
         setAnkiQueue(sorted.map(c => c.id));
         setAnkiRevealed(false);
+        setAnkiUndoStack([]);
         setView("ANKI_STUDY");
         showToast(`已开启提前复习模式（共 ${sorted.length} 张）`, "info");
       };
@@ -1712,9 +1788,37 @@
         return ankiCards.find(c => c.id === ankiQueue[0]) || null;
       }, [ankiQueue, ankiCards]);
 
+      const handleAnkiStudyUndo = () => {
+        if (ankiUndoStack.length === 0) {
+          showToast("当前没有可撤销的卡片", "info");
+          return;
+        }
+        const snap = ankiUndoStack[ankiUndoStack.length - 1];
+        setAnkiUndoStack(prev => prev.slice(0, -1));
+        setAnkiCards(prev => prev.map(c => c.id === snap.cardId ? { ...c, fsrs: snap.prevFsrs } : c));
+        setAnkiRevLog(prev => prev.slice(snap.addedLogCount || 1));
+        setDailyLogs(prev => {
+          const cur = prev[snap.dayKey];
+          if (!cur) return prev;
+          return { ...prev, [snap.dayKey]: { ...cur, ankiCount: Math.max(0, (cur.ankiCount || 0) - 1) } };
+        });
+        setAnkiQueue(snap.prevQueue);
+        setAnkiRevealed(true);
+        showToast("已撤销至上一张 Anki 卡片，可重新评分", "info");
+      };
+
       const handleAnkiStudyRate = (grade) => {
         if (!currentAnkiStudyCard) return;
         const nowMs = Date.now();
+        const dk = getStudyDateKey();
+        const snap = {
+          cardId: currentAnkiStudyCard.id,
+          prevFsrs: currentAnkiStudyCard.fsrs ? { ...currentAnkiStudyCard.fsrs } : createInitialFSRS(),
+          prevQueue: [...ankiQueue],
+          addedLogCount: 1,
+          dayKey: dk
+        };
+        setAnkiUndoStack(prev => [...prev.slice(-29), snap]);
         const nextFsrs = fsrsSchedule(currentAnkiStudyCard.fsrs, grade, targetRetention, nowMs);
         setAnkiCards(prev => prev.map(c => c.id === currentAnkiStudyCard.id ? { ...c, fsrs: nextFsrs } : c));
         setAnkiRevLog(prev => [{
@@ -1727,7 +1831,6 @@
           stateBefore: currentAnkiStudyCard.fsrs?.state || "New",
           ivlAfter: nextFsrs.scheduledDays || 0
         }, ...prev.slice(0, 4999)]);
-        const dk = getStudyDateKey();
         setDailyLogs(prev => {
           const cur = prev[dk] || { studySec: 0, qCount: 0, ankiCount: 0 };
           return { ...prev, [dk]: { ...cur, ankiCount: (cur.ankiCount || 0) + 1 } };
@@ -1885,6 +1988,7 @@
           if (view === "ANKI_STUDY" && currentAnkiStudyCard) {
             if (e.code === "Space") { e.preventDefault(); if (!ankiRevealed) setAnkiRevealed(true); }
             else if (ankiRevealed && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); handleAnkiStudyRate(Number(e.key)); }
+            else if (e.key.toLowerCase() === "z" || e.key === "ArrowLeft") { e.preventDefault(); handleAnkiStudyUndo(); }
           } else if (view === "MEDENG_STUDY" && currentMedEngCard) {
             if (e.code === "Space") { e.preventDefault(); if (!medEngRevealed) setMedEngRevealed(true); }
             else if (medEngRevealed && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); handleMedEngRate(Number(e.key)); }
@@ -3627,6 +3731,7 @@
                 const isCorrect = selectedOpt === currentQuestion.answer;
                 const fontSizeCls = textSize === 0 ? "text-sm" : textSize === 2 ? "text-lg" : "text-base";
                 const qHighlights = highlightsMap[qid] || [];
+                const qClues = [...(customKeyCluesMap[qid] || []), ...extractAutoKeyClues(currentQuestion)];
                 const qSpent = qTimesMap[qid] || 0;
 
                 return (
@@ -3673,20 +3778,37 @@
                         <div className="max-w-4xl mx-auto space-y-6 pb-12">
                           <div className="flex justify-between items-center text-xs text-slate-400">
                             <span>{currentQuestion.step} · <strong className={darkMode ? "text-sky-300" : "text-blue-700"}>{currentQuestion.system}</strong></span>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              {isSubmitted && (
+                                <button
+                                  onClick={() => setShowKeyClues(v => !v)}
+                                  className={`px-2.5 py-0.5 rounded border font-bold transition ${showKeyClues ? "bg-emerald-600 text-white border-emerald-700 shadow" : "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                >
+                                  🎯 题眼高亮 {showKeyClues ? "ON" : "OFF"}
+                                </button>
+                              )}
                               <button onClick={() => {
                                 const sel = window.getSelection()?.toString().trim();
                                 lookupSelectionInDict(sel, currentQuestion.stem + " " + Object.values(currentQuestion.options || {}).join(" "), currentQuestion);
-                              }} className="px-2.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 border border-sky-300 font-bold">📖 划词翻译 / 加入生词本</button>
+                              }} className="px-2.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 border border-sky-300 font-bold">📖 划词翻译 / 生词本</button>
                               <button onClick={() => {
                                 const sel = window.getSelection()?.toString().trim();
                                 if (sel && sel.length >= 2) setHighlightsMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] }));
-                              }} className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-900 border border-yellow-300">高亮选中文字</button>
+                              }} className="px-2 py-0.5 rounded bg-yellow-100 text-yellow-900 border border-yellow-300">高亮选中</button>
+                              {isSubmitted && (
+                                <button onClick={() => {
+                                  const sel = window.getSelection()?.toString().trim();
+                                  if (!sel || sel.length < 2) { showToast("请先在题干中选中要标为题眼的关键词", "info"); return; }
+                                  setCustomKeyCluesMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] }));
+                                  setShowKeyClues(true);
+                                  showToast("已将该线索设为本题题眼！", "success");
+                                }} className="px-2 py-0.5 rounded bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-300">+ 设为题眼</button>
+                              )}
                             </div>
                           </div>
 
                           <p onMouseUp={() => { if (!highlightMode) return; const sel = window.getSelection()?.toString().trim(); if (sel && sel.length >= 2) setHighlightsMap(p => ({ ...p, [qid]: [...(p[qid] || []), sel] })); }} className={`font-serif-clinical leading-relaxed whitespace-pre-line ${fontSizeCls}`}>
-                            {renderHighlightedStem(currentQuestion.stem, qHighlights)}
+                            {renderHighlightedStem(currentQuestion.stem, qHighlights, qClues, isSubmitted && showKeyClues)}
                           </p>
 
                           {currentQuestion.vignetteImage && <img src={currentQuestion.vignetteImage} alt="Exhibit" onClick={() => setZoomImage(currentQuestion.vignetteImage)} className="max-h-80 rounded-lg border mx-auto cursor-zoom-in" />}
@@ -3808,6 +3930,14 @@
                       Anki FSRS 复习 · 剩余 {ankiQueue.length} 张 · <span className="text-indigo-200">{currentAnkiStudyCard.step} · {currentAnkiStudyCard.system}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleAnkiStudyUndo}
+                        disabled={ankiUndoStack.length === 0}
+                        title="撤销上一张卡片 (快捷键 Z / ←)"
+                        className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:bg-indigo-800/60 disabled:text-indigo-300/60 disabled:border-indigo-700 text-slate-950 border border-amber-300 text-xs font-bold transition"
+                      >
+                        ↩️ 撤销上一张{ankiUndoStack.length > 0 ? ` (${ankiUndoStack.length})` : ""}
+                      </button>
                       <button onClick={() => openAnkiLinkedQuestion(currentAnkiStudyCard)} className="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold">
                         {currentAnkiStudyCard.sourceQuestionId ? "🔗 查看原题" : "🔗 关联原题"}
                       </button>
@@ -5181,7 +5311,122 @@
                 );
               })()}
 
-              {zoomImage && <div onClick={() => setZoomImage(null)} className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"><img src={zoomImage} alt="" className="max-w-full max-h-[90vh] rounded-lg" /></div>}
+              {zoomImage && (
+                <div onClick={() => setZoomImage(null)} className="fixed inset-0 z-[90] bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-6 gap-3">
+                  <div onClick={(e) => e.stopPropagation()} className="w-full max-w-4xl bg-slate-900 text-white rounded-2xl border border-slate-700 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs shadow-xl">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => { setCaliperMode(v => !v); setCaliperStart(null); setCaliperPreview(null); }}
+                        className={`px-3 py-1.5 rounded-xl font-bold border transition ${caliperMode ? "bg-amber-400 text-slate-950 border-amber-300 shadow" : "bg-slate-800 text-slate-200 border-slate-600 hover:bg-slate-700"}`}
+                      >
+                        📏 {caliperMode ? "卡尺测距中 (点击两点测量)" : "开启 ECG / 影像卡尺"}
+                      </button>
+                      {calipers.length > 0 && (
+                        <>
+                          <button
+                            onClick={() => {
+                              const last = calipers[calipers.length - 1];
+                              const dist = Math.hypot(last.x2 - last.x1, last.y2 - last.y1);
+                              if (dist > 0.2) { setCaliperCalib({ distPct: dist, value: 200, unit: "ms" }); showToast("已将最后一条标尺校准为 200 ms (ECG 1大格)", "success"); }
+                            }}
+                            className="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+                          >
+                            📐 设为 200ms (1大格)
+                          </button>
+                          <button
+                            onClick={() => {
+                              const last = calipers[calipers.length - 1];
+                              const dist = Math.hypot(last.x2 - last.x1, last.y2 - last.y1);
+                              if (dist > 0.2) { setCaliperCalib({ distPct: dist, value: 10, unit: "mm" }); showToast("已将最后一条标尺校准为 10 mm (1 cm)", "success"); }
+                            }}
+                            className="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold"
+                          >
+                            📐 设为 10mm (1cm)
+                          </button>
+                          <button
+                            onClick={() => { setCalipers([]); setCaliperStart(null); setCaliperPreview(null); setCaliperCalib(null); }}
+                            className="px-2.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold"
+                          >
+                            🧹 清除标尺 ({calipers.length})
+                          </button>
+                        </>
+                      )}
+                    </div>
+                    <button onClick={() => setZoomImage(null)} className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold">✕ 关闭</button>
+                  </div>
+
+                  <div onClick={(e) => e.stopPropagation()} className="relative inline-block max-w-full max-h-[82vh] select-none">
+                    <img
+                      src={zoomImage}
+                      alt="Exhibit"
+                      draggable={false}
+                      onClick={(e) => {
+                        if (!caliperMode) return;
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+                        const y = Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100));
+                        if (!caliperStart) {
+                          setCaliperStart({ x, y });
+                          setCaliperPreview({ x, y });
+                        } else {
+                          setCalipers(prev => [...prev, { x1: caliperStart.x, y1: caliperStart.y, x2: x, y2: y }]);
+                          setCaliperStart(null);
+                          setCaliperPreview(null);
+                        }
+                      }}
+                      onMouseMove={(e) => {
+                        if (!caliperMode || !caliperStart) return;
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+                        const y = Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100));
+                        setCaliperPreview({ x, y });
+                      }}
+                      className={`max-w-full max-h-[80vh] rounded-xl border border-slate-700 shadow-2xl ${caliperMode ? "cursor-crosshair" : ""}`}
+                    />
+
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none">
+                      {calipers.map((c, idx) => (
+                        <g key={idx}>
+                          <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="#fbbf24" strokeWidth="0.6" />
+                          <circle cx={c.x1} cy={c.y1} r="0.9" fill="#ef4444" stroke="#ffffff" strokeWidth="0.3" />
+                          <circle cx={c.x2} cy={c.y2} r="0.9" fill="#10b981" stroke="#ffffff" strokeWidth="0.3" />
+                        </g>
+                      ))}
+                      {caliperStart && caliperPreview && (
+                        <g>
+                          <line x1={caliperStart.x} y1={caliperStart.y} x2={caliperPreview.x} y2={caliperPreview.y} stroke="#38bdf8" strokeWidth="0.5" strokeDasharray="1.2 1.2" />
+                          <circle cx={caliperStart.x} cy={caliperStart.y} r="0.9" fill="#ef4444" />
+                        </g>
+                      )}
+                    </svg>
+
+                    {calipers.map((c, idx) => {
+                      const distPct = Math.hypot(c.x2 - c.x1, c.y2 - c.y1);
+                      const mx = (c.x1 + c.x2) / 2;
+                      const my = (c.y1 + c.y2) / 2;
+                      let label = `#${idx + 1}: ${distPct.toFixed(1)}%`;
+                      if (caliperCalib && caliperCalib.distPct > 0) {
+                        const val = (distPct / caliperCalib.distPct) * caliperCalib.value;
+                        if (caliperCalib.unit === "ms") {
+                          const bpm = val > 20 ? Math.round(60000 / val) : null;
+                          label = `#${idx + 1}: ${Math.round(val)} ms${bpm ? ` (${bpm} bpm)` : ""}`;
+                        } else {
+                          label = `#${idx + 1}: ${val.toFixed(1)} ${caliperCalib.unit}`;
+                        }
+                      }
+                      return (
+                        <div
+                          key={idx}
+                          style={{ left: `${mx}%`, top: `${my}%` }}
+                          className="absolute -translate-x-1/2 -translate-y-full -mt-1.5 px-2 py-0.5 rounded-md bg-slate-950/90 text-amber-300 border border-amber-400 text-[11px] font-mono font-bold whitespace-nowrap pointer-events-none shadow"
+                        >
+                          {label}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
 
               {/* MODAL: MEDENG MANAGER */}

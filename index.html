@@ -173,6 +173,15 @@
     const ALL_SYSTEMS_UNIQUE = [...SHARED_SYSTEMS, ...STEP1_EXCLUSIVE, ...STEP2_EXCLUSIVE];
     const getSystemsForStep = (step) => (step === "Step 2" ? STEP2_SYSTEMS : STEP1_SYSTEMS);
     const STEPS = ["Step 1", "Step 2"];
+    const resolveCanonicalSystemId = (folderName, step) => {
+      const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const target = norm(folderName);
+      const list = getSystemsForStep(step);
+      const exact = list.find(s => norm(s.id) === target);
+      if (exact) return exact.id;
+      const partial = list.find(s => norm(s.id).includes(target) || target.includes(norm(s.id)));
+      return partial ? partial.id : String(folderName || "").trim();
+    };
     const SAVED_CRED_KEY = "medspire_saved_cred_v1";
     const encodeCred = (s) => { try { return btoa(unescape(encodeURIComponent(s || ""))); } catch { return ""; } };
     const decodeCred = (s) => { try { return decodeURIComponent(escape(atob(s || ""))); } catch { return ""; } };
@@ -1180,8 +1189,77 @@
         provider: "gemini", apiKey: "", baseUrl: "https://api.openai.com/v1", model: "gemini-2.5-flash"
       }));
 
-      // Core Data
-      const [questions, setQuestions] = useState(() => safeGetStorage(currentUser === "guest" ? STORAGE_KEYS.QUESTIONS : getUserKey(currentUser, "questions"), INITIAL_QUESTIONS));
+      // Core Data (Static QBank from ./qbank/ + Dynamic Custom/Override Questions)
+      const [activeYear, setActiveYear] = useState("2022");
+      const [qbankManifest, setQbankManifest] = useState(null);
+      const [staticQuestions, setStaticQuestions] = useState([]);
+      const [loadedStaticKeys, setLoadedStaticKeys] = useState({});
+      const [loadingStaticKey, setLoadingStaticKey] = useState("");
+      const staticCacheRef = useRef({});
+      const [customQuestions, setCustomQuestions] = useState(() => safeGetStorage(currentUser === "guest" ? STORAGE_KEYS.QUESTIONS : getUserKey(currentUser, "questions"), INITIAL_QUESTIONS));
+      const setQuestions = setCustomQuestions;
+      const questions = useMemo(() => {
+        const map = new Map();
+        staticQuestions.forEach(q => { if (q && q.id) map.set(q.id, q); });
+        customQuestions.forEach(q => { if (q && q.id) map.set(q.id, q); });
+        return Array.from(map.values());
+      }, [staticQuestions, customQuestions]);
+
+      useEffect(() => {
+        let cancelled = false;
+        (async () => {
+          try {
+            const resp = await fetch("./qbank/manifest.json", { cache: "no-store" });
+            if (resp.ok && !cancelled) {
+              const mf = await resp.json();
+              if (mf && mf.years) setQbankManifest(mf);
+            }
+          } catch (e) {}
+        })();
+        return () => { cancelled = true; };
+      }, []);
+
+      const ensureStaticSystemsLoaded = async (year, step, sysIds) => {
+        const yrObj = qbankManifest?.years?.[year]?.[step];
+        if (!yrObj || !Array.isArray(sysIds) || sysIds.length === 0) return [];
+        const newlyLoaded = [];
+        for (const sysId of sysIds) {
+          const cacheKey = `${year}::${step}::${sysId}`;
+          if (staticCacheRef.current[cacheKey]) continue;
+          const entry = yrObj[sysId];
+          const files = entry?.files || [];
+          if (files.length === 0) continue;
+          setLoadingStaticKey(cacheKey);
+          try {
+            const batches = await Promise.all(files.map(async (fp) => {
+              const cleanPath = String(fp).replace(/^\.?\//, "");
+              const r = await fetch(`./${cleanPath}`);
+              if (!r.ok) return [];
+              const arr = await r.json();
+              return Array.isArray(arr) ? arr : (Array.isArray(arr?.questions) ? arr.questions : []);
+            }));
+            const flat = batches.flat().map(q => ({
+              ...q,
+              year: q.year || year,
+              step: q.step || step,
+              system: q.system || sysId,
+              _static: true
+            }));
+            staticCacheRef.current[cacheKey] = flat;
+            newlyLoaded.push(...flat);
+            setLoadedStaticKeys(prev => ({ ...prev, [cacheKey]: true }));
+          } catch (e) {}
+        }
+        setLoadingStaticKey("");
+        if (newlyLoaded.length > 0) {
+          setStaticQuestions(prev => {
+            const m = new Map(prev.map(q => [q.id, q]));
+            newlyLoaded.forEach(q => { if (q && q.id) m.set(q.id, q); });
+            return Array.from(m.values());
+          });
+        }
+        return newlyLoaded;
+      };
       const [mistakes, setMistakes] = useState(() => safeGetStorage(currentUser === "guest" ? STORAGE_KEYS.MISTAKES : getUserKey(currentUser, "mistakes"), []));
       const [ankiCards, setAnkiCards] = useState(() => normalizeAnkiClozeActiveNum(safeGetStorage(getUserKey(currentUser, "anki"), [])));
       const [medEngCards, setMedEngCards] = useState(() => {
@@ -1231,7 +1309,7 @@
         return () => { cancelled = true; };
       }, [currentUser]);
 
-      useEffect(() => safeSetBigStorage(currentUser === "guest" ? STORAGE_KEYS.QUESTIONS : getUserKey(currentUser, "questions"), questions), [questions, currentUser]);
+      useEffect(() => safeSetBigStorage(currentUser === "guest" ? STORAGE_KEYS.QUESTIONS : getUserKey(currentUser, "questions"), customQuestions), [customQuestions, currentUser]);
       useEffect(() => safeSetBigStorage(currentUser === "guest" ? STORAGE_KEYS.MISTAKES : getUserKey(currentUser, "mistakes"), mistakes), [mistakes, currentUser]);
       useEffect(() => safeSetBigStorage(getUserKey(currentUser, "anki"), ankiCards), [ankiCards, currentUser]);
       useEffect(() => safeSetBigStorage(getUserKey(currentUser, "medEngCards"), medEngCards), [medEngCards, currentUser]);
@@ -1249,7 +1327,7 @@
       useEffect(() => {
         if (isHydratingRef.current) return;
         if (currentUser !== "guest") setHasUnsynced(true);
-      }, [questions, mistakes, ankiCards, medEngCards, medEngMistakes, attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs]);
+      }, [customQuestions, mistakes, ankiCards, medEngCards, medEngMistakes, attemptedMap, markedIds, notesMap, highlightsMap, dailyLogs]);
       useEffect(() => { isHydratingRef.current = true; setHasUnsynced(false); }, [currentUser]);
 
       // UI Navigation
@@ -1732,8 +1810,30 @@
         setSelectedMoveIds([]);
       };
 
+      const availableYears = useMemo(() => {
+        const s = new Set(["2022"]);
+        Object.keys(qbankManifest?.years || {}).forEach(y => s.add(String(y)));
+        questions.forEach(q => { if (q.year) s.add(String(q.year)); });
+        return Array.from(s).sort();
+      }, [qbankManifest, questions]);
+
+      const getSystemsForYearStep = (year, step) => {
+        const base = year === "2022" ? [...getSystemsForStep(step)] : [];
+        const baseIds = new Set(base.map(s => s.id));
+        const mfSys = Object.keys(qbankManifest?.years?.[year]?.[step] || {});
+        const qSys = questions.filter(q => (q.year || "2022") === year && (q.step || "Step 1") === step).map(q => q.system).filter(Boolean);
+        [...mfSys, ...qSys].forEach(id => {
+          if (!baseIds.has(id)) {
+            baseIds.add(id);
+            const known = ALL_SYSTEMS_UNIQUE.find(x => x.id === id);
+            base.push(known || { id, cn: id });
+          }
+        });
+        return base.length > 0 ? base : getSystemsForStep(step);
+      };
+
       // QBank Eligible Questions
-      const stepQuestions = useMemo(() => questions.filter(q => (q.step || "Step 1") === activeStep), [questions, activeStep]);
+      const stepQuestions = useMemo(() => questions.filter(q => (q.year || "2022") === activeYear && (q.step || "Step 1") === activeStep), [questions, activeYear, activeStep]);
       const eligibleQuestions = useMemo(() => {
         return stepQuestions.filter(q => {
           if (qbankTrackFilter !== "ALL" && (q.track || "USMLE") !== qbankTrackFilter) return false;
@@ -1860,14 +1960,30 @@
       const currentFsrsCard = dueMistakes[0] || null;
 
       // Start QBank Test
-      const startTestBlock = () => {
-        if (eligibleQuestions.length === 0) { showToast("当前筛选条件下暂无题目", "error"); return; }
-        const picked = [...eligibleQuestions].sort(() => Math.random() - 0.5).slice(0, Math.min(questionCount, eligibleQuestions.length));
+      const startTestBlock = async () => {
+        const newly = await ensureStaticSystemsLoaded(activeYear, activeStep, selectedSystems);
+        let pool = eligibleQuestions;
+        if (newly.length > 0) {
+          const m = new Map();
+          [...questions, ...newly].forEach(q => { if (q && q.id) m.set(q.id, q); });
+          pool = Array.from(m.values()).filter(q => {
+            if ((q.year || "2022") !== activeYear || (q.step || "Step 1") !== activeStep) return false;
+            if (qbankTrackFilter !== "ALL" && (q.track || "USMLE") !== qbankTrackFilter) return false;
+            if (!selectedSystems.includes(q.system)) return false;
+            if (qFilterMode === "Unused") return !attemptedMap[q.id];
+            if (qFilterMode === "Incorrect") return mistakes.some(x => x.id === q.id) || (attemptedMap[q.id] && !attemptedMap[q.id].lastCorrect);
+            if (qFilterMode === "Marked") return markedIds.includes(q.id);
+            return true;
+          });
+        }
+        if (pool.length === 0) { showToast("当前筛选条件下暂无题目", "error"); return; }
+        const picked = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(questionCount, pool.length));
         const block = {
           id: `blk-${Date.now()}`,
+          year: activeYear,
           step: activeStep,
           mode: testMode,
-          sectionTitle: `${activeStep} · ${testMode} · ${qFilterMode}`,
+          sectionTitle: `${activeYear} · ${activeStep} · ${testMode} · ${qFilterMode}`,
           qIds: picked.map(q => q.id),
           currentIndex: 0,
           answers: {},
@@ -1910,8 +2026,10 @@
       };
 
 
-      const startWeaknessBlock = () => {
-        const sysStats = getSystemsForStep(activeStep).map(sys => {
+      const startWeaknessBlock = async () => {
+        const curSysList = getSystemsForYearStep(activeYear, activeStep);
+        await ensureStaticSystemsLoaded(activeYear, activeStep, curSysList.map(s => s.id));
+        const sysStats = curSysList.map(sys => {
           const qs = stepQuestions.filter(q => q.system === sys.id);
           const done = qs.filter(q => attemptedMap[q.id]);
           const right = done.filter(q => attemptedMap[q.id]?.lastCorrect).length;
@@ -2788,11 +2906,12 @@
                 }
               }
             } catch (e) {}
-            const qChunks = chunkByBytes(questions, 300000, 60);
+            const dynamicQuestions = customQuestions.filter(q => !q._static);
+            const qChunks = chunkByBytes(dynamicQuestions, 300000, 60);
             const aChunks = chunkByBytes(ankiCards, 300000, 200);
             const medEngChanged = medEngCards.filter(c => !/^me-\d+-[fb]$/.test(String(c.id || "")) || c.suspended || c._edited || (c.fsrs && (c.fsrs.reps > 0 || c.fsrs.lapses > 0)));
             const mChunks = chunkByBytes(medEngChanged, 300000, 500);
-            const totalItems = Math.max(1, questions.length + ankiCards.length + medEngChanged.length + 1);
+            const totalItems = Math.max(1, dynamicQuestions.length + ankiCards.length + medEngChanged.length + 1);
             const tasks = [];
             tasks.push({
               key: currentUser,
@@ -3508,11 +3627,23 @@
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex flex-wrap items-center gap-2">
                             <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm">
-                              {STEPS.map(st => (
-                                <button key={st} onClick={() => setActiveStep(st)} className={`px-4 py-2 rounded-lg text-sm font-bold ${activeStep === st ? "bg-blue-700 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>
-                                  {st} ({questions.filter(q => (q.step || "Step 1") === st).length} 题)
+                              {availableYears.map(yr => (
+                                <button key={yr} onClick={() => { setActiveYear(yr); setSelectedSystems(getSystemsForYearStep(yr, activeStep).map(s => s.id)); }} className={`px-3 py-2 rounded-lg text-sm font-extrabold ${activeYear === yr ? "bg-slate-900 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>
+                                  📅 {yr}
                                 </button>
                               ))}
+                            </div>
+                            <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm">
+                              {STEPS.map(st => {
+                                const mfTotal = Object.values(qbankManifest?.years?.[activeYear]?.[st] || {}).reduce((acc, v) => acc + (v.count || 0), 0);
+                                const loadedCnt = questions.filter(q => (q.year || "2022") === activeYear && (q.step || "Step 1") === st).length;
+                                const showCnt = Math.max(mfTotal, loadedCnt);
+                                return (
+                                  <button key={st} onClick={() => setActiveStep(st)} className={`px-4 py-2 rounded-lg text-sm font-bold ${activeStep === st ? "bg-blue-700 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>
+                                    {st} ({showCnt} 题)
+                                  </button>
+                                );
+                              })}
                             </div>
                             <div className="inline-flex rounded-xl bg-white p-1 border border-slate-200 shadow-sm text-xs font-bold">
                               <button onClick={() => setQbankSubMode("create")} className={`px-3.5 py-2 rounded-lg ${qbankSubMode === "create" ? "bg-slate-900 text-white shadow" : "text-slate-600 hover:bg-slate-100"}`}>🎲 自由组卷</button>
@@ -3577,15 +3708,17 @@
 
                           <div>
                             <div className="flex justify-between text-xs mb-2">
-                              <span className="font-bold text-slate-500">选择 {activeStep} 器官系统与专题:</span>
+                              <span className="font-bold text-slate-500">选择 {activeYear} · {activeStep} 器官系统与专题:</span>
                               <div className="flex gap-3">
-                                <button onClick={() => setSelectedSystems(getSystemsForStep(activeStep).map(s => s.id))} className="text-blue-600 font-semibold">全选</button>
+                                <button onClick={() => setSelectedSystems(getSystemsForYearStep(activeYear, activeStep).map(s => s.id))} className="text-blue-600 font-semibold">全选</button>
                                 <button onClick={() => setSelectedSystems([])} className="text-slate-400">清空</button>
                               </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-72 overflow-y-auto pr-1">
-                              {getSystemsForStep(activeStep).map(sys => {
-                                const cnt = stepQuestions.filter(q => q.system === sys.id).length;
+                              {getSystemsForYearStep(activeYear, activeStep).map(sys => {
+                                const loadedCnt = stepQuestions.filter(q => q.system === sys.id).length;
+                                const mfCnt = qbankManifest?.years?.[activeYear]?.[activeStep]?.[sys.id]?.count || 0;
+                                const cnt = Math.max(loadedCnt, mfCnt);
                                 const chk = selectedSystems.includes(sys.id);
                                 return (
                                   <label key={sys.id} className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer text-xs ${chk ? "bg-blue-50/70 border-blue-400 font-semibold" : "bg-slate-50 border-slate-200 text-slate-500"}`}>
@@ -3644,10 +3777,25 @@
                             </div>
                           </div>
 
-                          {getSystemsForStep(activeStep).map(sys => {
+                          {getSystemsForYearStep(activeYear, activeStep).map(sys => {
                             const qKw = qbankOverviewSearch.trim().toLowerCase();
                             const sysQs = stepQuestions.filter(q => q.system === sys.id && (!qKw || (q.stem || "").toLowerCase().includes(qKw) || (q.generalExplanation || "").toLowerCase().includes(qKw) || (q.educationalObjective || "").toLowerCase().includes(qKw)));
-                            if (sysQs.length === 0) return null;
+                            const mfEntry = qbankManifest?.years?.[activeYear]?.[activeStep]?.[sys.id];
+                            if (sysQs.length === 0 && !mfEntry) return null;
+                            if (sysQs.length === 0 && mfEntry) {
+                              const cKey = `${activeYear}::${activeStep}::${sys.id}`;
+                              return (
+                                <div key={sys.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+                                  <div>
+                                    <div className="font-bold text-sm text-slate-900">{sys.id} <span className="text-xs font-normal text-slate-400">({sys.cn})</span></div>
+                                    <div className="text-[11px] text-slate-500 mt-0.5">GitHub 静态题库共 <strong>{mfEntry.count || 0}</strong> 题（按需加载）</div>
+                                  </div>
+                                  <button onClick={() => ensureStaticSystemsLoaded(activeYear, activeStep, [sys.id])} disabled={loadingStaticKey === cKey} className="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold shadow">
+                                    {loadingStaticKey === cKey ? "正在加载..." : `📥 加载题号 (${mfEntry.count || 0} 题)`}
+                                  </button>
+                                </div>
+                              );
+                            }
                             const doneCnt = sysQs.filter(q => attemptedMap[q.id]).length;
                             const rightCnt = sysQs.filter(q => attemptedMap[q.id]?.lastCorrect).length;
                             const acc = doneCnt > 0 ? Math.round((rightCnt / doneCnt) * 100) : 0;
@@ -4565,6 +4713,79 @@
                               <button disabled={cloudBusy} onClick={pullGlobalQuestions} className="px-3 py-1.5 rounded-lg bg-blue-700 text-white font-bold">同步云端最新</button>
                               {isAdmin && <button disabled={cloudBusy} onClick={publishGlobalQuestions} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">发布公共库</button>}
                             </div>
+
+                            {isAdmin && (
+                              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-2">
+                                <div className="text-amber-900 font-semibold">📦 GitHub 静态题库工具（当前本地动态题库：{customQuestions.length} 题）：</div>
+                                <div className="flex flex-wrap gap-2">
+                                  <button onClick={() => {
+                                    const target = filtered.filter(q => !q._static);
+                                    if (target.length === 0) { showToast("当前筛选下没有可导出的本地动态题目", "info"); return; }
+                                    const chunkSize = 100;
+                                    const parts = Math.ceil(target.length / chunkSize);
+                                    for (let i = 0; i < parts; i++) {
+                                      const slice = target.slice(i * chunkSize, (i + 1) * chunkSize);
+                                      const blob = new Blob([JSON.stringify(slice, null, 2)], { type: "application/json" });
+                                      const a = document.createElement("a");
+                                      a.href = URL.createObjectURL(blob);
+                                      a.download = `part${String(i + 1).padStart(2, "0")}.json`;
+                                      a.click();
+                                    }
+                                    showToast(`已导出 ${target.length} 道题为 ${parts} 个 partXX.json 文件（保留原 ID）`, "success");
+                                  }} className="px-2.5 py-1.5 rounded-lg bg-white border border-amber-300 text-amber-900 font-bold hover:bg-amber-100">⬇️ 导出当前筛选为静态 JSON</button>
+
+                                  <label className="px-2.5 py-1.5 rounded-lg bg-blue-700 text-white font-bold cursor-pointer hover:bg-blue-600">
+                                    📁 扫描本地 qbank 文件夹生成 manifest.json
+                                    <input type="file" webkitdirectory="" directory="" multiple className="hidden" onChange={async (e) => {
+                                      const files = Array.from(e.target.files || []).filter(f => f.name.endsWith(".json") && f.name.toLowerCase() !== "manifest.json");
+                                      if (files.length === 0) { showToast("未在所选文件夹中找到 .json 题库文件", "error"); return; }
+                                      const years = {};
+                                      for (const f of files) {
+                                        const rel = (f.webkitRelativePath || f.name).replace(/\\/g, "/");
+                                        const parts = rel.split("/").filter(Boolean);
+                                        const qIdx = parts.findIndex(x => x.toLowerCase() === "qbank");
+                                        const sub = qIdx >= 0 ? parts.slice(qIdx + 1) : parts.slice(1);
+                                        if (sub.length < 4) continue;
+                                        const [yr, rawStep, rawSys, ...rest] = sub;
+                                        const step = rawStep.toLowerCase().includes("2") ? "Step 2" : "Step 1";
+                                        const sysId = resolveCanonicalSystemId(rawSys, step);
+                                        let cnt = 0;
+                                        try {
+                                          const txt = await f.text();
+                                          const parsed = JSON.parse(txt);
+                                          cnt = Array.isArray(parsed) ? parsed.length : (Array.isArray(parsed?.questions) ? parsed.questions.length : 0);
+                                        } catch (err) {}
+                                        if (!years[yr]) years[yr] = {};
+                                        if (!years[yr][step]) years[yr][step] = {};
+                                        if (!years[yr][step][sysId]) years[yr][step][sysId] = { files: [], count: 0 };
+                                        years[yr][step][sysId].files.push(`qbank/${sub.join("/")}`);
+                                        years[yr][step][sysId].count += cnt;
+                                      }
+                                      Object.values(years).forEach(stObj => Object.values(stObj).forEach(sysObj => Object.values(sysObj).forEach(v => v.files.sort())));
+                                      const mfBlob = new Blob([JSON.stringify({ generatedAt: new Date().toISOString(), years }, null, 2)], { type: "application/json" });
+                                      const a = document.createElement("a");
+                                      a.href = URL.createObjectURL(mfBlob);
+                                      a.download = "manifest.json";
+                                      a.click();
+                                      showToast("已生成并下载 manifest.json，请放到 qbank/ 根目录后推送到 GitHub！", "success");
+                                      e.target.value = "";
+                                    }} />
+                                  </label>
+
+                                  {staticQuestions.length > 0 && (
+                                    <button onClick={() => {
+                                      const staticIds = new Set(staticQuestions.map(q => q.id));
+                                      const remain = customQuestions.filter(q => !staticIds.has(q.id));
+                                      const removed = customQuestions.length - remain.length;
+                                      if (removed === 0) { showToast("本地没有与静态题库重复的题目", "info"); return; }
+                                      if (!confirm(`确认从本地/云端动态题库中清理这 ${removed} 道已静态化的题目吗？（您的做题记录、笔记与 Anki 关联将 100% 保留）`)) return;
+                                      setCustomQuestions(remain);
+                                      showToast(`已清理 ${removed} 道重复题，请点击顶部「同步到云端」完成瘦身！`, "success");
+                                    }} className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500">🧹 清理已静态化重复题</button>
+                                  )}
+                                </div>
+                              </div>
+                            )}
 
                             {/* Batch Select & Move Bar */}
                             {isAdmin && (

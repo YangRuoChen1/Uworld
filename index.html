@@ -4728,7 +4728,9 @@
                                       const blob = new Blob([JSON.stringify(slice, null, 2)], { type: "application/json" });
                                       const a = document.createElement("a");
                                       a.href = URL.createObjectURL(blob);
-                                      a.download = `part${String(i + 1).padStart(2, "0")}.json`;
+                                      const stepSlug = (qmStepFilter === "ALL" ? "all" : qmStepFilter).toLowerCase().replace(/[^a-z0-9]+/g, "");
+                                      const sysSlug = (qmSysFilter === "ALL" ? "all" : qmSysFilter).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 24);
+                                      a.download = `uw_${activeYear}_${stepSlug}_${sysSlug}_p${String(i + 1).padStart(2, "0")}.json`;
                                       a.click();
                                     }
                                     showToast(`已导出 ${target.length} 道题为 ${parts} 个 partXX.json 文件（保留原 ID）`, "success");

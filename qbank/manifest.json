@@ -1,6 +1,16 @@
 {
-  "generatedAt": "2026-11-22T08:14:15.851Z",
+  "generatedAt": "2026-11-22T08:56:40.335Z",
   "years": {
+    "2021": {
+      "Step 1": {
+        "Pathology (General Principles)": {
+          "files": [
+            "qbank/2021/step1/Pathology (General Principles)/part01.json"
+          ],
+          "count": 39
+        }
+      }
+    },
     "2022": {
       "Step 2": {
         "Cardiovascular System": {
@@ -11,14 +21,6 @@
             "qbank/2022/step2/Cardiovascular System/part04.json"
           ],
           "count": 306
-        }
-      },
-      "Step 1": {
-        "Pathology (General Principles)": {
-          "files": [
-            "qbank/2022/step1/Pathology (General Principles)/part01.json"
-          ],
-          "count": 39
         }
       }
     }

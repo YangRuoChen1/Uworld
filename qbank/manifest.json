@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T08:56:40.335Z",
+  "generatedAt": "2026-11-22T12:50:35.542Z",
   "years": {
     "2021": {
       "Step 1": {
@@ -8,6 +8,15 @@
             "qbank/2021/step1/Pathology (General Principles)/part01.json"
           ],
           "count": 39
+        },
+        "Cardiovascular System": {
+          "files": [
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_b2_p268-531.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_b3_p532-546.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p1-134.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p135-267.json"
+          ],
+          "count": 83
         }
       }
     },

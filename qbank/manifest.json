@@ -1,4 +1,26 @@
 {
-  "generatedAt": "2026-11-22T07:38:39.041Z",
-  "years": {}
+  "generatedAt": "2026-11-22T08:14:15.851Z",
+  "years": {
+    "2022": {
+      "Step 2": {
+        "Cardiovascular System": {
+          "files": [
+            "qbank/2022/step2/Cardiovascular System/part01.json",
+            "qbank/2022/step2/Cardiovascular System/part02.json",
+            "qbank/2022/step2/Cardiovascular System/part03.json",
+            "qbank/2022/step2/Cardiovascular System/part04.json"
+          ],
+          "count": 306
+        }
+      },
+      "Step 1": {
+        "Pathology (General Principles)": {
+          "files": [
+            "qbank/2022/step1/Pathology (General Principles)/part01.json"
+          ],
+          "count": 39
+        }
+      }
+    }
+  }
 }

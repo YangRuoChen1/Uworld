@@ -4740,11 +4740,18 @@
                                       const files = Array.from(e.target.files || []).filter(f => f.name.endsWith(".json") && f.name.toLowerCase() !== "manifest.json");
                                       if (files.length === 0) { showToast("未在所选文件夹中找到 .json 题库文件", "error"); return; }
                                       const years = {};
+                                      let totalFound = 0;
                                       for (const f of files) {
                                         const rel = (f.webkitRelativePath || f.name).replace(/\\/g, "/");
                                         const parts = rel.split("/").filter(Boolean);
-                                        const qIdx = parts.findIndex(x => x.toLowerCase() === "qbank");
-                                        const sub = qIdx >= 0 ? parts.slice(qIdx + 1) : parts.slice(1);
+                                        const yIdx = parts.findIndex(x => /^20\d{2}$/.test(x));
+                                        let sub = [];
+                                        if (yIdx >= 0 && parts.length - yIdx >= 4) {
+                                          sub = parts.slice(yIdx);
+                                        } else {
+                                          const qIdx = parts.findIndex(x => x.toLowerCase() === "qbank");
+                                          sub = qIdx >= 0 ? parts.slice(qIdx + 1) : [];
+                                        }
                                         if (sub.length < 4) continue;
                                         const [yr, rawStep, rawSys, ...rest] = sub;
                                         const step = rawStep.toLowerCase().includes("2") ? "Step 2" : "Step 1";
@@ -4760,6 +4767,13 @@
                                         if (!years[yr][step][sysId]) years[yr][step][sysId] = { files: [], count: 0 };
                                         years[yr][step][sysId].files.push(`qbank/${sub.join("/")}`);
                                         years[yr][step][sysId].count += cnt;
+                                        totalFound += cnt;
+                                      }
+                                      if (Object.keys(years).length === 0) {
+                                        const samplePath = files[0]?.webkitRelativePath || files[0]?.name || "";
+                                        showToast(`未识别到 年份/step/系统 结构（示例路径: ${samplePath}），请确认目录为 qbank/2022/step1/系统名/part01.json`, "error");
+                                        e.target.value = "";
+                                        return;
                                       }
                                       Object.values(years).forEach(stObj => Object.values(stObj).forEach(sysObj => Object.values(sysObj).forEach(v => v.files.sort())));
                                       const mfBlob = new Blob([JSON.stringify({ generatedAt: new Date().toISOString(), years }, null, 2)], { type: "application/json" });
@@ -4767,21 +4781,37 @@
                                       a.href = URL.createObjectURL(mfBlob);
                                       a.download = "manifest.json";
                                       a.click();
-                                      showToast("已生成并下载 manifest.json，请放到 qbank/ 根目录后推送到 GitHub！", "success");
+                                      showToast(`已成功扫描 ${Object.keys(years).length} 个年份共 ${totalFound} 道题，请用新 manifest.json 覆盖并推送！`, "success");
                                       e.target.value = "";
                                     }} />
                                   </label>
 
-                                  {staticQuestions.length > 0 && (
-                                    <button onClick={() => {
-                                      const staticIds = new Set(staticQuestions.map(q => q.id));
-                                      const remain = customQuestions.filter(q => !staticIds.has(q.id));
+                                  {qbankManifest?.years && (
+                                    <button onClick={async () => {
+                                      let allStatic = [...staticQuestions, ...Object.values(staticCacheRef.current || {}).flat()];
+                                      let mfTotal = 0;
+                                      for (const [yr, stObj] of Object.entries(qbankManifest.years || {})) {
+                                        for (const [st, sysObj] of Object.entries(stObj || {})) {
+                                          Object.values(sysObj || {}).forEach(v => { mfTotal += (v.count || 0); });
+                                          const loaded = await ensureStaticSystemsLoaded(yr, st, Object.keys(sysObj || {}));
+                                          if (loaded?.length) allStatic = [...allStatic, ...loaded];
+                                        }
+                                      }
+                                      const staticMap = new Map();
+                                      allStatic.forEach(q => { if (q && q.id) staticMap.set(q.id, q); });
+                                      if (staticMap.size === 0) {
+                                        showToast(`未能读取到 GitHub 静态题目文件（manifest 登记 ${mfTotal} 题），请检查 qbank/ 下文件是否已推送或路径是否一致`, "error");
+                                        return;
+                                      }
+                                      const staticIds = new Set(staticMap.keys());
+                                      const staticStems = new Set(Array.from(staticMap.values()).map(q => String(q.stem || "").trim().slice(0, 80)).filter(Boolean));
+                                      const remain = customQuestions.filter(q => !staticIds.has(q.id) && !staticStems.has(String(q.stem || "").trim().slice(0, 80)));
                                       const removed = customQuestions.length - remain.length;
-                                      if (removed === 0) { showToast("本地没有与静态题库重复的题目", "info"); return; }
-                                      if (!confirm(`确认从本地/云端动态题库中清理这 ${removed} 道已静态化的题目吗？（您的做题记录、笔记与 Anki 关联将 100% 保留）`)) return;
+                                      if (removed === 0) { showToast(`已核对 GitHub ${staticMap.size} 题，本地无重复题目`, "info"); return; }
+                                      if (!confirm(`已核对 GitHub 静态题库（共 ${staticMap.size} 题），确认从本地/云端动态题库中清理这 ${removed} 道重复题吗？（您的做题记录、笔记与 Anki 关联将 100% 保留）`)) return;
                                       setCustomQuestions(remain);
                                       showToast(`已清理 ${removed} 道重复题，请点击顶部「同步到云端」完成瘦身！`, "success");
-                                    }} className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500">🧹 清理已静态化重复题</button>
+                                    }} className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500">🧹 核对并清理已静态化重复题</button>
                                   )}
                                 </div>
                               </div>

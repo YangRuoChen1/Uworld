@@ -2241,46 +2241,65 @@
       }, [view, medEngDictQueue, medEngDictIdx, medEngCards]);
 
       const ecdictShardCache = useRef({});
+      const ecdictInflight = useRef({});
 
-      const loadEcdictShard = async (ch) => {
-        const key = /^[a-z]$/.test(ch) ? ch : "_";
+      const getEcdictShardKey = (word) => {
+        const w = String(word || "").trim().toLowerCase();
+        if (w.length >= 2 && /^[a-z]{2}$/.test(w.slice(0, 2))) return w.slice(0, 2);
+        if (w.length >= 1 && /^[a-z]$/.test(w[0])) return w[0] + "_";
+        return "__";
+      };
+
+      const loadEcdictShard = async (wordOrPrefix) => {
+        const key = getEcdictShardKey(wordOrPrefix);
         if (ecdictShardCache.current[key]) return ecdictShardCache.current[key];
-        let db = null;
-        try {
-          db = await new Promise((res, rej) => {
-            const req = indexedDB.open("medspire_ecdict_v1", 1);
-            req.onupgradeneeded = () => {
-              if (!req.result.objectStoreNames.contains("shards")) req.result.createObjectStore("shards");
-            };
-            req.onsuccess = () => res(req.result);
-            req.onerror = () => rej(req.error);
-          });
-          const cached = await new Promise((res) => {
-            const tx = db.transaction("shards", "readonly");
-            const r = tx.objectStore("shards").get(key);
-            r.onsuccess = () => res(r.result || null);
-            r.onerror = () => res(null);
-          });
-          if (cached && typeof cached === "object") {
-            ecdictShardCache.current[key] = cached;
-            return cached;
-          }
-        } catch (e) {}
-        try {
-          const resp = await fetch(`./dict/${key}.json`);
-          if (resp.ok) {
-            const data = await resp.json();
-            ecdictShardCache.current[key] = data;
-            if (db) {
-              try {
-                const tx = db.transaction("shards", "readwrite");
-                tx.objectStore("shards").put(data, key);
-              } catch (e) {}
+        if (ecdictInflight.current[key]) return ecdictInflight.current[key];
+        const task = (async () => {
+          let db = null;
+          try {
+            db = await new Promise((res, rej) => {
+              const req = indexedDB.open("medspire_ecdict_v2", 1);
+              req.onupgradeneeded = () => {
+                if (!req.result.objectStoreNames.contains("shards")) req.result.createObjectStore("shards");
+              };
+              req.onsuccess = () => res(req.result);
+              req.onerror = () => rej(req.error);
+            });
+            const cached = await new Promise((res) => {
+              const tx = db.transaction("shards", "readonly");
+              const r = tx.objectStore("shards").get(key);
+              r.onsuccess = () => res(r.result || null);
+              r.onerror = () => res(null);
+            });
+            if (cached && typeof cached === "object") {
+              ecdictShardCache.current[key] = cached;
+              return cached;
             }
-            return data;
-          }
-        } catch (e) {}
-        return null;
+          } catch (e) {}
+          try {
+            const resp = await fetch(`./dict/${key}.json`);
+            if (resp.ok) {
+              const data = await resp.json();
+              ecdictShardCache.current[key] = data;
+              if (db) {
+                setTimeout(() => {
+                  try {
+                    const tx = db.transaction("shards", "readwrite");
+                    tx.objectStore("shards").put(data, key);
+                  } catch (e) {}
+                }, 0);
+              }
+              return data;
+            }
+          } catch (e) {}
+          return null;
+        })();
+        ecdictInflight.current[key] = task;
+        try {
+          return await task;
+        } finally {
+          delete ecdictInflight.current[key];
+        }
       };
 
       const queryEcdictWord = async (raw) => {
@@ -2306,14 +2325,14 @@
           if (clean.endsWith("i") && clean.length > 3) candidates.push(clean.slice(0, -1) + "us");
         }
         for (const cand of candidates) {
-          const shard = await loadEcdictShard(cand[0]);
+          const shard = await loadEcdictShard(cand);
           if (!shard) return { unavailable: true };
           if (shard[cand]) {
             const entry = { ...shard[cand], matchedWord: cand };
             if (entry.x && (!entry.p || !entry.d)) {
               const m = entry.x.match(/(?:^|\/)0:([^/]+)/);
               if (m && m[1]) {
-                const lShard = await loadEcdictShard(m[1][0].toLowerCase());
+                const lShard = await loadEcdictShard(m[1].toLowerCase());
                 const lEntry = lShard?.[m[1].toLowerCase()];
                 if (lEntry) {
                   if (!entry.p && lEntry.p) entry.p = lEntry.p;
@@ -3420,6 +3439,7 @@
                       }
                       const avgQ7 = (q7 / 7).toFixed(1);
                       const avgA7 = (a7 / 7).toFixed(1);
+                      const avgMe7 = (m7 / 7).toFixed(1);
                       const onTrack = unusedQs === 0 || Number(avgQ7) >= reqQ;
                       return (
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
@@ -3431,7 +3451,7 @@
                             <div className="flex flex-wrap gap-2 text-slate-600">
                               <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">未做题库 <strong>{unusedQs}</strong> → 需 <strong>{reqQ}</strong> 题/天 <span className="text-slate-400">(近7天均 {avgQ7})</span></span>
                               <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">Anki新卡 <strong>{newAnki}</strong> → 需 <strong>{reqA}</strong> 张/天 <span className="text-slate-400">(近7天均 {avgA7})</span></span>
-                              <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">医学英语新卡 <strong>{newMedEng}</strong> → 需 <strong>{reqMe}</strong> 张/天</span>
+                              <span className="px-2.5 py-1 rounded-lg bg-slate-50 border">医学英语新卡 <strong>{newMedEng}</strong> → 需 <strong>{reqMe}</strong> 张/天 <span className="text-slate-400">(近7天均 {avgMe7})</span></span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">

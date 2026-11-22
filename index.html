@@ -4772,16 +4772,23 @@
                                     }} />
                                   </label>
 
-                                  {staticQuestions.length > 0 && (
-                                    <button onClick={() => {
-                                      const staticIds = new Set(staticQuestions.map(q => q.id));
+                                  {qbankManifest?.years && (
+                                    <button onClick={async () => {
+                                      let allStatic = [...staticQuestions];
+                                      for (const [yr, stObj] of Object.entries(qbankManifest.years || {})) {
+                                        for (const [st, sysObj] of Object.entries(stObj || {})) {
+                                          const loaded = await ensureStaticSystemsLoaded(yr, st, Object.keys(sysObj || {}));
+                                          if (loaded?.length) allStatic = [...allStatic, ...loaded];
+                                        }
+                                      }
+                                      const staticIds = new Set(allStatic.map(q => q.id));
                                       const remain = customQuestions.filter(q => !staticIds.has(q.id));
                                       const removed = customQuestions.length - remain.length;
-                                      if (removed === 0) { showToast("本地没有与静态题库重复的题目", "info"); return; }
-                                      if (!confirm(`确认从本地/云端动态题库中清理这 ${removed} 道已静态化的题目吗？（您的做题记录、笔记与 Anki 关联将 100% 保留）`)) return;
+                                      if (removed === 0) { showToast("本地没有与 GitHub 静态题库重复的题目", "info"); return; }
+                                      if (!confirm(`已核对 GitHub 静态题库，确认从本地/云端动态题库中清理这 ${removed} 道重复题吗？（您的做题记录、笔记与 Anki 关联将 100% 保留）`)) return;
                                       setCustomQuestions(remain);
                                       showToast(`已清理 ${removed} 道重复题，请点击顶部「同步到云端」完成瘦身！`, "success");
-                                    }} className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500">🧹 清理已静态化重复题</button>
+                                    }} className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500">🧹 核对并清理已静态化重复题</button>
                                   )}
                                 </div>
                               </div>

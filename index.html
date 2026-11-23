@@ -1511,6 +1511,9 @@
       const [showMedEngManager, setShowMedEngManager] = useState(false);
       const [medEngMgrTab, setMedEngMgrTab] = useState("browse"); // addCard | json | browse
       const [medEngSearch, setMedEngSearch] = useState("");
+      const [ankiDashSearch, setAnkiDashSearch] = useState("");
+      const [ankiMgrSearch, setAnkiMgrSearch] = useState("");
+      const [medEngDashSearch, setMedEngDashSearch] = useState("");
       const [medEngSysFilter, setMedEngSysFilter] = useState("ALL");
       const [medEngCatFilter, setMedEngCatFilter] = useState("ALL");
       const [medEngSelectedIds, setMedEngSelectedIds] = useState([]);
@@ -3992,12 +3995,62 @@
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
                           <div className="flex flex-wrap justify-between items-center gap-2 border-b pb-3">
                             <h2 className="text-base sm:text-lg font-bold">{ankiStep} · Anki 知识卡组 (总计 {ankiStepCards.length} 张)</h2>
-                            <div className="flex flex-wrap gap-2 text-xs font-bold">
+                            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
                               <span className="px-2.5 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200">新卡: {ankiDueStats.newCards.length}</span>
                               <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">今日到期: {ankiDueStats.revCards.length}</span>
                               <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">未到期排队: {Math.max(0, ankiDueStats.total - ankiDueStats.newCards.length - ankiDueStats.revCards.length)}</span>
                             </div>
                           </div>
+
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={ankiDashSearch}
+                              onChange={(e) => setAnkiDashSearch(e.target.value)}
+                              placeholder="🔍 搜索 Anki 卡片正面 / 补充解析 / 系统..."
+                              className="flex-1 border border-slate-300 rounded-xl px-3.5 py-2 text-xs bg-slate-50 focus:bg-white focus:border-indigo-500 outline-none"
+                            />
+                            {ankiDashSearch && (
+                              <button onClick={() => setAnkiDashSearch("")} className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600">清空</button>
+                            )}
+                          </div>
+
+                          {ankiDashSearch.trim() && (() => {
+                            const akw = ankiDashSearch.trim().toLowerCase();
+                            const hits = ankiCards.filter(c =>
+                              (c.text || "").toLowerCase().includes(akw) ||
+                              (c.extra || "").toLowerCase().includes(akw) ||
+                              (c.system || "").toLowerCase().includes(akw) ||
+                              (c.tags || "").toLowerCase().includes(akw)
+                            );
+                            return (
+                              <div className="p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-200 space-y-2.5">
+                                <div className="flex justify-between items-center text-xs font-bold text-indigo-900">
+                                  <span>🔍 搜索结果：共找到 {hits.length} 张匹配卡片 {hits.length > 40 ? "（展示前 40 张）" : ""}</span>
+                                </div>
+                                {hits.length === 0 ? (
+                                  <div className="text-xs text-slate-500 py-3 text-center">未找到包含「{ankiDashSearch}」的 Anki 卡片</div>
+                                ) : (
+                                  <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
+                                    {hits.slice(0, 40).map(c => (
+                                      <div key={c.id} className="p-3 rounded-xl bg-white border border-indigo-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                                        <div className="min-w-0 flex-1">
+                                          <div className="font-bold text-indigo-700 text-[11px]">{c.step || "Step 1"} · {c.system}</div>
+                                          <div className="text-slate-800 line-clamp-2 mt-0.5">{String(c.text || "").replace(/<[^>]+>/g, " ").slice(0, 140)}</div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-1.5 shrink-0">
+                                          <button onClick={() => { setPreviewAnkiCard(c); setPreviewAnkiRevealed(false); }} className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">👁️ 预览</button>
+                                          <button onClick={() => { setAnkiQueue([c.id]); setAnkiRevealed(false); setAnkiUndoStack([]); setView("ANKI_STUDY"); }} className="px-2.5 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white font-bold">🎯 复习</button>
+                                          {c.sourceQuestionId && <button onClick={() => openAnkiLinkedQuestion(c)} className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold">🔗 原题</button>}
+                                          {isAdmin && <button onClick={() => setEditingAnkiCard({ ...c })} className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold">✏️ 编辑</button>}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
 
                           <div>
                             <div className="flex justify-between text-xs mb-2">
@@ -4097,6 +4150,61 @@
                               <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">当前筛选: {medEngDueStats.total} 张</span>
                             </div>
                           </div>
+
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={medEngDashSearch}
+                              onChange={(e) => setMedEngDashSearch(e.target.value)}
+                              placeholder="🔍 搜索医学英语词根词缀 / 缩写 / 术语 / 中文释义..."
+                              className="flex-1 border border-slate-300 rounded-xl px-3.5 py-2 text-xs bg-slate-50 focus:bg-white focus:border-teal-600 outline-none"
+                            />
+                            {medEngDashSearch && (
+                              <button onClick={() => setMedEngDashSearch("")} className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600">清空</button>
+                            )}
+                          </div>
+
+                          {medEngDashSearch.trim() && (() => {
+                            const mkw = medEngDashSearch.trim().toLowerCase();
+                            const hits = medEngCards.filter(c =>
+                              (c.front || "").toLowerCase().includes(mkw) ||
+                              (c.back || "").toLowerCase().includes(mkw) ||
+                              (c.example || "").toLowerCase().includes(mkw) ||
+                              (c.note || "").toLowerCase().includes(mkw) ||
+                              (c.system || "").toLowerCase().includes(mkw)
+                            );
+                            return (
+                              <div className="p-3.5 rounded-xl bg-teal-50/70 border border-teal-200 space-y-2.5">
+                                <div className="text-xs font-bold text-teal-900">
+                                  🔍 搜索结果：共找到 {hits.length} 张匹配卡片 {hits.length > 50 ? "（展示前 50 张）" : ""}
+                                </div>
+                                {hits.length === 0 ? (
+                                  <div className="text-xs text-slate-500 py-3 text-center">未找到包含「{medEngDashSearch}」的医学英语卡片</div>
+                                ) : (
+                                  <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
+                                    {hits.slice(0, 50).map(c => (
+                                      <div key={c.id} className="p-3 rounded-xl bg-white border border-teal-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                                        <div className="min-w-0 flex-1">
+                                          <div className="flex flex-wrap items-center gap-1.5">
+                                            <span className="px-1.5 py-0.5 rounded bg-teal-100 text-teal-800 text-[10px] font-bold">{c.direction}</span>
+                                            <span className="font-bold text-slate-900">{c.front}</span>
+                                            <span className="text-slate-400">→</span>
+                                            <span className="font-semibold text-teal-800">{c.back}</span>
+                                          </div>
+                                          <div className="text-[11px] text-slate-500 mt-0.5 truncate">{c.system} · {c.category}{c.example ? ` · 例: ${c.example}` : ""}</div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-1.5 shrink-0">
+                                          <button onClick={() => speakEnglish(c.direction === "正→反" ? c.front : c.back)} className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-700">🔊 发音</button>
+                                          <button onClick={() => { setMedEngQueue([c.id]); setMedEngIdx(0); setMedEngRevealed(false); setMedEngUndoStack([]); setView("MEDENG_STUDY"); }} className="px-2.5 py-1 rounded-lg bg-teal-700 hover:bg-teal-600 text-white font-bold">🎯 练习</button>
+                                          {isAdmin && <button onClick={() => setEditingMedEngCard({ ...c })} className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold">✏️ 编辑</button>}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
 
                           <div>
                             <div className="flex flex-wrap justify-between items-center gap-2 text-xs mb-2">
@@ -4972,12 +5080,14 @@
                     </div>
                     <div className="p-5 overflow-y-auto flex-1 text-xs">
                       {ankiMgrTab === "browse" && (() => {
-                        const filtered = ankiCards.filter(c => (ankiStepFilter === "ALL" || c.step === ankiStepFilter) && (ankiSysFilter === "ALL" || c.system === ankiSysFilter));
+                        const amkw = ankiMgrSearch.trim().toLowerCase();
+                        const filtered = ankiCards.filter(c => (ankiStepFilter === "ALL" || c.step === ankiStepFilter) && (ankiSysFilter === "ALL" || c.system === ankiSysFilter) && (!amkw || (c.text || "").toLowerCase().includes(amkw) || (c.extra || "").toLowerCase().includes(amkw) || (c.tags || "").toLowerCase().includes(amkw)));
                         return (
                           <div className="space-y-3">
                             <div className="flex flex-wrap gap-2 items-center">
                               <select value={ankiStepFilter} onChange={(e) => setAnkiStepFilter(e.target.value)} className="border rounded-lg px-2.5 py-1.5"><option value="ALL">全部 Step</option>{STEPS.map(s => <option key={s}>{s}</option>)}</select>
                               <select value={ankiSysFilter} onChange={(e) => setAnkiSysFilter(e.target.value)} className="border rounded-lg px-2.5 py-1.5 flex-1"><option value="ALL">全部系统</option>{ALL_SYSTEMS_UNIQUE.map(s => <option key={s.id} value={s.id}>{s.id}</option>)}</select>
+                              <input type="text" value={ankiMgrSearch} onChange={(e) => setAnkiMgrSearch(e.target.value)} placeholder="🔍 搜索卡片..." className="border rounded-lg px-2.5 py-1.5 w-44" />
                               <button onClick={batchAutoLinkAnkiQuestions} className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold">⚡ 批量智能关联原题</button>
                               <button disabled={cloudBusy} onClick={pullGlobalAnki} className="px-3 py-1.5 rounded-lg bg-indigo-700 text-white font-bold">同步云端 Anki 库</button>
                               {isAdmin && <button disabled={cloudBusy} onClick={publishGlobalAnki} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">发布 Anki 公共库</button>}

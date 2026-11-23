@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T12:50:35.542Z",
+  "generatedAt": "2026-11-23T02:11:26.508Z",
   "years": {
     "2021": {
       "Step 1": {
@@ -11,12 +11,19 @@
         },
         "Cardiovascular System": {
           "files": [
+            "qbank/2021/step1/Cardiovascular System/artifacts_file_generation_ttl=63d_output_uw_2021_step1_cv_items04-16.json",
+            "qbank/2021/step1/Cardiovascular System/artifacts_file_generation_ttl=63d_output_uw_2021_step1_cv_items17-28.json",
             "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_b2_p268-531.json",
             "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_b3_p532-546.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p02.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p03.json",
             "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p1-134.json",
-            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p135-267.json"
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_p135-267.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_part03_p1103-1648.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_part04_p1649-2199.json",
+            "qbank/2021/step1/Cardiovascular System/uw_2021_s1_cv_part05_p2200-2629.json"
           ],
-          "count": 83
+          "count": 396
         }
       }
     },

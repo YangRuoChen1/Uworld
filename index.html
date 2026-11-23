@@ -675,7 +675,11 @@
     })();
     const safeSetBigStorage = (key, value) => {
       MedSpireIDB.set(key, value);
-      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+      try {
+        const s = JSON.stringify(value);
+        if (s.length < 300000) localStorage.setItem(key, s);
+        else localStorage.removeItem(key);
+      } catch (e) {}
     };
 
     const getUserKey = (uname, suffix) => `uw_v3_u_${uname || "guest"}_${suffix}`;
@@ -1288,13 +1292,16 @@
         (async () => {
           const qKey = u === "guest" ? STORAGE_KEYS.QUESTIONS : getUserKey(u, "questions");
           const mKey = u === "guest" ? STORAGE_KEYS.MISTAKES : getUserKey(u, "mistakes");
-          const [idbQ, idbM, idbA, idbMe, idbMeM, idbMeL] = await Promise.all([
+          const [idbQ, idbM, idbA, idbMe, idbMeM, idbMeL, idbDaily, idbAtt, idbAnkiLog] = await Promise.all([
             MedSpireIDB.get(qKey),
             MedSpireIDB.get(mKey),
             MedSpireIDB.get(getUserKey(u, "anki")),
             MedSpireIDB.get(getUserKey(u, "medEngCards")),
             MedSpireIDB.get(getUserKey(u, "medEngMistakes")),
-            MedSpireIDB.get(getUserKey(u, "medEngRevLog"))
+            MedSpireIDB.get(getUserKey(u, "medEngRevLog")),
+            MedSpireIDB.get(getUserKey(u, "dailyLogs")),
+            MedSpireIDB.get(getUserKey(u, "attempted")),
+            MedSpireIDB.get(getUserKey(u, "ankiRevLog"))
           ]);
           if (cancelled) return;
           if (Array.isArray(idbQ) && idbQ.length > 0) setQuestions(prev => idbQ.length >= prev.length ? idbQ : prev);
@@ -1303,6 +1310,25 @@
           if (Array.isArray(idbMe) && idbMe.length > 0) setMedEngCards(idbMe);
           if (Array.isArray(idbMeM) && idbMeM.length > 0) setMedEngMistakes(idbMeM);
           if (Array.isArray(idbMeL) && idbMeL.length > 0) setMedEngRevLog(idbMeL);
+          if (Array.isArray(idbAnkiLog) && idbAnkiLog.length > 0) setAnkiRevLog(prev => idbAnkiLog.length >= prev.length ? idbAnkiLog : prev);
+          if (idbDaily && typeof idbDaily === "object") {
+            setDailyLogs(prev => {
+              const merged = { ...prev };
+              Object.entries(idbDaily).forEach(([dk, val]) => {
+                const cur = merged[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
+                merged[dk] = {
+                  studySec: Math.max(cur.studySec || 0, val?.studySec || 0),
+                  qCount: Math.max(cur.qCount || 0, val?.qCount || 0),
+                  ankiCount: Math.max(cur.ankiCount || 0, val?.ankiCount || 0),
+                  medEngCount: Math.max(cur.medEngCount || 0, val?.medEngCount || 0)
+                };
+              });
+              return merged;
+            });
+          }
+          if (idbAtt && typeof idbAtt === "object") {
+            setAttemptedMap(prev => ({ ...idbAtt, ...prev }));
+          }
           idbHydratedUserRef.current = u;
           setTimeout(() => { isHydratingRef.current = false; }, 300);
         })();
@@ -1315,13 +1341,13 @@
       useEffect(() => safeSetBigStorage(getUserKey(currentUser, "medEngCards"), medEngCards), [medEngCards, currentUser]);
       useEffect(() => safeSetBigStorage(getUserKey(currentUser, "medEngMistakes"), medEngMistakes), [medEngMistakes, currentUser]);
       useEffect(() => safeSetBigStorage(getUserKey(currentUser, "medEngRevLog"), medEngRevLog), [medEngRevLog, currentUser]);
-      useEffect(() => safeSetStorage(getUserKey(currentUser, "attempted"), attemptedMap), [attemptedMap, currentUser]);
+      useEffect(() => { safeSetStorage(getUserKey(currentUser, "attempted"), attemptedMap); MedSpireIDB.set(getUserKey(currentUser, "attempted"), attemptedMap); }, [attemptedMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "marked"), markedIds), [markedIds, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "notes"), notesMap), [notesMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "highlights"), highlightsMap), [highlightsMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "keyClues"), customKeyCluesMap), [customKeyCluesMap, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "retention"), targetRetention), [targetRetention, currentUser]);
-      useEffect(() => safeSetStorage(getUserKey(currentUser, "dailyLogs"), dailyLogs), [dailyLogs, currentUser]);
+      useEffect(() => { safeSetStorage(getUserKey(currentUser, "dailyLogs"), dailyLogs); MedSpireIDB.set(getUserKey(currentUser, "dailyLogs"), dailyLogs); }, [dailyLogs, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "vocabBook"), vocabBook), [vocabBook, currentUser]);
       useEffect(() => safeSetStorage(getUserKey(currentUser, "examGoal"), examGoal), [examGoal, currentUser]);
       useEffect(() => {
@@ -2984,11 +3010,33 @@
             if (Array.isArray(d.mistakes)) setMistakes(d.mistakes);
             if (Array.isArray(d.medEngMistakes)) setMedEngMistakes(d.medEngMistakes);
             if (Array.isArray(d.medEngRevLog)) setMedEngRevLog(d.medEngRevLog);
-            if (d.attemptedMap) setAttemptedMap(d.attemptedMap);
-            if (Array.isArray(d.markedIds)) setMarkedIds(d.markedIds);
-            if (d.notesMap) setNotesMap(d.notesMap);
-            if (d.highlightsMap) setHighlightsMap(d.highlightsMap);
-            if (d.dailyLogs) setDailyLogs(d.dailyLogs);
+            if (d.attemptedMap) {
+              setAttemptedMap(prev => {
+                const merged = { ...prev };
+                Object.entries(d.attemptedMap).forEach(([qid, val]) => {
+                  if (!merged[qid] || (val?.count || 0) >= (merged[qid]?.count || 0)) merged[qid] = val;
+                });
+                return merged;
+              });
+            }
+            if (Array.isArray(d.markedIds)) setMarkedIds(prev => Array.from(new Set([...(prev || []), ...d.markedIds])));
+            if (d.notesMap) setNotesMap(prev => ({ ...d.notesMap, ...prev }));
+            if (d.highlightsMap) setHighlightsMap(prev => ({ ...d.highlightsMap, ...prev }));
+            if (d.dailyLogs) {
+              setDailyLogs(prev => {
+                const merged = { ...prev };
+                Object.entries(d.dailyLogs).forEach(([dk, val]) => {
+                  const cur = merged[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
+                  merged[dk] = {
+                    studySec: Math.max(cur.studySec || 0, val?.studySec || 0),
+                    qCount: Math.max(cur.qCount || 0, val?.qCount || 0),
+                    ankiCount: Math.max(cur.ankiCount || 0, val?.ankiCount || 0),
+                    medEngCount: Math.max(cur.medEngCount || 0, val?.medEngCount || 0)
+                  };
+                });
+                return merged;
+              });
+            }
             if (Array.isArray(d.vocabBook)) setVocabBook(d.vocabBook);
             if (d.examGoal) setExamGoal(d.examGoal);
             if (d.medEngFsrsMap) {
@@ -3436,8 +3484,44 @@
                                   <span>学习签到日历</span>
                                   <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-[11px] ml-1">
                                     <button onClick={() => setCalViewMode("month")} className={`px-2 py-0.5 rounded font-bold ${calViewMode === "month" ? "bg-amber-500 text-white" : "text-slate-600"}`}>月视图</button>
-                                    <button onClick={() => setCalViewMode("year")} className={`px-2 py-0.5 rounded font-bold ${calViewMode === "year" ? "bg-amber-500 text-white" : "text-slate-600"}`}>年统计</button>
-                                  </div>
+                            <button onClick={() => setCalViewMode("year")} className={`px-3 py-1 rounded-md ${calViewMode === "year" ? "bg-amber-500 text-white shadow" : "text-slate-600"}`}>年统计</button>
+                          </div>
+                          <button onClick={() => {
+                            const recovered = {};
+                            (ankiRevLog || []).forEach(l => {
+                              if (!l?.ts) return;
+                              const dk = getStudyDateKey(l.ts);
+                              if (!recovered[dk]) recovered[dk] = { qCount: 0, ankiCount: 0, medEngCount: 0 };
+                              recovered[dk].ankiCount += 1;
+                            });
+                            (medEngRevLog || []).forEach(l => {
+                              if (!l?.ts) return;
+                              const dk = getStudyDateKey(l.ts);
+                              if (!recovered[dk]) recovered[dk] = { qCount: 0, ankiCount: 0, medEngCount: 0 };
+                              recovered[dk].medEngCount += 1;
+                            });
+                            let fixedDays = 0;
+                            setDailyLogs(prev => {
+                              const next = { ...prev };
+                              Object.entries(recovered).forEach(([dk, rec]) => {
+                                const cur = next[dk] || { studySec: 0, qCount: 0, ankiCount: 0, medEngCount: 0 };
+                                const newA = Math.max(cur.ankiCount || 0, rec.ankiCount);
+                                const newMe = Math.max(cur.medEngCount || 0, rec.medEngCount);
+                                const estSec = (newA + newMe) * 15;
+                                if (newA > (cur.ankiCount || 0) || newMe > (cur.medEngCount || 0)) {
+                                  fixedDays++;
+                                  next[dk] = {
+                                    studySec: Math.max(cur.studySec || 0, estSec),
+                                    qCount: cur.qCount || 0,
+                                    ankiCount: newA,
+                                    medEngCount: newMe
+                                  };
+                                }
+                              });
+                              return next;
+                            });
+                            showToast(fixedDays > 0 ? `已从复习日志补全 ${fixedDays} 天的打卡记录！` : "复习日志中暂未发现可补全的缺失日期", fixedDays > 0 ? "success" : "info");
+                          }} className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold">🔧 从复习日志补全</button>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-xs">
                                   <select value={calYear} onChange={(e) => setCalYear(Number(e.target.value))} className="border rounded-lg px-2 py-1 font-bold bg-slate-50">

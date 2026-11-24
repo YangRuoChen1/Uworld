@@ -1362,6 +1362,7 @@
       const [qbankSubMode, setQbankSubMode] = useState("create"); // create | overview
       const [qbankOverviewClearMode, setQbankOverviewClearMode] = useState(false);
       const [qbankOverviewSearch, setQbankOverviewSearch] = useState("");
+      const [collapsedOverviewSystems, setCollapsedOverviewSystems] = useState({});
       const [showMedEngStatsModal, setShowMedEngStatsModal] = useState(false);
       const [showPerfModal, setShowPerfModal] = useState(false);
       const [showNotebookModal, setShowNotebookModal] = useState(false);
@@ -1706,15 +1707,19 @@
               updateSyncProgress("UWorld 公共题库", 0, totalModules, "发现云端新题，正在拉取...");
               const remoteQs = await pullGlobalChunked("__global_questions_v3__", "questions", "UWorld 公共题库", false);
               if (Array.isArray(remoteQs) && remoteQs.length > 0) {
-                setQuestions(prev => {
-                  const remoteMap = new Map(remoteQs.filter(q => q && q.id).map(q => [q.id, q]));
-                  const prevIds = new Set(prev.map(q => q.id));
-                  const addedCount = remoteQs.filter(q => q && q.id && !prevIds.has(q.id)).length;
-                  const updatedPrev = prev.map(q => remoteMap.has(q.id) ? remoteMap.get(q.id) : q);
-                  const newItems = remoteQs.filter(q => q && q.id && !prevIds.has(q.id));
-                  if (addedCount > 0) showToast(`已同步 +${addedCount} 道云端新题！`, "success");
-                  return [...newItems, ...updatedPrev];
-                });
+                const staticIdsNow = new Set([...staticQuestions, ...Object.values(staticCacheRef.current || {}).flat()].map(q => q.id));
+                const dynamicRemote = remoteQs.filter(q => q && q.id && !staticIdsNow.has(q.id));
+                if (dynamicRemote.length > 0) {
+                  setQuestions(prev => {
+                    const remoteMap = new Map(dynamicRemote.map(q => [q.id, q]));
+                    const prevIds = new Set(prev.map(q => q.id));
+                    const addedCount = dynamicRemote.filter(q => !prevIds.has(q.id)).length;
+                    const updatedPrev = prev.map(q => remoteMap.has(q.id) ? remoteMap.get(q.id) : q);
+                    const newItems = dynamicRemote.filter(q => !prevIds.has(q.id));
+                    if (addedCount > 0) showToast(`已同步 +${addedCount} 道云端新题！`, "success");
+                    return [...newItems, ...updatedPrev];
+                  });
+                }
                 safeSetStorage("__ver___global_questions_v3__", qVer);
               }
             }
@@ -3220,8 +3225,9 @@
         if (!isAdmin) return;
         setCloudBusy(true);
         try {
-          await publishGlobalChunked("__global_questions_v3__", questions, "UWorld 公共题库 (发布)", 60);
-          showToast(`已发布全部 ${questions.length} 题至全端公共库！`, "success");
+          const dynamicOnly = customQuestions.filter(q => !q._static);
+          await publishGlobalChunked("__global_questions_v3__", dynamicOnly, "UWorld 公共题库 (发布)", 60);
+          showToast(dynamicOnly.length === 0 ? "已清空云端旧公共题库（当前题库已全部静态化）！" : `已发布 ${dynamicOnly.length} 道动态题至全端公共库！`, "success");
         } catch (err) { setSyncProgress(null); showToast("发布失败：" + (err?.message || "网络异常"), "error"); }
         finally { setCloudBusy(false); }
       };
@@ -3902,22 +3908,33 @@
                             const doneCnt = sysQs.filter(q => attemptedMap[q.id]).length;
                             const rightCnt = sysQs.filter(q => attemptedMap[q.id]?.lastCorrect).length;
                             const acc = doneCnt > 0 ? Math.round((rightCnt / doneCnt) * 100) : 0;
+                            const ovKey = `${activeYear}::${activeStep}::${sys.id}`;
+                            const isCollapsed = Boolean(collapsedOverviewSystems[ovKey]);
                             return (
                               <div key={sys.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-3">
-                                <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-2.5">
+                                <div className={`flex flex-wrap items-center justify-between gap-2 ${isCollapsed ? "" : "border-b pb-2.5"}`}>
                                   <div>
                                     <div className="font-bold text-sm text-slate-900">{sys.id} <span className="text-xs font-normal text-slate-400">({sys.cn})</span></div>
                                     <div className="text-[11px] text-slate-500 mt-0.5">
                                       已做 <strong>{doneCnt}</strong> / {sysQs.length} 题 · 正确率 <strong className="text-emerald-600">{acc}%</strong>
                                     </div>
                                   </div>
-                                  <button
-                                    onClick={() => resetSystemQuestionsStatus(sys.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-700 border border-slate-200 text-xs font-bold text-slate-600"
-                                  >
-                                    🔄 重置本系统 ({sysQs.length}题)
-                                  </button>
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <button
+                                      onClick={() => setCollapsedOverviewSystems(prev => ({ ...prev, [ovKey]: !isCollapsed }))}
+                                      className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700"
+                                    >
+                                      {isCollapsed ? `🔽 展开题号 (${sysQs.length}题)` : "🔼 收起题号"}
+                                    </button>
+                                    <button
+                                      onClick={() => resetSystemQuestionsStatus(sys.id)}
+                                      className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-700 border border-slate-200 text-xs font-bold text-slate-600"
+                                    >
+                                      🔄 重置本系统 ({sysQs.length}题)
+                                    </button>
+                                  </div>
                                 </div>
+                                {!isCollapsed && (
                                 <div className="flex flex-wrap gap-2">
                                   {sysQs.map((q, idx) => {
                                     const att = attemptedMap[q.id];
@@ -3944,6 +3961,7 @@
                                     );
                                   })}
                                 </div>
+                                )}
                               </div>
                             );
                           })}
@@ -5037,6 +5055,15 @@
                                 <select value={moveTargetStep} onChange={(e) => { setMoveTargetStep(e.target.value); setMoveTargetSystem(getSystemsForStep(e.target.value)[0].id); }} className="border rounded px-2 py-1 bg-white font-semibold">{STEPS.map(s => <option key={s}>{s}</option>)}</select>
                                 <select value={moveTargetSystem} onChange={(e) => setMoveTargetSystem(e.target.value)} className="border rounded px-2 py-1 bg-white max-w-xs">{getSystemsForStep(moveTargetStep).map(s => <option key={s.id} value={s.id}>{s.id}</option>)}</select>
                                 <button onClick={handleBatchMoveQuestions} className="px-3 py-1 rounded bg-indigo-700 text-white font-bold">移动选中题目</button>
+                                <button onClick={() => {
+                                  const dynamicSel = selectedMoveIds.filter(id => customQuestions.some(q => q.id === id));
+                                  if (dynamicSel.length === 0) { showToast("请先勾选要删除的本地动态题目（静态题库需在 GitHub 删除）", "info"); return; }
+                                  if (!confirm(`确认从本地/云端动态题库中删除这 ${dynamicSel.length} 道选中题目吗？（做题记录、笔记与 Anki 关联仍会保留）`)) return;
+                                  const idSet = new Set(dynamicSel);
+                                  setCustomQuestions(prev => prev.filter(q => !idSet.has(q.id)));
+                                  setSelectedMoveIds([]);
+                                  showToast(`已删除 ${dynamicSel.length} 道动态题目，记得点「发布公共库」和「同步到云端」保存！`, "success");
+                                }} className="px-3 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white font-bold">🗑️ 批量删除选中</button>
                               </div>
                             )}
 

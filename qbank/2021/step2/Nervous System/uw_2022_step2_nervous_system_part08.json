@@ -1,0 +1,279 @@
+[
+  {
+    "id": "q-uw-4698",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 30-year-old woman comes to the office due to increasing muscle weakness. The patient has not been able to grip her coffee mug or open jars due to weakness in her hands. She has also had some loss of sensation in the upper extremities that has caused her to cut herself while doing craft projects. The patient was in a motor vehicle collision 7 years ago in which she sustained a whiplash cervical spine injury. She has no other medical conditions. BMI is 22 kg/m2. Physical examination reveals moderate wasting of the small muscles of the hand. Bilateral upper extremities have impaired pain and temperature sensation. Light touch, vibration, and position senses are all intact. Which of the following is the most likely diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Amyotrophic lateral sclerosis",
+      "B": "Cervical spondylosis",
+      "C": "Intervertebral disk prolapse",
+      "D": "Multiple sclerosis",
+      "E": "Syringomyelia"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "ALS produces upper and lower motor neuron signs without sensory abnormalities.",
+      "B": "Cervical spondylosis causes neck pain, radiculopathy, or compressive myelopathy without cape-like dissociated anesthesia.",
+      "C": "Cervical disc herniation produces dermatomal radicular pain/numbness in a single nerve root distribution, not bilateral dissociated sensory loss.",
+      "D": "Multiple sclerosis causes multifocal central nervous system demyelinating deficits disseminated across space and time rather than a focal central cord cavitation."
+    },
+    "generalExplanation": "This patient has syringomyelia, a progressive fluid-filled cavitation (syrinx) within the central spinal cord (most commonly cervical). It is most frequently congenital (Arnold-Chiari malformation type 1), but can develop as a delayed sequela months to years after spinal cord trauma, meningitis, or tumor.\n\nThe syrinx expands from the central canal, first destroying the decussating fibers of the lateral spinothalamic tract within the anterior white commissure. This produces a bilateral, 'cape-like' loss of pain and temperature sensation across the neck, shoulders, and arms, with preservation of dorsal column modalities (light touch, vibration, proprioception)—a phenomenon termed dissociated sensory loss. Further expansion into anterior horn motor neurons causes lower motor neuron weakness, flaccid paresis, and intrinsic hand muscle wasting. Spinal MRI confirms the intramedullary syrinx cavity.",
+    "explanationImages": [],
+    "educationalObjective": "Syringomyelia causes a cystic cavitation of the central spinal cord (often posttraumatic or with Chiari I malformation), leading to bilateral loss of pain and temperature sensation with preserved touch/proprioception (dissociated anesthesia) in a 'cape-like' distribution and intrinsic hand muscle weakness."
+  },
+  {
+    "id": "q-uw-19891",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 59-year-old man comes to the emergency department due to a sore throat. He says that he was assaulted during an altercation in a bar 7 days ago. The following day, the patient noticed some neck pain and stiffness, followed by a sore throat. Today, he has severe throat pain, which has spread to his left shoulder and radiates down his left arm. The patient drinks 6-12 beers daily and has a 50-pack-year smoking history. Medical history includes type 2 diabetes mellitus and hypertension. Temperature is 38.6 C (101.5 F), blood pressure is 108/70 mm Hg, pulse is 106/min, and respirations are 16/min. On examination, the patient is awake and alert. Abrasions are present on the head, neck, and face. Mild swelling and ecchymosis are noted on the forehead and around the right eye. The posterior pharynx is normal; there is no trismus or drooling. Right upper extremity strength is 5/5 and left upper extremity strength is 4/5. Cervical spine tenderness is present at the C5 and C6 level. Laboratory results show hemoglobin 11 g/dL, platelets 260,000/mm3, and leukocytes 16,300/mm3. What is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Contrast esophagography",
+      "B": "CT scan of the head",
+      "C": "Direct laryngoscopy",
+      "D": "MR angiography of the neck vessels",
+      "E": "MRI of the cervical spine with contrast"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Contrast esophagography detects esophageal perforation (Boerhaave syndrome or penetrating trauma), which causes surgical emphysema, pneumomediastinum, and hydropneumothorax within hours of insult.",
+      "B": "Head CT rules out acute intracranial hemorrhage; it does not evaluate focal cervical spinal cord impingement or spinal infection.",
+      "C": "Direct laryngoscopy inspects airway compromise and supraglottic infection (epiglottitis), but it cannot detect deep spinal epidural abscess or neural compression.",
+      "D": "MR angiography evaluates blunt cerebrovascular injury (carotid/vertebral dissection), which causes ischemic stroke rather than radiculopathy, fever, and focal spinal tenderness."
+    },
+    "generalExplanation": "This patient presents with cervical spinal epidural abscess (SEA), an emergency characterized by focal spinal pain, radiculopathy radiating down the arm (C5-C6), progressive motor weakness, fever, and marked leukocytosis. Trauma (from the bar assault) and systemic immunocompromise (diabetes mellitus, heavy alcohol use) are prominent predisposing risk factors, often beginning as a traumatic spinal hematoma that becomes secondarily infected.\n\nThe definitive diagnostic study of choice is emergent contrast-enhanced MRI of the cervical spine, which visualizes the fluid collection, extent of canal stenosis, and spinal cord compression. Management requires intravenous broad-spectrum bactericidal antibiotics and urgent neurosurgical surgical decompression/drainage to avert irreversible paralysis.",
+    "explanationImages": [],
+    "educationalObjective": "Spinal epidural abscess should be suspected in patients with focal spinal tenderness, progressive radiculopathy/neurologic deficits, and systemic signs of infection (fever, leukocytosis). Emergent contrast-enhanced MRI of the spine is the gold standard diagnostic test."
+  },
+  {
+    "id": "q-uw-4641",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 38-year-old woman comes to the emergency department due to a week of clumsiness and shaking in her right arm. The patient also feels unsteady and has fallen twice in the past 2 days. One year ago, she had diplopia and vertigo for 2 weeks that resolved without treatment. The patient has no other medical problems. She takes oral contraceptives and occasionally acetaminophen. She does not use tobacco, alcohol, or illicit drugs. She recently started a vegan diet. Her father died of a large stroke, and her mother has diabetes mellitus. Temperature is 37 C (98.6 F), blood pressure is 140/85 mm Hg, and pulse is 84/min and regular. BMI is 34 kg/m2. On physical examination, there is mild right pronator drift but no muscle weakness. The patient is unable to walk a tandem gait. MRI of the brain without contrast demonstrates multiple ovoid periventricular T2/FLAIR hyperintense white matter lesions. Which of the following is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Initiate acetazolamide",
+      "B": "Initiate aspirin and atorvastatin",
+      "C": "Initiate intravenous heparin",
+      "D": "Initiate methylprednisolone",
+      "E": "Initiate vitamin B12",
+      "F": "Perform echocardiogram",
+      "G": "Perform lumbar puncture"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Acetazolamide lowers CSF production in idiopathic intracranial hypertension, which presents with papilledema and normal MRI parenchyma.",
+      "B": "Aspirin and statin therapy provide stroke prevention for acute arterial ischemic stroke, which causes territorial cortical/subcortical infarcts rather than periventricular ovoid white matter plaques.",
+      "C": "Intravenous heparin treats cerebral venous sinus thrombosis, which presents with signs of intracranial hypertension and sagittal/transverse sinus thrombosis.",
+      "E": "B12 supplementation treats subacute combined degeneration, which causes symmetric dorsal column and lateral tract dysfunction developing over years.",
+      "F": "Echocardiogram evaluates cardioembolic sources of stroke, which typically appear at the gray-white junction across multiple vascular territories.",
+      "G": "Lumbar puncture for oligoclonal bands is reserved for clinically atypical cases or equivocal neuroimaging; it is unnecessary when classic episodic clinical relapses and characteristic periventricular MRI demyelinating lesions confirm multiple sclerosis."
+    },
+    "generalExplanation": "This patient presents with an acute relapse of multiple sclerosis (MS), fulfilling the McDonald diagnostic criteria of lesions disseminated in time (prior optic/brainstem attack 1 year ago and current cerebellar/corticospinal attack) and space (multiple periventricular and subcortical ovoid white matter lesions on MRI, representing demyelinating plaques with perivenular inflammation and astrogliosis).\n\nFor acute, disabling MS attacks causing functional impairment (ataxia, falls, motor drift), the treatment of choice is high-dose intravenous corticosteroids (methylprednisolone 500-1,000 mg/day for 3-5 days). This speeds functional neurological recovery by stabilizing the blood-brain barrier and suppressing inflammatory cytokine cascades. Plasma exchange is reserved for steroid-refractory relapses.",
+    "explanationImages": [],
+    "educationalObjective": "Acute exacerbations of multiple sclerosis with functional disability are treated with high-dose intravenous glucocorticoids (eg, methylprednisolone). Plasmapheresis is indicated in patients refractory to corticosteroids."
+  },
+  {
+    "id": "q-uw-11982",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 23-year-old woman is brought to the emergency department after a seizure episode. The seizure occurred at work and was not preceded by any prodromal symptoms or aura. The patient's coworkers reported that she became unresponsive with generalized tonic-clonic movements lasting 1-2 minutes followed by several minutes of confusion. She experienced urinary incontinence but no tongue biting. The patient has no medical problems and takes no prescription medications. She has no prior head trauma and no family history of epilepsy. Vital signs and neurologic examination are normal. Serum electrolytes, glucose, calcium, magnesium, complete blood count, renal function tests, and liver function tests are unremarkable. A non-contrast head CT scan is normal. Which of the following is the most appropriate next step in management?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Check urine drug screen",
+      "B": "MRI of the brain with seizure protocol",
+      "C": "Reassure patient and discharge home",
+      "D": "Routine EEG",
+      "E": "Start valproic acid"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Brain MRI with dedicated epilepsy protocol is indicated to detect structural foci (eg, mesial temporal sclerosis, focal cortical dysplasia, cavernoma) once provoked toxic and metabolic causes are thoroughly excluded.",
+      "C": "Discharge without completing a toxicology evaluation is inappropriate because unprovoked versus substance-provoked seizures dictate drastically different diagnostic and antiepileptic management pathways.",
+      "D": "Routine outpatient EEG is useful for electrographic risk stratification after toxic and metabolic screening is complete.",
+      "E": "Antiepileptic therapy is not initiated after a solitary unprovoked seizure with normal neuroimaging, and valproic acid is specifically teratogenic in women of childbearing potential."
+    },
+    "generalExplanation": "In an adult presenting with an apparent first-time generalized seizure, initial evaluation is aimed at distinguishing between a provoked seizure (triggered by an acute, reversible systemic or toxic insult) and an unprovoked seizure.\n\nImmediate workup mandates excluding metabolic derangements (hypoglycemia, hyponatremia, hypocalcemia, hypomagnesemia, uremia) and toxic etiologies (illicit sympathomimetics such as cocaine or amphetamines, or sedative/alcohol withdrawal). Because comprehensive serum chemistries and noncontrast head CT are normal, obtaining a urine toxicology screen is the critical next step in the emergency department to evaluate for substance abuse before proceeding to elective outpatient MRI and EEG.",
+    "explanationImages": [],
+    "educationalObjective": "The initial evaluation of a first-time seizure in an adult focuses on ruling out acute metabolic abnormalities and toxic etiologies (eg, illicit substances, withdrawal). A urine toxicology screen is an essential early component of this workup."
+  },
+  {
+    "id": "q-uw-12393",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 68-year-old man comes to the emergency department due to severe dizziness while playing tennis an hour ago. He says that he had a spinning sensation accompanied by nausea and vomiting; the symptoms have now subsided. The patient has had brief episodes of dizziness in the past, especially when performing vigorous work with his arms. He has also experienced heaviness and fatigue of the left arm with exertion. The patient has a history of hypertension, hyperlipidemia, and type 2 diabetes mellitus. Blood pressure is 140/90 mm Hg on the right arm and 100/74 mm Hg on the left, and pulse is 82/min and regular. A systolic bruit is present at the base of the neck just above the clavicle on the left side. Cardiac auscultation discloses a fourth heart sound. There is no extremity weakness or sensory loss. Which of the following is the most likely cause of this patient's symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Coronary artery atherosclerosis",
+      "B": "Internal carotid artery stenosis",
+      "C": "Segmental narrowing of the aortic arch",
+      "D": "Subclavian artery occlusion",
+      "E": "Vertebral artery atherosclerosis"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Coronary atherosclerosis presents with exertional angina or dyspnea, not arm claudication and exercise-induced vertigo.",
+      "B": "Internal carotid artery stenosis causes transient monocular blindness (amaurosis fugax) or hemispheric TIAs (contralateral hemiparesis/aphasia), not arm claudication or inter-arm blood pressure differentials.",
+      "C": "Aortic coarctation causes upper extremity hypertension with lower extremity claudication and femoral pulse delay, not unilateral upper limb claudication.",
+      "E": "Isolated vertebral artery stenosis can cause chronic vertebrobasilar insufficiency, but it does not cause ipsilateral arm claudication, supraclavicular bruit, or asymmetric upper extremity blood pressure."
+    },
+    "generalExplanation": "This patient has subclavian steal syndrome, caused by severe atherosclerotic stenosis or occlusion of the proximal subclavian artery (most commonly left-sided, proximal to the vertebral artery takeoff). Stenosis lowers perfusion pressure in the distal subclavian bed.\n\nWhen the ipsilateral arm exercises (eg, playing tennis), local muscular vasodilation causes a further dramatic drop in distal arteriolar resistance. Blood is retrograde-diverted ('stolen') down the ipsilateral vertebral artery away from the basilar artery and posterior cerebral circulation into the arm. This produces simultaneous upper-extremity exercise-induced claudication (fatigue, heaviness) and transient vertebrobasilar insufficiency (vertigo, ataxia, dysmetria). Physical examination classically reveals an inter-arm systolic blood pressure difference (>15 mm Hg lower in the affected arm) and a supraclavicular systolic bruit.",
+    "explanationImages": [],
+    "educationalObjective": "Subclavian steal syndrome results from severe stenosis of the proximal subclavian artery, causing retrograde blood flow through the ipsilateral vertebral artery during upper-extremity exertion. Findings include exercise-induced arm fatigue, transient vertebrobasilar symptoms (vertigo, ataxia), an inter-arm systolic blood pressure disparity (>15 mm Hg), and a supraclavicular bruit."
+  },
+  {
+    "id": "q-uw-21518",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 27-year-old woman comes to the office due to facial weakness. When the patient woke up this morning, the left side of her face seemed to be \"pulling down.\" She had difficulty eating breakfast, and orange juice leaked out the left side of her mouth. The patient had some minor left ear pain last night that responded to acetaminophen and is fully resolved. She has no chronic medical conditions and takes no other medications. Vital signs are within normal limits. On examination, the external ear, external auditory canal, and tympanic membrane are normal. There is weakness of the entire left side of the face, including the forehead and incomplete eye closure. The pupils are equal and reactive to light. Hearing is intact. Which of the following is the most appropriate next step in diagnosis of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Chest x-ray",
+      "B": "HIV testing",
+      "C": "Lumbar puncture",
+      "D": "MRI of the head",
+      "E": "No additional testing needed"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Chest x-ray screens for pulmonary sarcoidosis, but neurosarcoidosis rarely presents as isolated unilateral peripheral facial palsy without established systemic features.",
+      "B": "HIV testing is not routinely indicated for isolated Bell palsy in a low-risk, immunocompetent patient.",
+      "C": "Lumbar puncture evaluates suspected Guillain-Barré syndrome, which causes ascending flaccid paraparesis and bilateral, symmetric facial palsy.",
+      "D": "Brain MRI is indicated for central facial palsy (forehead-sparing upper motor neuron lesions) or atypical features (slow progression >3 weeks, absence of recovery at 4 months, other cranial neuropathies)."
+    },
+    "generalExplanation": "This patient presents with a classic peripheral facial nerve (CN VII) palsy, most commonly idiopathic Bell palsy. Peripheral lesions affect all branches of CN VII, causing acute, complete hemifacial paresis involving both the upper face (loss of forehead wrinkling, inability to close the eye) and lower face (flattened nasolabial fold, mouth drooping, oral incompetence). By contrast, central (upper motor neuron) facial lesions spare forehead movement because the frontalis muscle receives bilateral corticonuclear innervation.\n\nIn a young, healthy patient with stereotypical, acute-onset, unilateral peripheral facial palsy and no other cranial neuropathies or systemic red flags, Bell palsy is a clinical diagnosis and no additional diagnostic testing (imaging or lumbar puncture) is required. First-line medical therapy is oral high-dose corticosteroids (prednisone) initiated within 72 hours of symptom onset, accompanied by corneal eye lubrication.",
+    "explanationImages": [],
+    "educationalObjective": "Bell palsy presents as acute unilateral facial weakness involving both the upper and lower face (including the forehead). In typical presentations without systemic features or other cranial nerve deficits, diagnosis is clinical and requires no additional laboratory testing or neuroimaging."
+  },
+  {
+    "id": "q-uw-3205",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 38-year-old woman comes to the office because of chronic aching pain and stiffness around her neck, shoulders, lower back, and hips. Even minor exertion worsens the pain. The patient also has difficulty sleeping and frequently wakes up in the middle of the night. Even after a good night's sleep, she always feels fatigued in the morning. The patient has no muscle weakness, fever, malaise, weight loss, or rash. She tried water aerobic exercise 3 times a week but had no symptom improvement. She has a history of irritable bowel syndrome. Vital signs are within normal limits. Examination shows multiple tender spots at muscle insertion points and bony prominences. Her muscle strength is 5/5 in all extremities, and deep-tendon reflexes are 2+ throughout. No sensory abnormalities are noted. Laboratory results show normal hematocrit (43%), leukocytes (7,000/mm3), platelets (200,000/mm3), serum creatine kinase (60 U/L), TSH (3.0 µU/mL), and ESR (9 mm/h). Which of the following is the most appropriate therapy for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Amitriptyline",
+      "B": "Colchicine",
+      "C": "Methotrexate",
+      "D": "Naproxen",
+      "E": "Oxycodone",
+      "F": "Prednisone"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Colchicine treats acute gout flares, which cause acute inflammatory monoarthritis.",
+      "C": "Methotrexate treats inflammatory autoimmune arthropathies (rheumatoid arthritis) associated with elevated inflammatory markers and synovitis.",
+      "D": "NSAIDs and corticosteroids (naproxen, prednisone) are ineffective in fibromyalgia because it is a noninflammatory central pain processing disorder with normal ESR and CRP.",
+      "E": "Chronic opioid therapy is contraindicated in fibromyalgia due to lack of efficacy, central sensitization, and dependency risk."
+    },
+    "generalExplanation": "This patient meets clinical diagnostic criteria for fibromyalgia, a central pain amplification and sensitization syndrome characterized by widespread musculoskeletal aching and stiffness (>3 months), unrefreshing sleep, chronic fatigue, and cognitive dysfunction, accompanied by normal inflammatory markers (ESR, CRP) and normal muscle enzymes (CK).\n\nWhen conservative nonpharmacological measures (patient education, low-impact aerobic exercise, sleep hygiene) provide inadequate relief, first-line pharmacotherapy is a low-dose tricyclic antidepressant (TCA) such as amitriptyline at bedtime. Amitriptyline enhances descending inhibitory pain pathways by inhibiting serotonin and norepinephrine reuptake while also promoting restorative slow-wave sleep. Alternate second-line agents include SNRIs (duloxetine, milnacipran) and alpha-2-delta calcium channel ligands (pregabalin).",
+    "explanationImages": [],
+    "educationalObjective": "Fibromyalgia is characterized by chronic widespread musculoskeletal pain, fatigue, sleep disturbance, and cognitive dysfunction with normal inflammatory markers. When nonpharmacologic therapies fail, low-dose amitriptyline is the preferred first-line medication."
+  },
+  {
+    "id": "q-uw-14196",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 55-year-old man comes to the office due to difficulty chewing food over the past 2 months. The patient initially experienced coughing while drinking liquids and has recently had difficulty ingesting solid foods. In addition, several people have told him they have difficulty understanding his speech. Review of systems is positive for a 5-kg (11-lb) weight loss over the past 3 months. The patient smoked a pack of cigarettes daily for 35 years. Temperature is 37 C (98.6 F), blood pressure is 120/70 mm Hg, pulse is 78/min, and respirations are 14/min. BMI is 24 kg/m2. On examination, there is pooling of secretions in the oral cavity. Involuntary muscle twitching is noted over the chin, tongue, and upper and lower limbs. Power is 4/5 in both upper extremities. Deep tendon reflexes are 3+ throughout. Bilateral Babinski is present. Mental and sensory examinations are normal. Which of the following is most likely present in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Antibodies against postsynaptic acetylcholine receptors",
+      "B": "Antibodies against presynaptic Ca channels",
+      "C": "Brainstem compression",
+      "D": "Degeneration of corticospinal tract",
+      "E": "Inflammatory muscle disease"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Myasthenia gravis targets postsynaptic acetylcholine receptors at the motor end plate, causing fluctuating fatigable weakness without fasciculations or upper motor neuron signs.",
+      "B": "Lambert-Eaton syndrome targets presynaptic voltage-gated calcium channels, causing proximal limb weakness and hyporeflexia that improves with post-exercise facilitation.",
+      "C": "Brainstem compression would cause sensory deficits and multiple cranial neuropathies without widespread peripheral fasciculations across all extremities.",
+      "E": "Inflammatory myopathies (polymyositis) cause symmetric proximal muscle weakness and tenderness without hyperreflexia, extensor plantar responses, or fasciculations."
+    },
+    "generalExplanation": "This patient has amyotrophic lateral sclerosis (ALS), a progressive neurodegenerative disease characterized by the simultaneous degeneration of upper motor neurons (UMNs in the motor cortex and corticospinal/corticobulbar tracts) and lower motor neurons (LMNs in the brainstem motor nuclei and spinal anterior horns).\n\nKey features in this vignette confirming dual motor system degeneration include:\n• UMN signs: Generalized hyperreflexia (3+), bilateral extensor plantar responses (Babinski sign), and spasticity\n• LMN signs: Prominent muscle fasciculations (twitching of the chin, tongue, and limbs) and muscle atrophy\n• Bulbar involvement: Dysarthria, dysphagia with choking/aspiration, and pooling of saliva\n• Complete preservation of sensory and cognitive functions\nDegeneration and sclerosis of the lateral corticospinal tracts account for the profound UMN features.",
+    "explanationImages": [],
+    "educationalObjective": "Amyotrophic lateral sclerosis is a fatal neurodegenerative disorder characterized by combined upper motor neuron (corticospinal tract degeneration, hyperreflexia, Babinski sign) and lower motor neuron (anterior horn degeneration, fasciculations, atrophy) signs in the absence of sensory deficits."
+  },
+  {
+    "id": "q-uw-12246",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 65-year-old woman is brought to the office by her family due to increasing forgetfulness over the past year. The patient previously had trouble remembering where she left her keys or glasses, and lately she has had difficulty recalling familiar names. She says, \"I'm just getting older and slowing down,\" but her daughter became concerned when her mother couldn't remember the steps to make a favorite dish that she had previously cooked from memory for years. The patient has a history of well-controlled hypertension. She does not use tobacco but has 2 glasses of wine daily. Her husband unexpectedly died of a myocardial infarction a year ago. The patient's mother died of Alzheimer disease in her 80s. Blood pressure is 130/85 mm Hg and pulse is 85/min. The patient is alert, oriented, and cooperative. Muscle strength, sensation, deep tendon reflexes, and gait are normal. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Apolipoprotein E testing",
+      "B": "MRI of the head",
+      "C": "Montreal Cognitive Assessment",
+      "D": "Thiamine blood test",
+      "E": "Thyroid function tests",
+      "F": "Vitamin B12 and folate levels"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "APOE epsilon-4 testing has low positive predictive value and is not recommended as a clinical diagnostic tool for late-onset Alzheimer disease.",
+      "B": "Neuroimaging (MRI or CT) is an important component of dementia workup to exclude structural causes, but standard objective cognitive screening must be performed first.",
+      "D": "Thiamine testing evaluates acute Wernicke encephalopathy (triad of encephalopathy, ataxia, ophthalmoplegia), not chronic progressive forgetfulness.",
+      "E": "Thyroid function testing is part of the reversible secondary dementia lab panel, but it is ordered after establishing objective cognitive deficits on bedside screening.",
+      "F": "Serum B12 is tested after confirming cognitive impairment with an objective screening tool."
+    },
+    "generalExplanation": "When a patient or family member reports progressive memory loss and functional decline exceeding normal age-related forgetfulness (such as inability to complete familiar recipes or navigate familiar surroundings), the essential first step in management is to objectively confirm and quantify cognitive impairment using a validated, standardized cognitive screening instrument.\n\nThe Montreal Cognitive Assessment (MoCA) is a sensitive 30-point screening tool assessing multiple domains: orientation, executive function, visuospatial skills, memory, language, and attention. A score <26 indicates cognitive impairment (mild cognitive impairment or dementia). Once objective impairment is established, secondary evaluation proceeds with laboratory screening (TSH, vitamin B12, CBC, CMP), depression screening, and brain MRI.",
+    "explanationImages": [],
+    "educationalObjective": "The initial evaluation of a patient presenting with suspected cognitive decline begins with an objective cognitive screening tool (eg, Montreal Cognitive Assessment [MoCA], Mini-Mental State Examination [MMSE]) before ordering neuroimaging or laboratory investigations."
+  },
+  {
+    "id": "q-uw-18287",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 34-year-old man is brought to the emergency department due to confusion. The patient recently lost his job and moved in with his parents yesterday because he could no longer afford housing. Today, his mother found him disoriented and unsteady. He has no known chronic medical conditions and takes no medications. Temperature is 38.5 C (101.3 F), blood pressure is 164/90 mm Hg, pulse is 108/min, and respirations are 22/min. The patient appears restless and is constantly picking at the bed linens, yelling, \"Get these bugs off me.\" The lungs are clear on auscultation, and cardiac examination is unremarkable with the exception of regular tachycardia. The abdomen is soft and nontender. No extremity edema is present. Laboratory results show hemoglobin 14.8 g/dL, MCV 104 µm3, leukocytes 11,000/mm3, sodium 146 mEq/L, potassium 3.1 mEq/L, and magnesium 1.8 mg/dL. Which of the following would be most helpful to improve this patient's current condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Atypical antipsychotic agent",
+      "B": "Broad-spectrum antibiotic",
+      "C": "Long-acting benzodiazepine",
+      "D": "Thyroid hormone replacement",
+      "E": "Vitamin supplementation"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Antipsychotics can lower the seizure threshold and do not correct the underlying GABA deficiency in alcohol withdrawal.",
+      "B": "Antibiotics treat sepsis; this patient's tachycardia, hypertension, fever, and formication are classical manifestations of severe delirium tremens following alcohol cessation.",
+      "D": "Thyroid hormone replacement treats myxedema coma (hypothermia, bradycardia), not hyperadrenergic delirium.",
+      "E": "Intravenous thiamine must be given to prevent Wernicke encephalopathy, but it does not reverse life-threatening autonomic hyperactivity or delirium tremens."
+    },
+    "generalExplanation": "This patient presents with delirium tremens (DTs), the most severe manifestation of alcohol withdrawal syndrome, occurring 48-96 hours after abrupt reduction or cessation of alcohol intake (corroborated by macrocytosis [MCV 104] and hypokalemia).\n\nChronic heavy alcohol intake downregulates inhibitory GABA-A receptors and upregulates excitatory NMDA receptors. Abrupt cessation unmasks massive, uninhibited central sympathetic excitation. Hallmarks of DTs include fluctuating delirium, visual or tactile hallucinations ('bugs crawling' / formication), severe agitation, and autonomic hyperarousal (fever, diaphoresis, severe hypertension, tachycardia).\n\nFirst-line therapy requires immediate intravenous administration of a long-acting benzodiazepine (such as diazepam or chlordiazepoxide; or lorazepam in patients with hepatic impairment) to restore GABAergic inhibition, sedate the patient, stabilize autonomic hyperactivity, and prevent fatal status epilepticus or cardiovascular collapse.",
+    "explanationImages": [],
+    "educationalObjective": "Delirium tremens is a severe manifestation of alcohol withdrawal characterized by delirium, autonomic instability (fever, tachycardia, hypertension), and visual/tactile hallucinations. First-line therapy is intravenous benzodiazepines."
+  }
+]

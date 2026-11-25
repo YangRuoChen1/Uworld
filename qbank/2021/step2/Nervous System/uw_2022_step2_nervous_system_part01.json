@@ -1,0 +1,137 @@
+[
+  {
+    "id": "q-uw-4700",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A middle-aged woman is found wandering the streets with an abnormal gait. She is brought to the hospital by police officers. When asked for identification, the patient mumbles incoherently. She is not oriented to time or place. Her temperature is 36.2 C (97.3 F), blood pressure is 160/100 mm Hg, pulse is 100/min, and respirations are 18/min. BMI is 17 kg/m2. Head and neck examination shows bitemporal wasting and dry mucous membranes. The pupils are 3 mm bilaterally and react slowly to light. Her neck is supple, and she moves all extremities equally. Deep-tendon reflexes are symmetrical bilaterally. Which of the following is the best initial treatment for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Flumazenil",
+      "B": "Haloperidol",
+      "C": "Labetalol",
+      "D": "Naloxone",
+      "E": "Thiamine"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Flumazenil is a competitive antagonist of the GABA/benzodiazepine receptor and is used to treat benzodiazepine overdose. Patients typically have slurred speech, ataxia, hypotension, and depressed mental status. This patient's hypertension makes this unlikely.",
+      "B": "Haloperidol is an antipsychotic medication used to treat schizophrenia and acute psychotic states. However, this patient should have medical causes of altered mental status excluded before receiving haloperidol.",
+      "C": "Labetalol can treat hypertensive encephalopathy, which usually presents with blood pressure >=180/120 mm Hg, headache, nausea, vomiting, and confusion. This patient's moderate blood pressure elevation is more likely due to the underlying condition and will likely resolve after appropriate treatment.",
+      "D": "Naloxone is an opioid antagonist used to treat opioid overdose, which typically presents with pinpoint pupils and respiratory depression (respirations usually <12/min)."
+    },
+    "generalExplanation": "Altered mental status (AMS), as in this patient, suggests widespread dysfunction of the cerebral cortex and/or reticular activating system. AMS can be due to a broad spectrum of disorders, including psychiatric illness, substance intoxication/withdrawal, infection, metabolic derangements (eg, hypoglycemia, hypernatremia), primary central nervous system disorders (eg, seizures), trauma, or organ dysfunction (respiratory, liver, or renal failure).\n\nChronic malnutrition, especially in the setting of alcoholism, can lead to thiamine (vitamin B1) deficiency with progression to Wernicke encephalopathy (WE). WE typically presents with the classic triad of encephalopathy, ocular dysfunction, and gait ataxia. Giving thiamine promptly in suspected WE may prevent further complications. Thiamine is a cofactor in many enzymes required for energy metabolism, and giving intravenous fluids containing glucose prior to thiamine can precipitate or worsen WE. Therefore, thiamine should be given along with or before glucose. When the cause of AMS is not apparent after initial assessment, empiric treatment for likely causes (eg, WE) is often appropriate.",
+    "explanationImages": [],
+    "educationalObjective": "Wernicke encephalopathy is due to thiamine (vitamin B1) deficiency and is most commonly seen in malnourished patients with underlying alcoholism. Features include encephalopathy, ocular dysfunction, and gait ataxia. Patients should be treated empirically with thiamine prior to or along with glucose administration."
+  },
+  {
+    "id": "q-uw-19661",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 25-year-old woman, gravida 1 para 1, comes to the office with her husband for an 8-week postpartum visit. The pregnancy and delivery were normal and without complications. The patient says, \"I'm exhausted and sleep deprived but doing okay.\" Her husband is concerned about her extreme fatigue; he says she has gotten weaker and unsteady over the past week. He also says she has not been holding the baby as often and rarely goes upstairs to the nursery. The patient reports no depressed mood or appetite changes. Medical history is unremarkable. Blood pressure is 126/84 mm Hg, and pulse is 80/min. On physical examination, the patient appears tired. There is no scleral icterus, and the mucous membranes are pink and moist. The thyroid is not enlarged. Heart and lung sounds are normal, and the abdomen is soft and nontender. There is bilateral lower extremity weakness, left side more than right. Knee reflexes are increased bilaterally. Genital examination shows the episiotomy site has healed, and there is no vaginal discharge. Which of the following is the most appropriate next step in management?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cognitive-behavioral therapy",
+      "B": "MRI of the brain and spinal cord",
+      "C": "Reassurance and regular follow-up",
+      "D": "Selective serotonin reuptake inhibitor",
+      "E": "Thyroid function studies"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "All postpartum patients should be evaluated for depression; cognitive-behavioral therapy and/or selective serotonin reuptake inhibitors are appropriate first-line treatments. However, this patient's fatigue and probable reluctance to climb stairs to the nursery are more likely due to her muscle weakness and imbalance. Any patient who demonstrates neurological deficits must undergo additional evaluation to rule out medical causes before a primary psychiatric illness is considered.",
+      "C": "Fatigue due to sleep deprivation is common in new parents. However, reassurance is inappropriate when it is accompanied by new-onset neurologic symptoms and functional deficits.",
+      "D": "All postpartum patients should be evaluated for depression; SSRIs are appropriate first-line treatments for postpartum depression. However, primary psychiatric illness is not considered until neurologic deficits have been fully investigated.",
+      "E": "Although fatigue and weakness can be seen in postpartum thyroid dysfunction, this patient lacks other characteristic symptoms of hypothyroidism (eg, cold intolerance, constipation, dry skin). In addition, hypothyroidism typically presents with bilateral proximal weakness as opposed to asymmetrical weakness, as well as delayed rather than increased reflexes."
+    },
+    "generalExplanation": "This patient's increasing fatigue, weakness, and imbalance with examination findings of asymmetric lower extremity weakness and increased knee reflexes are concerning for a neurologic disorder. Multiple sclerosis (MS) is a common immune-mediated inflammatory demyelinating disease of the CNS that typically presents in young adults, especially women of child-bearing age. Although pregnancy is protective for MS, there is an increased risk in the early postpartum period. MS symptoms may be focal or multifocal and develop over hours to days with partial resolution over weeks to months. Common symptoms include motor weakness, diplopia, gait disturbance and balance problems, sensory symptoms in limbs or face, unilateral vision loss, vertigo, and bladder dysfunction.\n\nThe next step in evaluating a patient with suspected MS is MRI of the brain, with extension to the spinal cord if examination warrants. MRI findings of characteristic demyelinating plaques disseminated in space and time can be used to confirm the clinical diagnosis. Additional tests such as lumbar puncture for oligoclonal bands and visual evoked potentials can also help make the diagnosis if the clinical picture or MRI findings are equivocal.",
+    "explanationImages": [],
+    "educationalObjective": "Multiple sclerosis (MS) is an immune-mediated inflammatory demyelinating disease that typically presents in young women with episodes of CNS dysfunction. When MS is suspected, brain MRI showing demyelinating plaques disseminated in time and space can help confirm the diagnosis."
+  },
+  {
+    "id": "q-uw-3226",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 34-year-old man is treated in the intensive care unit after being involved in a motorcycle accident. He has multiple injuries, including severe traumatic brain injury. Head CT scan shows areas of contusion and swelling without subdural or epidural hematoma. On the second day of hospitalization, a ventriculostomy is placed for invasive intracranial pressure monitoring. On the third day, his pressure is high despite adequate sedation, elevation of the head of the bed, and removal of cerebrospinal fluid. Hyperventilation would decrease this patient's intracranial pressure by which of the following mechanisms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebral vasoconstriction",
+      "B": "Decreased capillary leak",
+      "C": "Decreased sympathetic output",
+      "D": "Increased pO2",
+      "E": "Increased venous outflow from the head"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "The CBF system is tightly regulated and mediated by cerebral vasodilation rather than capillary leak.",
+      "C": "Hyperventilation does not significantly affect the sympathetic output of the brain, which is mediated predominantly by pressures in the compartments (eg, brain, CSF, blood).",
+      "D": "Ventilatory rate has a much greater effect on arterial pCO2 than on pO2, which can be modified by changing the concentration of inhaled oxygen or the end-expiratory pressure in a mechanically ventilated patient.",
+      "E": "Increased venous outflow from the head is achieved by elevation of the head rather than hyperventilation."
+    },
+    "generalExplanation": "Because the brain is an encased organ, relatively small changes in pressure can alter the intracranial pressure in important ways. The pressures in 3 distinct compartments of the brain - the brain parenchyma, the cerebrospinal fluid (CSF), and cerebral blood flow (CBF) - determine the overall intracranial pressure (ICP). Both brain parenchyma and CSF have relatively constant pressures except in certain circumstances, including space-occupying lesions and obstructions to CSF flow. CBF is influenced by systemic blood pressure and is held constant over a fairly wide range of pressures by cerebrovascular autoregulation. However, the partial pressures of O2 and CO2 also play an important role in regulating CBF. In conditions such as stroke or trauma, these systems are disrupted and interventions may be required to lower ICP.\n\nCBF is an important target for therapy, and paCO2 is a potent regulator of CBF (much greater than paO2). As levels of cerebral paCO2 rise, so does blood flow. Lowering cerebral arterial paCO2 through hyperventilation results in rapid vasoconstriction and a consequent decrease in ICP.\n\nOther interventions to lower ICP do so by lowering systemic pressures and reducing metabolic demand (sedation), or increasing venous outflow (head elevation), reducing brain parenchyma water content/volume (mannitol), or reducing the volume of CSF (therapeutic lumbar punctures).",
+    "explanationImages": [],
+    "educationalObjective": "Short-term hyperventilation helps lower increased intracranial pressure by causing cerebral washout of CO2, leading to vasoconstriction and decreased cerebral blood flow."
+  },
+  {
+    "id": "q-uw-16457",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 17-year-old primigravida at 29 weeks gestation comes to the clinic due to headaches. For the last 2 weeks, she has had an intermittent throbbing pain in the left frontal region when she wakes up. The pain is sometimes accompanied by a rhythmic pulsating sound. Acetaminophen provides minimal improvement. The patient has had no fever, right upper quadrant pain, contractions, or vaginal bleeding. She recalls no trauma and has no chronic medical conditions. Prepregnancy BMI is 31 kg/m2, and the patient has gained 20 kg (44 lb) so far. Temperature is 37.1 C (98.8 F), blood pressure is 136/76 mm Hg, pulse is 80/min, and respirations are 18/min. Fetal heart rate is 160/min. There is no neck stiffness. Visual field testing is normal. Funduscopic examination shows bilateral optic disc edema. Bilateral deep tendon reflexes are 2+. The remainder of the neurologic examination is unremarkable. Urinalysis has trace protein. Which of the following is the best next step in evaluation of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "24-hour urine collection for total protein",
+      "B": "Lumbar puncture",
+      "C": "MRI of the brain",
+      "D": "Polysomnography",
+      "E": "Tonometry"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "A 24-hour urine collection can be used to diagnose preeclampsia (systolic blood pressure >=140 or diastolic >=90 mm Hg), which can cause headache and blurry vision in pregnant women. However, this patient's blood pressure is <140/90 mm Hg, and her trace urine protein is a normal pregnancy finding.",
+      "B": "Diagnosis of IIH is with neuroimaging followed by lumbar puncture (which reveals opening pressure >250 mm H2O). MRI of the brain is performed before lumbar puncture to exclude other causes of elevated ICP (eg, space-occupying mass) that would increase the risk of cerebral herniation.",
+      "D": "Polysomnography can be used to diagnose obstructive sleep apnea (OSA), which is more common during pregnancy and in patients with obesity or rapid weight gain. OSA may be associated with morning headaches but not tinnitus or papilledema, making this diagnosis unlikely.",
+      "E": "Tonometry is used to evaluate for increased intraocular pressure, which can cause severe eye pain and headache if pressure changes acutely (eg, angle-closure glaucoma). In contrast, eye findings associated with IIH (eg, papilledema) are due to increased intracranial, not intraocular, pressure; therefore, tonometry is not used for evaluation."
+    },
+    "generalExplanation": "This patient has headaches and optic disc edema most likely due to idiopathic intracranial hypertension (IIH), a disorder in which increased intracranial pressure (ICP) occurs without a secondary cause. IIH is most common in obese (BMI >= 30 kg/m2) women of childbearing age, and although pregnancy by itself is not a risk factor, excessive weight gain (as in this patient) can exacerbate the disorder.\n\nPatients typically have positional headaches that are worse when lying flat, which increases ICP, and improve with sitting, which decreases ICP. Pulsatile tinnitus (due to increased vascular pulsations) and blurry vision (due to increased pressure on the optic nerves) also commonly occur. On physical examination, increased ICP can manifest as optic disc edema (ie, papilledema), abducens nerve (CN VI) palsy (lateral rectus palsy), and/or visual field deficits.\n\nDiagnosis is with neuroimaging followed by lumbar puncture, which reveals an elevated opening pressure (>250 mm H2O). MRI of the brain, often with MR venography to rule out cerebral vein thrombosis, is the preferred imaging modality and avoids fetal radiation exposure. MRI is performed before lumbar puncture to exclude other causes of elevated ICP (eg, space-occupying mass) that would increase the risk of cerebral herniation.",
+    "explanationImages": [],
+    "educationalObjective": "Idiopathic intracranial hypertension is most common in obese women of childbearing age and can present with positional headaches, pulsatile tinnitus, and papilledema. Diagnosis is with MRI of the brain followed by lumbar puncture."
+  },
+  {
+    "id": "q-uw-3164",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 74-year-old woman comes to the emergency department due to sudden onset of complete vision loss in her right eye. Her vision had been blurry for the past 24 hours and acutely worsened an hour ago. The patient has had no weakness or sensory changes in the extremities. Review of systems is positive for 2 months of generalized headaches. She has no nausea or vomiting but does have malaise and fatigue. Medical history is significant for type 2 diabetes mellitus, hypertension, hypercholesterolemia, and bilateral cataract surgeries. Temperature is 37.2 C (99 F), blood pressure is 156/86 mm Hg, and pulse is 78/min. Examination shows complete loss of vision in the right eye. The pupils are 4 mm bilaterally. Funduscopy shows a swollen pale disc with blurred margins. The lateral scalp is tender to palpation. Cardiopulmonary examination is normal. Motor and sensory examinations are normal. Which of the following is the most appropriate therapy for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "High-dose systemic glucocorticoid",
+      "B": "Intravenous acetazolamide",
+      "C": "Low-dose oral glucocorticoid",
+      "D": "Subcutaneous sumatriptan",
+      "E": "Systemic thrombolytic therapy"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Acetazolamide is used to treat angle-closure glaucoma, which presents with acute vision loss and headache. However, patients frequently have ocular pain, nausea, and vomiting. Examination findings include conjunctival erythema, corneal opacity, and a fixed, mid-dilated pupil.",
+      "C": "Low-dose glucocorticoids (eg, prednisone 10-20 mg daily) are recommended for polymyalgia rheumatica without GCA. Higher dose oral prednisone (40-60 mg/day) is appropriate for uncomplicated GCA without signs of end-organ damage. However, this patient has acute vision loss and warrants aggressive treatment with parenteral glucocorticoids.",
+      "D": "Sumatriptan is indicated for acute treatment of migraine headache, which can be associated with visual aura. However, unilateral headaches associated with nausea and photosensitivity are typical, and AION would not occur.",
+      "E": "Thrombolytic therapy is indicated for treatment of acute ischemic stroke, which typically presents with focal neurologic deficits (eg, hemiparesis, aphasia), not AION."
+    },
+    "generalExplanation": "This patient has acute monocular vision loss following 2 months of headache and associated lateral scalp tenderness to palpation. In a patient age >=50 this presentation suggests giant cell arteritis (GCA; also referred to as temporal arteritis), a chronic vasculitis affecting medium and large vessels. Systemic symptoms (eg, fatigue, fever, weight loss) are common, and about half of patients have concurrent polymyalgia rheumatica, which presents with proximal muscle pain and stiffness. In addition to headaches (often temporal) and visual symptoms, other common manifestations of GCA include jaw claudication, thickening and tenderness along the temporal artery (eg, lateral scalp), and asymmetric loss of distal pulses.\n\nVision loss is the most dreaded complication of GCA; most patients experience transient monocular vision loss (ie, amaurosis fugax) prior to developing permanent vision loss. Anterior ischemic optic neuropathy (AION), the most common ocular manifestation, occurs due to partial or complete occlusion of the posterior ciliary artery and is characterized by a pale, edematous disc with blurred margins.\n\nThreatened (eg, vision change) or confirmed vision loss in GCA requires high-dose intravenous glucocorticoids (eg, methylprednisolone 500-1,000 mg daily), followed by oral therapy with a slow taper over several months to prevent worsening or contralateral vision loss. Temporal artery biopsy can confirm the diagnosis of GCA; however, therapy should be started immediately when the diagnosis is suspected and should not be withheld while awaiting confirmation.",
+    "explanationImages": [],
+    "educationalObjective": "Giant cell arteritis (GCA, or temporal arteritis) presents with headache and systemic symptoms (eg, fatigue, fever) in patients age >=50. Potential complications include anterior ischemic optic neuropathy, which can lead to blindness. Threatened (eg, vision change) or confirmed vision loss in GCA requires high-dose intravenous glucocorticoids."
+  }
+]

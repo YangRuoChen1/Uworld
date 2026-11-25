@@ -1,0 +1,291 @@
+[
+  {
+    "id": "q-uw-2443",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 10-month-old girl is brought to the office because she has not yet begun to stand. She can pull herself along the floor using her arms but drags her legs. The patient was born at 32 weeks gestation by spontaneous vaginal delivery after the mother developed preeclampsia with severe features. Apgar scores were 7 and 8 at 1 and 5 minutes, respectively. On physical examination, the patient is alert and well appearing. She says \"mama\" and \"dada.\" Mild hypertonia of the upper extremities is noted; bilateral lower extremities are hypertonic with significant resistance to passive extension. Patellar reflexes are brisk. Bilateral feet have equinovarus deformities, but the examination shows no other dysmorphic features. The Babinski reflex is present bilaterally. Which of the following is the most likely diagnosis for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebral palsy",
+      "B": "Myotonic dystrophy",
+      "C": "Rett syndrome",
+      "D": "Spinal muscular atrophy",
+      "E": "Tethered spinal cord"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Myotonic dystrophy presents with hypotonia, distal muscle wasting, and delayed grip relaxation (myotonia), without upper motor neuron signs such as spasticity and hyperreflexia.",
+      "C": "Rett syndrome is characterized by normal early development followed by regression of speech, loss of purposeful hand skills with stereotypical wringing, and deceleration of head growth.",
+      "D": "Spinal muscular atrophy (Werdnig-Hoffmann) causes lower motor neuron degeneration, presenting with symmetric flaccid proximal weakness, hypotonia, and absent reflexes.",
+      "E": "Tethered cord syndrome causes lower extremity weakness, hyporeflexia, and neurogenic bladder/bowel dysfunction without hyperreflexia or upper extremity involvement."
+    },
+    "generalExplanation": "Cerebral palsy (CP) is a chronic, nonprogressive motor disorder resulting from perinatal or prenatal injury to the developing brain. Prematurity (<37 weeks gestation) is the leading risk factor, frequently complicated by periventricular leukomalacia and germinal matrix intraventricular hemorrhage.\n\nSpastic CP (specifically spastic diplegia) is the most common subtype. Clinical hallmarks include delayed motor milestones, resistance to passive stretch, hyperreflexia, upgoing plantar reflexes, contractures, talipes equinovarus deformities, and characteristic 'commando crawling' (pulling forward with arms while dragging spastic legs).",
+    "explanationImages": [],
+    "educationalObjective": "Cerebral palsy is a nonprogressive motor impairment, with prematurity being the greatest risk factor. Spastic diplegia typically presents in infancy with motor delay, spasticity (hypertonia, hyperreflexia), and commando crawling."
+  },
+  {
+    "id": "q-uw-4552",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 23-year-old man is found unconscious at the scene of a motor vehicle collision with an obvious left leg deformity and a large laceration of the left temporal scalp. As the patient is being rolled onto a backboard, he regains consciousness. He recalls no details of the collision but reports severe left leg pain, headache, and some shortness of breath. Blood pressure is 94/60 mm Hg, pulse is 120/min, and respirations are 18/min. Peripheral intravenous access is obtained, and 1 L of intravenous fluids is administered. On the way to the hospital, the patient develops progressive weakness on the right side and becomes obtunded. On arrival, blood pressure is 160/90 mm Hg, pulse is 50/min, and respirations are 10/min. Which of the following nerves is most likely to be compromised in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Accessory",
+      "B": "Facial",
+      "C": "Glossopharyngeal",
+      "D": "Oculomotor",
+      "E": "Vestibulocochlear"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "The spinal accessory nerve (CN XI) innervates the sternocleidomastoid and trapezius muscles; it is injured by blunt/penetrating neck trauma or posterior triangle dissection.",
+      "B": "The facial nerve (CN VII) emerges from the cerebellopontine angle and is not compressed at the tentorial notch in uncal herniation.",
+      "C": "The glossopharyngeal nerve (CN IX) exits via the jugular foramen in the posterior fossa.",
+      "E": "The vestibulocochlear nerve (CN VIII) courses through the internal acoustic meatus and is not primarily compressed during transtentorial herniation."
+    },
+    "generalExplanation": "This patient sustained left temporal impact followed by a classic lucid interval, subsequent obtundation, contralateral hemiparesis, and Cushing triad (hypertension, bradycardia, bradypnea)—findings diagnostic of an expanding left epidural hematoma (laceration of the middle meningeal artery) causing uncal (transtentorial) herniation.\n\nAs the uncus of the medial temporal lobe herniates downward past the free edge of the tentorium cerebelli, it compresses the ipsilateral oculomotor nerve (CN III) against the petroclinoid ligament. Parasympathetic pupillomotor fibers running superficially in CN III are compromised first, resulting in an ipsilateral fixed, dilated pupil ('blown pupil'), followed later by ptosis and down-and-out ophthalmoplegia.",
+    "explanationImages": [],
+    "educationalObjective": "Uncal herniation secondary to an expanding supratentorial mass (eg, epidural hematoma) causes ipsilateral oculomotor nerve (CN III) compression, presenting earliest as an ipsilateral fixed and dilated pupil."
+  },
+  {
+    "id": "q-uw-4253",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 35-year-old man comes to the emergency department due to severe pain behind his left eye. The patient reports that the pain is intense and stabbing and that it woke him up around midnight. It improved after 30 minutes and he was about to go back to sleep when the same pain began again. He took ibuprofen without relief. Several months ago, the patient had similar episodes of pain that resolved spontaneously after 2 weeks. He has had no fevers, blurry vision, nausea, or vomiting but has had nasal congestion. The patient has seasonal allergies for which he takes cetirizine. He works as a flight operations officer and describes his job as \"pretty stressful.\" He drinks 2 or 3 cups of coffee daily and drinks alcohol occasionally. His mother has migraine headaches. Temperature is 36.7 C (98 F), blood pressure is 140/90 mm Hg, and pulse is 94/min. The patient is restless and agitated. Physical examination shows left-sided ptosis, miosis, and rhinorrhea. Neurologic examination shows bilateral equal and normal motor strength, sensation, and deep tendon reflexes. Which of the following is the most likely cause of this patient's headache?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute maxillary sinusitis",
+      "B": "Angle closure glaucoma",
+      "C": "Brain tumor",
+      "D": "Cluster headache",
+      "E": "Lacunar infarction",
+      "F": "Migraine without aura",
+      "G": "Orbital cellulitis",
+      "H": "Retinal detachment",
+      "I": "Subarachnoid hemorrhage",
+      "J": "Substance use disorder"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Acute sinusitis presents with fever, facial pressure/tenderness over sinuses, and purulent nasal discharge, without Horner syndrome or nocturnal brief paroxysms.",
+      "B": "Angle-closure glaucoma causes severe ocular pain and halos around lights with a fixed mid-dilated pupil, not ptosis and miosis.",
+      "C": "Brain tumors present with insidious progressive morning headache, vomiting, and focal neurologic deficits.",
+      "F": "Migraine causes unilateral throbbing headaches lasting 4-72 hours associated with photophobia, nausea, and vomiting, where patients prefer lying still in dark rooms rather than exhibiting severe agitation.",
+      "G": "Orbital cellulitis is an acute orbital soft-tissue infection presenting with fever, proptosis, and painful ophthalmoplegia."
+    },
+    "generalExplanation": "Cluster headache is a trigeminal autonomic cephalgia characterized by strictly unilateral, excruciating, piercing retro-orbital or periorbital pain. Attacks last 15-180 minutes, often occur during sleep, and recur in clusters multiple times daily for several weeks followed by symptom-free remissions.\n\nAssociated ipsilateral cranial autonomic features include conjunctival injection, lacrimation, nasal congestion, rhinorrhea, forehead sweating, and partial Horner syndrome (ptosis and miosis). Patients typically pace restlessly in agony. Acute abortive treatment includes 100% high-flow oxygen via nonrebreather mask and subcutaneous sumatriptan; verapamil is first-line prophylaxis.",
+    "explanationImages": [],
+    "educationalObjective": "Cluster headaches present in young adult men as severe, unilateral, retro-orbital stabbing pain that awakens them from sleep, accompanied by ipsilateral cranial autonomic features (ptosis, miosis, lacrimation, rhinorrhea) and severe psychomotor agitation."
+  },
+  {
+    "id": "q-uw-2856",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 26-year-old woman comes to the office due to blurry vision in her left eye. She first noticed a \"smudge\" in the center of her left vision 2 days ago. The patient had been using the computer more than normal to study for an examination and thought that this might be the cause. She ceased using the computer, but the smudge gradually enlarged to involve almost the entire left visual field. She also reports that colors appear \"washed out.\" The patient has mild left ocular discomfort with eye movement. She has no chronic medical problems. Temperature is 36.7 C (98 F), blood pressure is 124/82 mm Hg, and pulse is 78/min. Visual acuity is 20/200 in the left eye and 20/20 in the right. When light is moved from the right eye to the left, the left pupil dilates. Muscle strength, deep tendon reflexes, and sensation are normal. Funduscopic examination is unremarkable. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute anterior uveitis",
+      "B": "Central retinal artery occlusion",
+      "C": "Cortical blindness",
+      "D": "Macular degeneration",
+      "E": "Open-angle glaucoma",
+      "F": "Optic neuritis",
+      "G": "Retinal detachment"
+    },
+    "answer": "F",
+    "explanations": {
+      "A": "Anterior uveitis causes painful eye redness, ciliary flush, pupillary constriction, and hypopyon on slit-lamp exam.",
+      "B": "CRAO typically occurs in older individuals with vascular risk factors, causing sudden, painless blindness with retinal whitening and a cherry-red spot.",
+      "C": "Cortical blindness involves occipital lobe pathology, bilateral vision loss, and intact pupillary light reflexes.",
+      "D": "Macular degeneration causes chronic, painless central vision loss in elderly patients with funduscopic drusen.",
+      "E": "Open-angle glaucoma causes insidious peripheral visual field contraction with increased cup-to-disc ratio.",
+      "G": "Retinal detachment presents with photopsias (flashes), floaters, and a peripheral shadow/curtain with retinal tears on funduscopy."
+    },
+    "generalExplanation": "This young woman presents with acute monocular vision loss, pain with eye movement, central scotoma, dyschromatopsia (colors appearing washed out), and a relative afferent pupillary defect (Marcus Gunn pupil), which is diagnostic of optic neuritis. In two-thirds of cases, inflammation is retrobulbar, leaving the optic disc normal on funduscopy.\n\nOptic neuritis is an immune-mediated inflammatory demyelination of the optic nerve (CN II) and is strongly associated with multiple sclerosis (MS). High-dose intravenous corticosteroids (methylprednisolone) hasten visual recovery.",
+    "explanationImages": [],
+    "educationalObjective": "Optic neuritis is an acute inflammatory demyelination of the optic nerve occurring predominantly in young women. Hallmark features are monocular vision loss, pain with extraocular movements, 'washed-out' color vision, a central scotoma, and an afferent pupillary defect."
+  },
+  {
+    "id": "q-uw-2669",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 7-year-old boy is brought to the emergency department after a seizure. He was watching television when he developed tonic-clonic movements lasting 5 minutes. The seizure stopped without intervention, but the boy had loss of urine and was confused afterward. The patient was born full term and has no known medical conditions. He has struggled academically in school and is often disruptive in class and unable to stay on task. Family history is significant for a maternal uncle with fragile X syndrome who lives in an assisted-living facility. On physical examination, the pupils are equal and reactive, and the fundi are normal. Mucous membranes are clear, and there is no cleft lip or palate or other facial dysmorphisms. The axillary and inguinal folds have multiple freckles; the chest and back have 6, darkly pigmented macules with smooth borders. This patient's diagnosis is most commonly associated with which additional finding?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acoustic neuromas",
+      "B": "Intracardiac tumor",
+      "C": "Optic pathway gliomas",
+      "D": "Testicular enlargement",
+      "E": "Vascular malformations"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Bilateral acoustic neuromas (vestibular schwannomas) are the hallmark of neurofibromatosis type 2 (NF2).",
+      "B": "Cardiac rhabdomyomas are associated with tuberous sclerosis complex (TSC1/TSC2).",
+      "D": "Macroorchidism is characteristic of fragile X syndrome after puberty, but café-au-lait spots and axillary freckling are absent.",
+      "E": "Leptomeningeal capillary-venous malformations and facial port-wine stains occur in Sturge-Weber syndrome."
+    },
+    "generalExplanation": "This patient's cutaneous findings—six or more café-au-lait macules with smooth borders ('coast of California') and axillary/inguinal freckling (Crowe sign)—meet clinical criteria for neurofibromatosis type 1 (von Recklinghausen disease), an autosomal dominant disorder caused by NF1 mutations on chromosome 17.\n\nNF1 is complicated by neurodevelopmental disorders (ADHD, learning disabilities, seizures) and benign or malignant neoplasms. Optic pathway gliomas (pilocytic astrocytomas of the optic nerve or chiasm) occur in up to 15% of children with NF1 and can lead to progressive visual field defects or proptosis. Annual screening ophthalmologic examinations are recommended.",
+    "explanationImages": [],
+    "educationalObjective": "Neurofibromatosis type 1 is characterized by café-au-lait macules, axillary/inguinal freckling, and neurofibromas. The most common intracranial tumor in pediatric NF1 is an optic pathway glioma."
+  },
+  {
+    "id": "q-uw-4322",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 73-year-old Caucasian man is brought to the office by his daughter, who is concerned that he might be depressed. He is a retired surgeon, and has lived alone ever since his wife died a year ago. His daughter visits him every 6 months; she feels bad about not being able to visit him more frequently because her job and family keep her very busy. He denies having any feelings of sadness, guilt, weight loss, loss of appetite, suicidal ideation, deafness, vertigo, and decreased or blurred vision. His medical problems include hypertension, diabetes mellitus-type 2 and a myocardial infarction 10 years ago. His current medications are glyburide, aspirin and enalapril. He denies the use of tobacco, alcohol, or drugs. His vital signs are within normal limits. He appears withdrawn, less energetic than usual, and walks stiffly. He sits with a stooped posture. He has a fixed facial expression, and his voice sounds monotonous. His deep tendon reflexes are 2+. Sensations and motor strength are normal. There is increased resistance to passive flexion. Which of the following types of gait is most likely to be present in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebellar ataxia",
+      "B": "Hypokinetic gait",
+      "C": "Waddling gait",
+      "D": "Spastic gait",
+      "E": "Gait disequilibrium",
+      "F": "Sensory ataxia",
+      "G": "Vestibular ataxia",
+      "H": "Wide based gait",
+      "I": "Dystonic gait"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Cerebellar ataxia produces a wide-based, unsteady, lurching gait with truncal titubation and dysmetria.",
+      "C": "Waddling gait results from hip abductor (gluteus medius/minimus) weakness seen in muscular dystrophies.",
+      "D": "Spastic gait (circumducting / scissor gait) is caused by upper motor neuron lesions with hyperreflexia and clonus.",
+      "F": "Sensory ataxia is caused by dorsal column / proprioceptive loss, producing a stomping, wide-based gait that worsens significantly when eyes are closed (positive Romberg).",
+      "H": "A wide-based gait is typical of sensory ataxia, cerebellar disease, or normal pressure hydrocephalus; Parkinsonian gait is classically narrow-based."
+    },
+    "generalExplanation": "This patient has idiopathic Parkinson disease (PD), characterized by degeneration of dopaminergic neurons in the substantia nigra pars compacta. Clinical hallmarks are bradykinesia, lead-pipe or cogwheel rigidity, masked facies (hypomimia), monotonous speech (hypophonia), and a characteristic hypokinetic (festinating) gait.\n\nThe hypokinetic gait of Parkinsonism is narrow-based, slow, and shuffling, with short strides, reduced foot clearance, flexed posture, and decreased or absent arm swing. As patients walk, steps may progressively accelerate as if chasing their center of gravity (festination), and turns are made 'en bloc' requiring multiple small steps.",
+    "explanationImages": [],
+    "educationalObjective": "Parkinsonism causes a hypokinetic gait characterized by a narrow base, shuffling steps, stooped posture, reduced arm swing, and festination, resulting from nigrostriatal dopaminergic depletion."
+  },
+  {
+    "id": "q-uw-4900",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 34-year-old woman comes to the physician with complaints of periodic visual obscurations. She has episodes during which she goes blind for several seconds when standing up or stooping forward abruptly. She also describes frequent morning headaches over the last 2 months for which she takes ibuprofen or aspirin almost every morning. The patient takes no other medications. Her past medical history is insignificant except for an uncomplicated vaginal delivery. She does not use tobacco, alcohol, or illicit drugs. Her temperature is 36.4 C (97.6 F), blood pressure is 138/88 mm Hg, and pulse is 93/min. Her body mass index is 35 kg/m2. Visual field testing shows enlarged blind spots. Which of the following ocular features is most commonly associated with this patient's condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Amaurosis fugax",
+      "B": "Cataract",
+      "C": "Glaucoma",
+      "D": "Optic neuritis",
+      "E": "Papilledema",
+      "F": "Uveitis"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Amaurosis fugax is transient monocular blindness due to carotid atheroembolism to the central retinal artery, lasting minutes and unrelated to positional shifts.",
+      "B": "Cataracts cause painless, gradual, progressive lens opacification and glare, not fleeting positional visual obscurations.",
+      "C": "Open-angle glaucoma causes insidious peripheral field loss with increased optic cup-to-disc ratio; transient positional obscurations do not occur.",
+      "D": "Optic neuritis causes acute monocular vision loss and pain with eye movements in multiple sclerosis.",
+      "F": "Uveitis presents with ciliary injection, hypopyon, eye pain, and photophobia."
+    },
+    "generalExplanation": "This obese woman of childbearing age with morning headaches and transient visual obscurations (momentary monocular or binocular blindness provoked by changes in head position or Valsalva maneuvers) has idiopathic intracranial hypertension (IIH, pseudotumor cerebri).\n\nElevated intracranial pressure is transmitted down the optic nerve subarachnoid sheath, compressing axoplasmic flow and causing optic disc swelling (papilledema). Bilateral papilledema produces painless mechanical expansion of the physiological blind spot on perimetry. Persistent untreated papilledema can cause optic atrophy and irreversible vision loss.",
+    "explanationImages": [],
+    "educationalObjective": "Papilledema from elevated intracranial pressure (eg, idiopathic intracranial hypertension) causes transient positional visual obscurations (lasting seconds) and enlargement of the physiologic blind spot on visual field testing."
+  },
+  {
+    "id": "q-uw-16073",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 2-year-old boy is brought to the office by his parents for evaluation after he lost consciousness earlier today. The patient was running around at a playground when he tripped and fell, landing on his outstretched hands. He did not hit his head on the ground. The patient gasped and, instead of crying, suddenly became pale, limp, and diaphoretic and then lost consciousness. There were no clonic movements. He regained consciousness after several seconds and returned to normal activity within 2-3 minutes. The patient has otherwise been healthy, but his mother says that he had a similar episode a month ago. Temperature is 36.7 C (98.1 F), blood pressure is 90/50 mm Hg, pulse is 100/min, and respirations are 20/min. Pulse oximetry is 100% on room air. On examination, the patient is alert and playful. Heart sounds are normal with no murmurs. Neurologic examination shows no focal deficits. The skin has a normal color. The patient has 2+ peripheral pulses. Which of the following testing is required to establish this patient's most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Ambulatory ECG event monitor",
+      "B": "CT scan of the head",
+      "C": "Echocardiogram",
+      "D": "Electroencephalogram",
+      "E": "No testing required"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "ECG monitoring is reserved for unprovoked syncopal episodes, exertion-induced syncope, or a family history of sudden cardiac death/arrhythmia.",
+      "B": "Head CT is indicated for suspected traumatic brain injury after head impact; this child tripped without head trauma.",
+      "C": "Echocardiography evaluates structural congenital heart defects (eg, Tetralogy of Fallot tet spells, which feature cyanosis and hyperpnea, not pallid apnea).",
+      "D": "EEG evaluates suspected unprovoked epileptic seizures; seizures feature postictal confusion >5 minutes and lack benign minor pain triggers."
+    },
+    "generalExplanation": "This toddler experienced a classic pallid breath-holding spell (reflex anoxic seizure), a benign childhood paroxysmal autonomic reflex. Unlike cyanotic spells (provoked by frustration or crying), pallid spells are triggered by minor traumatic pain or sudden fright (such as tripping or scraping a knee). Severe vagal hyperreactivity produces sudden transient bradycardia, breath-holding, diaphoresis, pallor, and limp loss of consciousness lasting seconds, followed by rapid recovery.\n\nPallid breath-holding spells are diagnosed clinically from history alone, and no diagnostic testing (EEG, neuroimaging, or cardiac monitoring) is required. Screening for concurrent iron deficiency anemia is recommended, as iron repletion often reduces spell frequency.",
+    "explanationImages": [],
+    "educationalObjective": "Pallid breath-holding spells are benign childhood reflex syncopal events triggered by minor pain or fear, presenting with sudden pallor, diaphoresis, and brief loss of consciousness with rapid recovery. Diagnosis is clinical and requires no testing."
+  },
+  {
+    "id": "q-uw-4622",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 78-year-old woman is brought to the emergency department due to insomnia and frequent episodes of agitation over the past 2 days. The patient was confused yet calm on arrival; but now she is yelling loudly and trying to pull out her intravenous lines, take off her clothes, and run away while being examined. She is a nursing home resident. Her recent medical history includes severe memory loss. The patient's chronic medical issues include hypertension, type 2 diabetes mellitus, peptic ulcer disease, and chronic pyelonephritis. Her temperature is 37.2 C (99 F), blood pressure is 162/96 mm Hg, and pulse is 95/min and regular. Pulse oximetry shows 96% oxygen saturation on room air. ECG shows normal sinus rhythm, left ventricular hypertrophy, a normal QTc interval, and no acute ischemic changes. Laboratory studies show leukocytosis (12,000/mm3) and urinalysis with pyuria and bacteriuria. Which of the following is the best initial treatment for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Amitriptyline",
+      "B": "Clopidogrel",
+      "C": "Haloperidol",
+      "D": "Lorazepam",
+      "E": "Memantine"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Amitriptyline has potent anticholinergic activity that directly worsens delirium and cognitive decline in elderly patients.",
+      "B": "Clopidogrel is an antiplatelet agent used in acute coronary syndrome and stroke secondary prevention.",
+      "D": "Benzodiazepines (lorazepam) often cause paradoxical excitation, prolong delirium, increase fall risk, and are reserved strictly for alcohol or sedative withdrawal.",
+      "E": "Memantine treats moderate-to-severe Alzheimer dementia chronically, but has no role in acute behavioral control of severe hyperactive delirium."
+    },
+    "generalExplanation": "This patient has acute hyperactive delirium, likely precipitated by a urinary tract infection in the setting of underlying dementia. While nonpharmacological measures (reorientation, sitter, quiet room) and treating the underlying infection are the cornerstones of delirium management, acute severe agitation posing an immediate risk of self-harm or interfering with life-sustaining treatment (pulling out IV lines, elopement) warrants short-term pharmacotherapy.\n\nLow-dose high-potency typical antipsychotics (haloperidol) or atypical antipsychotics (quetiapine, risperidone) are the agents of choice. Benzodiazepines should be avoided in older adults with delirium as they frequently worsen confusion and agitation.",
+    "explanationImages": [],
+    "educationalObjective": "When acute delirium manifests with severe agitation threatening patient safety or critical medical interventions, low-dose haloperidol or an atypical antipsychotic is the preferred pharmacologic intervention. Benzodiazepines should be avoided as they often worsen delirium in the elderly."
+  },
+  {
+    "id": "q-uw-16022",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 28-year-old man with a history of spinal cord injury comes to the emergency department due to headache, restlessness, and excessive sweating for the past several hours. A year ago, the patient was involved in a motor vehicle collision that caused a C6 spinal cord injury, leading to paraplegia and neurogenic bladder. He has no other medical concerns. Temperature is 36 C (96.8 F), blood pressure is 170/100 mm Hg, and pulse is 52/min. Physical examination shows facial flushing and excessive perspiration. The lungs are clear to auscultation and heart sounds are normal. The abdomen is soft with a mass palpable in the lower abdomen. A suprapubic catheter is present. Neurologic examination demonstrates absence of pain and temperature sensation below the nipples and paraplegic and spastic lower extremities, unchanged from previous examination. Further evaluation reveals occlusion of the urinary catheter and urinary retention. The urinary catheter is changed, which leads to rapid improvement in the patient's symptoms and hypertension. Which of the following best explains the observed findings in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Autonomic dysreflexia",
+      "B": "Carotid sinus hypersensitivity",
+      "C": "Catecholamine-secreting tumor",
+      "D": "Peripheral autonomic neuropathy",
+      "E": "Renovascular hypertension",
+      "F": "Spinal shock state"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Carotid sinus hypersensitivity triggers syncope and hypotension upon carotid pressure, not severe paroxysmal hypertension.",
+      "C": "Pheochromocytoma causes episodic hypertension and diaphoresis, but it presents with sinus tachycardia (not bradycardia) and does not resolve upon urinary catheter unblocking.",
+      "D": "Diabetic autonomic neuropathy causes resting tachycardia, gastroparesis, and orthostatic hypotension.",
+      "E": "Renovascular hypertension produces persistent secondary hypertension without acute paroxysmal flushing, diaphoresis, and bradycardia.",
+      "F": "Spinal shock is the transient flaccid, areflexic state occurring immediately following acute cord trauma, whereas autonomic dysreflexia develops after reflex recovery in lesions at or above T6."
+    },
+    "generalExplanation": "Autonomic dysreflexia is a potentially fatal hypertensive emergency seen in patients with chronic spinal cord lesions at or above T6. A noxious visceral stimulus below the lesion (most commonly an occluded catheter with bladder distension, or fecal impaction) triggers an afferent spinal reflex that elicits massive, unregulated sympathetic outflow below the injury level.\n\nSplanchnic and peripheral vasoconstriction leads to severe hypertension. Baroreceptors in the carotid sinus and aortic arch sense the hypertension and trigger a compensatory cranial parasympathetic response via the vagus nerve (CN X), causing bradycardia, facial flushing, pupillary constriction, and profuse diaphoresis above the lesion level. However, descending inhibitory signals cannot pass the spinal cord transection, leaving severe vasoconstriction unchecked below the lesion. Management requires sitting the patient upright and immediately relieving the offending trigger (eg, replacing the occluded urinary catheter).",
+    "explanationImages": [],
+    "educationalObjective": "Autonomic dysreflexia occurs in patients with spinal cord injury at or above T6 when an uninhibited sympathetic response to a noxious stimulus below the lesion (eg, distended bladder) leads to severe hypertension, accompanied by compensatory parasympathetic diaphoresis, flushing, and bradycardia above the lesion."
+  }
+]

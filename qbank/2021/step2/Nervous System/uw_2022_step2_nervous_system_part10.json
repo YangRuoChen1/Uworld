@@ -1,0 +1,280 @@
+[
+  {
+    "id": "q-uw-12044",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 29-year-old woman comes to the clinic for routine follow-up. Five years ago, she experienced an unprovoked generalized tonic-clonic seizure. At that time, phenytoin was prescribed, and the patient has been on a stable dose since. She has not experienced seizure recurrence. MRI of the brain performed following the initial episode was normal. She has no other medical problems and is a lifetime nonsmoker. The patient's family history is negative for neurologic disease. She is in a stable relationship and is contemplating pregnancy. Blood pressure is 123/72 mm Hg and pulse is 75/min. Neurologic examination is unremarkable. Serum phenytoin level is 11 mcg/mL (therapeutic range, 10-20 mcg/mL). Electroencephalogram is normal. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Discontinue phenytoin now",
+      "B": "Increase phenytoin dose",
+      "C": "Repeat MRI of the brain",
+      "D": "Slowly taper and discontinue phenytoin",
+      "E": "Switch to valproic acid"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Abrupt cessation of antiepileptic therapy can precipitate rebound seizures or status epilepticus; a slow, individualized taper is necessary.",
+      "B": "Increasing the dose is unwarranted in a seizure-free patient and increases teratogenic risk as well as toxicity (ataxia, nystagmus, gingival hyperplasia).",
+      "C": "Repeat neuroimaging is low yield in a patient with an unprovoked seizure who has had a normal baseline MRI, remains seizure-free, and has a normal neurologic exam.",
+      "E": "Valproic acid has the highest teratogenic potential among antiepileptic drugs (neural tube defects, craniofacial defects) and should not replace phenytoin in pregnancy planning."
+    },
+    "generalExplanation": "Patients with a history of epilepsy who have been seizure-free for >=2-5 years on antiepileptic drugs (AEDs) are candidates for medication discontinuation, particularly if they have low risk factors for recurrence (normal EEG, normal neuroimaging, single seizure type, no family history). Furthermore, phenytoin is a known teratogen capable of causing fetal hydantoin syndrome (cleft lip/palate, microcephaly, hypoplastic nails/digits, cardiac defects, developmental delay).\n\nIn women planning pregnancy who meet criteria for low recurrence risk, AED withdrawal should be attempted pre-conception. To avoid withdrawal seizures and status epilepticus, the medication must be tapered slowly over several months rather than stopped abruptly.",
+    "explanationImages": [],
+    "educationalObjective": "Patients who have been seizure-free for >=2 years with a normal EEG and normal neuroimaging can be considered for antiepileptic drug withdrawal. Tapering must be done slowly to minimize the risk of recurrent seizures, especially in women planning pregnancy to prevent drug-induced teratogenicity."
+  },
+  {
+    "id": "q-uw-2282",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 66-year-old woman is brought to the emergency department by her son due to increasing confusion, loss of mobility, and behavioral changes. The patient cries out for no apparent reason and recently exclaimed that \"a lion was sleeping in the backyard.\" She often sees cats in her room when none are present. She has had memory loss and frequently gets lost in her neighborhood. The patient is afebrile; blood pressure is 136/72 mm Hg, pulse is 98/min, and respirations are 16/min. On physical examination, she is alert but disoriented and quite agitated. Physical examination shows increased muscle tone, normal reflexes, and coarse resting tremors in the extremities. Which of the following is most closely associated with this patient's current condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Concurrent atherosclerotic cardiovascular disease",
+      "B": "Increased sensitivity to antipsychotic drugs",
+      "C": "Predisposition to respiratory muscle weakness",
+      "D": "Predominant atrophy of frontotemporal lobes",
+      "E": "Rapid response to high-volume lumbar puncture",
+      "F": "Vertical supranuclear gaze palsy"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Atherosclerotic vascular disease is associated with vascular dementia, which presents with stepwise cognitive decline and focal neurological deficits.",
+      "C": "Respiratory muscle weakness is characteristic of motor neuron disorders (ALS) rather than synucleinopathies.",
+      "D": "Frontotemporal lobar degeneration occurs in frontotemporal dementia, presenting with early disinhibition, hyperorality, and personality change without early visual hallucinations or parkinsonism.",
+      "E": "Improvement following high-volume lumbar puncture is diagnostic of normal pressure hydrocephalus (triad of gait disturbance, urinary incontinence, and dementia).",
+      "F": "Vertical supranuclear gaze palsy is the hallmark of progressive supranuclear palsy (PSP)."
+    },
+    "generalExplanation": "This patient presents with dementia with Lewy bodies (DLB), a neurodegenerative dementia characterized by intracellular accumulations of alpha-synuclein (Lewy bodies) in cortical and subcortical neurons. Core clinical criteria include:\n1. Fluctuating cognition and attention\n2. Recurrent, detailed, well-formed visual hallucinations (frequently of animals or people)\n3. Spontaneous features of parkinsonism (rigidity, resting tremor, bradykinesia)\n4. REM sleep behavior disorder\n\nA hallmark supportive feature of DLB is extreme sensitivity to antipsychotics (neuroleptic sensitivity). Exposure to dopamine D2-receptor antagonists (particularly first-generation antipsychotics like haloperidol, but also second-generation agents) can precipitate acute, irreversible worsening of parkinsonism, prolonged somnolence, autonomic instability, and neuroleptic malignant syndrome.",
+    "explanationImages": [],
+    "educationalObjective": "Dementia with Lewy bodies is characterized by cognitive fluctuations, visual hallucinations, and spontaneous parkinsonism. Patients have marked neuroleptic hypersensitivity, where exposure to antipsychotics can cause severe worsening of parkinsonism and autonomic dysfunction."
+  },
+  {
+    "id": "q-uw-16772",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Hard",
+    "stem": "A 46-year-old woman comes to the office due to worsening lower extremity tingling and numbness. She has also had difficulty walking, especially at night. Review of systems is positive for hair loss. The patient had gastric bypass surgery 5 years ago and has lost 30 kg (66 lb). She was originally prescribed multivitamin and mineral supplements but now takes only zinc. Physical examination shows gait ataxia with loss of vibration and position sensation in the feet. There is mild lower extremity edema and scattered areas of skin depigmentation. Laboratory studies reveal hypochromic microcytic anemia. Deficiency of which of the following is the most likely cause of this patient's current condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Copper",
+      "B": "Thiamine",
+      "C": "Selenium",
+      "D": "Folate",
+      "E": "Vitamin C"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Thiamine (B1) deficiency causes Wernicke encephalopathy (triad of encephalopathy, ataxia, oculomotor dysfunction) or wet/dry beriberi, but does not cause hypochromic microcytic anemia or skin depigmentation.",
+      "C": "Selenium deficiency causes dilated cardiomyopathy, skeletal muscle pain, and macrocytosis, without dorsal column sensory ataxia.",
+      "D": "Folate deficiency causes macrocytic megaloblastic anemia without dorsal column sensory ataxia or dermatologic hypopigmentation.",
+      "E": "Vitamin C deficiency causes scurvy (perifollicular hemorrhages, corkscrew hairs, gingival bleeding), not myeloneuropathy."
+    },
+    "generalExplanation": "This patient has acquired copper deficiency, a recognized complication following Roux-en-Y gastric bypass or prolonged, excessive zinc supplementation. Zinc upregulates metallothionein in enterocytes, which binds copper with higher affinity than zinc and traps copper within enterocytes, preventing systemic absorption.\n\nCopper is a crucial cofactor for enzymes including cytochrome c oxidase and ferroxidase (ceruloplasmin). Clinical hallmarks include:\n• Myeloneuropathy mimicking subacute combined degeneration (dorsal column dysfunction with sensory ataxia, positive Romberg, loss of vibration/proprioception, and peripheral paresthesias)\n• Hematologic manifestations: Hypochromic microcytic or normocytic anemia (due to impaired ferroxidase-mediated iron transport) and neutropenia/leukopenia\n• Dermatologic and skeletal findings: Skin depigmentation/hypopigmentation (due to impaired tyrosinase), brittle hair, and osteoporosis\nDiagnosis is confirmed by low serum copper and ceruloplasmin levels.",
+    "explanationImages": [],
+    "educationalObjective": "Acquired copper deficiency typically occurs after gastric bypass surgery or excessive zinc ingestion. It causes a myeloneuropathy resembling subacute combined degeneration (sensory ataxia, dorsal column loss), microcytic/normocytic anemia, and skin depigmentation."
+  },
+  {
+    "id": "q-uw-19403",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 40-year-old woman is brought to the emergency department after an hour of sudden-onset, severe headache and progressive right-sided weakness. She has no chronic medical conditions and takes no medications. Temperature is 38.5 C (101.3 F), blood pressure is 170/100 mm Hg, and pulse is 110/min and regular. The pupils are 5 mm and reactive to light. The neck is supple. Right-sided facial weakness and slurred speech are noted. There is weakness and decreased pinprick sensation in the right upper and lower extremities. Cardiopulmonary examination is normal with no murmurs or gallops. The abdomen is soft, nontender, and without organomegaly. A noncontrast CT scan of the head reveals a left thalamic hemorrhage with no midline shift. Electrocardiogram is normal except sinus tachycardia. Which of the following is most likely to reveal the underlying etiology of this patient's symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Carotid Doppler study",
+      "B": "Echocardiogram",
+      "C": "Lumbar puncture",
+      "D": "Thrombin time",
+      "E": "Urine toxicology screen"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Carotid Doppler evaluates internal carotid artery stenosis, which causes anterior circulation ischemic stroke or transient monocular blindness, not deep thalamic hemorrhage.",
+      "B": "Echocardiography identifies cardiogenic emboli (eg, infective endocarditis with mycotic aneurysm), which typically causes peripheral cortical wedge infarcts or subarachnoid hemorrhage rather than acute subcortical ICH in a patient without murmurs.",
+      "C": "Lumbar puncture evaluates meningitis or subarachnoid hemorrhage; it is contraindicated in focal intracerebral hemorrhage with elevated ICP due to herniation risk.",
+      "D": "Thrombin time assesses direct thrombin inhibitors (eg, dabigatran); this patient takes no prescription medications."
+    },
+    "generalExplanation": "In young adults presenting with sudden-onset intracerebral hemorrhage (ICH) in deep subcortical structures (such as the thalamus or basal ganglia) accompanied by signs of severe sympathetic hyperactivation (hypertension, sinus tachycardia, hyperthermia, mydriasis), cocaine intoxication is a leading etiology.\n\nCocaine inhibits presynaptic reuptake of norepinephrine, epinephrine, and dopamine, leading to severe acute vasoconstriction, acute surges in blood pressure, endothelial damage, and rupture of small penetrating cerebral arterioles. In all young patients presenting with acute stroke or ICH lacking traditional atherosclerotic risk factors, a urine toxicology screen is essential to confirm the diagnosis.",
+    "explanationImages": [],
+    "educationalObjective": "Cocaine use is a major cause of hemorrhagic stroke and subcortical intracerebral hemorrhage in young adults. It is characterized by acute severe hypertension, tachycardia, hyperthermia, and mydriasis. Evaluation requires a urine toxicology screen."
+  },
+  {
+    "id": "q-uw-15783",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 63-year-old woman is brought to the office due to a change in behavior over the past year. The patient was a highly successful CEO of a large company but had to step down 3 months ago due to poor performance. She once excelled in organization and strategic planning, but 9 months ago, she began to have significant difficulty planning important meetings. Now the patient is unable to shop and cook for herself. She has had recent bouts of sadness and urinary frequency. Medical history is significant for hypertension and type 2 diabetes mellitus. Temperature is 37.1 C (98.8 F), blood pressure is 132/79 mm Hg, pulse is 76/min and respirations are 14/min. The patient scores 23/30 (normal: >=26) on the Montreal Cognitive Assessment. Gait is slow and unsteady. Extraocular movements are intact. Reflexes are 3+ in the left upper extremity and 2+ on the right. Which of the following is the most likely diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Alzheimer disease",
+      "B": "Dementia with Lewy bodies",
+      "C": "Frontotemporal dementia",
+      "D": "Parkinson disease dementia",
+      "E": "Vascular dementia"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Alzheimer disease features insidious anterograde amnesia (delayed recall failure) early in its course, with executive dysfunction and focal motor/reflex deficits occurring much later.",
+      "B": "Dementia with Lewy bodies requires fluctuating cognition, spontaneous parkinsonism, and visual hallucinations.",
+      "C": "Frontotemporal dementia features early disinhibition, hyperorality, apathy, and loss of empathy without focal lateralized upper motor neuron signs.",
+      "D": "Parkinson disease dementia requires preexisting parkinsonism established >=1 year prior to the onset of cognitive decline."
+    },
+    "generalExplanation": "This patient has vascular dementia (VaD), the second most common cause of dementia. Unlike Alzheimer disease, which begins with prominent anterograde memory impairment, vascular dementia is characterized by early and prominent executive dysfunction (impaired planning, multitasking, organization, and abstract reasoning).\n\nIn subcortical vascular dementia (Binswanger disease or lacunar/small-vessel disease associated with chronic hypertension and diabetes), ischemia of deep white matter tracts and frontal-subcortical circuits results in focal motor deficits (asymmetric hyperreflexia 3+ vs 2+), pseudobulbar/gait impairment (slow, unsteady gait), urinary symptoms (frequency/urgency), and depression. Neuroimaging (brain MRI) typically demonstrates extensive periventricular white matter hyperintensities and subcortical lacunes.",
+    "explanationImages": [],
+    "educationalObjective": "Vascular dementia typically presents with early, prominent executive dysfunction, accompanied by vascular risk factors (hypertension, diabetes), focal neurological signs (asymmetric reflexes, gait disturbance), and urinary symptoms."
+  },
+  {
+    "id": "q-uw-3657",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 2-day-old girl develops seizures and a bulging anterior fontanelle. Temperature is 36.8 C (98.2 F), pulse is 180/min, and capillary refill is >4 seconds. Cardiac examination reveals tachycardia. Neurologic examination shows rhythmic contractions of the upper extremities, tongue thrusting, and lip smacking. Cranial ultrasound demonstrates bilateral hyperechoic intraventricular hemorrhage with acute ventriculomegaly. Which of the following conditions most likely led to this patient's condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Arteriovenous malformation",
+      "B": "Berry aneurysm",
+      "C": "Congenital infection",
+      "D": "Placental abruption",
+      "E": "Prematurity"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Cerebral AVMs can cause intracranial hemorrhage in older children and adults, but they are an extremely rare cause of neonatal IVH.",
+      "B": "Ruptured berry aneurysms cause subarachnoid hemorrhage and are exceptional in neonates.",
+      "C": "Congenital infections (TORCH) cause periventricular or diffuse parenchymal calcifications, microcephaly, and chorioretinitis, not acute intraventricular hemorrhage.",
+      "D": "Placental abruption can cause hypoxic-ischemic encephalopathy (HIE) from fetal asphyxia, but HIE shows diffuse cortical/basal ganglia edema rather than acute germinal matrix hemorrhage."
+    },
+    "generalExplanation": "Intraventricular hemorrhage (IVH) in neonates originates predominantly from the rupture of fragile, thin-walled capillary beds within the subependymal germinal matrix. The subependymal germinal matrix is a highly cellular, vascularized layer that generates neurons and glial cells during embryogenesis; it undergoes gradual involution beginning around 28-32 weeks gestation and is completely absent at term.\n\nBecause the germinal matrix vasculature lacks smooth muscle and autoregulatory tone, premature and very-low-birth-weight (<1,500 g) infants are at extreme risk of rupture during hemodynamic fluctuations (hypoxemia, hypercarbia, blood pressure instability). Acute bleeding extends into the lateral ventricles, presenting with a bulging fontanelle, sudden anemia, seizures, apnea, and posthemorrhagic hydrocephalus. Cranial ultrasound through the anterior fontanelle is diagnostic.",
+    "explanationImages": [],
+    "educationalObjective": "Neonatal intraventricular hemorrhage typically originates in the fragile subependymal germinal matrix, making prematurity (<32 weeks) and very low birth weight the primary risk factors. Manifestations include bulging fontanelle, apnea, seizures, and acute drop in hematocrit."
+  },
+  {
+    "id": "q-uw-3809",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 34-year-old woman is brought to the emergency department due to a 2-day history of progressive dyspnea and drowsiness. According to her husband, she had difficulty swallowing food and almost choked while having dinner yesterday. One week ago, she was treated with ciprofloxacin for a urinary tract infection. The patient volunteers in a local library and for the past several months has had to reduce her work hours due to difficulty lifting books and placing them on shelves. She drinks alcohol socially and does not smoke. Her blood pressure is 142/90 mm Hg, pulse is 92/min, and respirations are 20/min and shallow. Pulse oximetry shows 93% on room air. The patient's BMI is 32 kg/m2. Her speech sounds nasal. Physical examination demonstrates clear lung fields with the use of accessory muscles of respiration and paradoxical abdominal wall motion with inspiration. Heart sounds are normal without a murmur. Muscle strength is bilaterally decreased with normal deep tendon reflexes. Babinski reflex is absent bilaterally. Arterial blood gas shows pH 7.2, pCO2 65 mm Hg, and pO2 90 mm Hg. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Foodborne botulism",
+      "B": "Guillain-Barré syndrome",
+      "C": "Myasthenic crisis",
+      "D": "Obesity hypoventilation syndrome",
+      "E": "Polymyositis",
+      "F": "West Nile encephalitis"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Foodborne botulism causes descending flaccid paralysis with prominent gastrointestinal symptoms (vomiting, diarrhea) and fixed, dilated pupils.",
+      "B": "Guillain-Barré syndrome causes ascending motor paralysis and areflexia; deep tendon reflexes are preserved in myasthenia gravis.",
+      "D": "Obesity hypoventilation syndrome causes chronic hypercapnia and daytime sleepiness, but does not cause acute bulbar palsy (dysphagia, nasal speech) or acute hypercapnic respiratory failure triggered by ciprofloxacin.",
+      "E": "Polymyositis causes symmetric proximal weakness with elevated CK, but typically spares ocular, bulbar, and diaphragm muscles.",
+      "F": "West Nile neuroinvasive disease presents with acute asymmetric flaccid paralysis, fever, and meningoencephalitis."
+    },
+    "generalExplanation": "This patient has a myasthenic crisis, a life-threatening complication of myasthenia gravis characterized by severe weakness of the diaphragm and intercostal muscles leading to acute hypercapnic respiratory failure (respiratory acidosis: pH 7.20, pCO2 65 mm Hg). Paradoxical abdominal breathing (inward movement of the abdomen during inspiration) signifies diaphragmatic fatigue.\n\nMyasthenic crisis is commonly precipitated by infections (eg, UTI) or medications that impair neuromuscular transmission, notoriously fluoroquinolones (ciprofloxacin), aminoglycosides, macrolides, and beta blockers. Initial management mandates emergent endotracheal intubation, temporarily withholding anticholinesterase inhibitors (to prevent excessive secretions), and initiating therapeutic plasma exchange (plasmapheresis) or IVIG along with corticosteroids.",
+    "explanationImages": [],
+    "educationalObjective": "Myasthenic crisis presents with severe respiratory insufficiency, accessory muscle use, and bulbar weakness. It is frequently triggered by infection, surgery, or medications that impair neuromuscular transmission (eg, fluoroquinolones, aminoglycosides, beta blockers). Management involves endotracheal intubation and plasmapheresis or IVIG."
+  },
+  {
+    "id": "q-uw-4268",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 65-year-old, right-handed man comes to the emergency department due to sudden-onset, right-sided weakness. The patient was watching television an hour ago, when his family noted that his face appeared \"twisted.\" He also experienced weakness of his right arm and leg but no headache, nausea, vomiting, or loss of consciousness. The patient has a history of hypertension and is nonadherent with medications. He is a former smoker with a 20-pack-year history. Temperature is 36.7 C (98.1 F), blood pressure is 164/72 mm Hg, pulse is 65/min, and respirations are 14/min. Physical examination shows weakness of the right lower face and right upper and lower extremities. Pupillary reflexes, ocular movements, and visual field testing are normal bilaterally. Speech is without aphasia, and the patient correctly names his left and right arms. Sensory examination is normal throughout. Noncontrast CT scan of the head reveals no intracranial bleeding. Which of the following is the most likely site of a lesion in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Left frontoparietal cortex",
+      "B": "Left internal capsule",
+      "C": "Left lateral pons",
+      "D": "Right frontoparietal cortex",
+      "E": "Right internal capsule",
+      "F": "Right lateral pons"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "A cortical stroke large enough to cause dense face, arm, and leg weakness would involve language centers (aphasia in the dominant left hemisphere), hemineglect, or cortical sensory loss, which are absent here.",
+      "C": "Lateral pontine infarction produces crossed signs: ipsilateral cranial nerve palsies (CN V, VII, VIII) with contralateral hemiparesis/hemisensory loss.",
+      "D": "Right cortical lesions cause left-sided hemiparesis and hemineglect.",
+      "E": "Right internal capsule infarction causes left pure motor hemiparesis.",
+      "F": "Right pontine lesions produce left hemiparesis."
+    },
+    "generalExplanation": "This patient presents with a classic pure motor hemiparesis lacunar stroke, characterized by contralateral hemiparesis equally involving the face, arm, and leg without sensory deficits, visual field cuts, or cortical signs (no aphasia, agnosia, apraxia, or neglect).\n\nPure motor hemiparesis is most commonly caused by microatheroma formation and lipohyalinosis in the small penetrating lenticulostriate branches of the middle cerebral artery, producing ischemic infarction of the posterior limb of the internal capsule (or the basis pontis). Because the corticospinal and corticobulbar fibers are tightly packed within the posterior limb of the internal capsule, a small subcortical lacune (<15 mm) results in dense contralateral motor weakness.",
+    "explanationImages": [],
+    "educationalObjective": "Pure motor hemiparesis (contralateral weakness of the lower face, arm, and leg without sensory loss or cortical signs) is the most common lacunar stroke syndrome. It localizes to an ischemic infarct in the posterior limb of the contralateral internal capsule."
+  },
+  {
+    "id": "q-uw-2938",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 17-year-old boy is brought to the office due to unusual behavior and argumentativeness. He was a pleasant student with good grades until a year ago, when his grades started slipping and he became argumentative with teachers and parents. The patient has a 24-year-old, healthy sister, and family history is unremarkable. He is not sexually active. Temperature is 36.9 C (98.4 F), blood pressure is 112/74 mm Hg, pulse is 78/min, and respirations are 14/min. BMI is 25 kg/m2. Sclerae are anicteric. Mucous membranes are moist. The mouth is held slightly open. The neck is supple. The chest is clear to auscultation. The abdomen is soft and nontender; hepatomegaly is present. There is no splenomegaly or ascites. Neurologic examination shows dysarthria and hyperactive deep tendon reflexes. Which of the following is the best next step in management?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Electroencephalography",
+      "B": "Lumbar puncture",
+      "C": "Nerve conduction studies",
+      "D": "Serum ceruloplasmin level",
+      "E": "Urinary toxicology screen",
+      "F": "Vitamin B12 level"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "EEG evaluates suspected seizure disorders, which is not indicated for chronic progressive behavioral decline with hepatomegaly.",
+      "B": "Lumbar puncture evaluates acute meningoencephalitis or GBS, which do not present with chronic neuropsychiatric decline and hepatomegaly.",
+      "C": "Nerve conduction studies evaluate peripheral neuropathy or motor neuron disease (ALS), not hepatolenticular degeneration.",
+      "E": "Urine toxicology is reasonable for unexplained adolescent behavioral changes, but drug abuse alone cannot explain concomitant hepatomegaly, dysarthria, and open-mouth dystonia.",
+      "F": "Vitamin B12 deficiency causes subacute combined degeneration and megaloblastic anemia without hepatomegaly."
+    },
+    "generalExplanation": "Wilson disease (hepatolenticular degeneration) is an autosomal recessive disorder caused by mutations in the ATP7B gene, impairing hepatocellular copper transport and biliary excretion. Free copper accumulates and causes toxic injury in the liver, basal ganglia, and corneas.\n\nIn adolescents and young adults, Wilson disease commonly presents with combined neuropsychiatric and hepatic manifestations:\n• Neuropsychiatric: Behavioral changes, academic decline, irritability, depression, dysarthria, resting/action tremor, dystonia (eg, open-mouth facies, risus sardonicus), and parkinsonism\n• Hepatic: Asymptomatic transaminitis, hepatomegaly, chronic hepatitis, or cirrhosis\nInitial laboratory evaluation reveals decreased serum ceruloplasmin (<20 mg/dL) and increased 24-hour urinary copper excretion. A slit-lamp examination demonstrating Kayser-Fleischer rings confirms the diagnosis. Lifelong treatment consists of copper chelators (D-penicillamine, trientine) and oral zinc.",
+    "explanationImages": [],
+    "educationalObjective": "Wilson disease (ATP7B mutation) should be suspected in adolescents presenting with neuropsychiatric symptoms (behavioral changes, academic decline, dysarthria, dystonia) and hepatic abnormalities (hepatomegaly). Initial screening is serum ceruloplasmin and slit-lamp examination for Kayser-Fleischer rings."
+  },
+  {
+    "id": "q-uw-4293",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 40-year-old woman is brought to the emergency department following a low-speed motor vehicle accident. The patient was in the front passenger seat. During the accident, she hit her head against the windshield and hurt her right leg. She appears alert and oriented. Glasgow Coma Scale score is 15/15. Bilateral pupils are equal and reactive to light. There is a bruise over the right forehead, but no tenderness is present on palpation of the cranial bones. Examination of the right leg shows a hematoma over the thigh. Right knee extension and patellar reflex are markedly reduced compared to those on the left. There is decreased sensation to both sharp and dull stimuli over the anterior side of the right thigh and the medial side of the lower leg. All other dermatomes are intact. This patient most likely has an injury to which of the following nerves?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Common peroneal",
+      "B": "Femoral",
+      "C": "Ilioinguinal",
+      "D": "Obturator",
+      "E": "Tibial"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "The common peroneal (fibular) nerve innervates the anterior and lateral compartments of the lower leg; injury causes foot drop (weakness of dorsiflexion/eversion) and numbness over the dorsum of the foot, sparing knee extension and the patellar reflex.",
+      "C": "The ilioinguinal nerve provides cutaneous sensation to the groin, pubic region, and scrotum/labia majora without motor innervation to the thigh.",
+      "D": "The obturator nerve innervates thigh adductor muscles (adductor longus, brevis, magnus, gracilis) and provides sensation to the medial thigh, sparing knee extension.",
+      "E": "The tibial nerve innervates posterior compartment muscles (gastrocnemius, soleus) responsible for ankle plantarflexion and the Achilles reflex."
+    },
+    "generalExplanation": "The femoral nerve (L2-L4) emerges from the lumbar plexus, courses through the psoas major, and passes under the inguinal ligament into the femoral triangle lateral to the femoral vessels. In the thigh, it divides into motor and sensory branches:\n• Motor innervation: Supplies the anterior compartment of the thigh (quadriceps femoris [rectus femoris, vastus lateralis, vastus medialis, vastus intermedius], sartorius, and pectineus), mediating knee extension and hip flexion\n• Reflex: Mediates the afferent and efferent limbs of the patellar (knee-jerk) reflex\n• Sensory innervation: Supplies the anterior thigh via anterior femoral cutaneous branches, and the medial lower leg and foot via its terminal sensory branch, the saphenous nerve\nDirect blunt trauma, pelvic fractures, or compressing retroperitoneal/iliopsoas hematomas can injure the femoral nerve, causing knee extension weakness, loss of the patellar reflex, and sensory loss over the anterior thigh and medial calf.",
+    "explanationImages": [],
+    "educationalObjective": "Femoral nerve injury leads to weakness of knee extension and hip flexion, diminished patellar reflex, and sensory loss over the anterior thigh and medial lower leg (saphenous nerve distribution)."
+  }
+]

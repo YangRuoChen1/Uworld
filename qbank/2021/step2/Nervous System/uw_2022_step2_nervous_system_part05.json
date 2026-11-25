@@ -1,0 +1,282 @@
+[
+  {
+    "id": "q-uw-2350",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 78-year-old man comes to the office due to disturbed sleep. He describes being unable to sleep well for the past few months and says that it is making him feel \"slowed down\" and without energy. The patient used to get 7-8 hours of restful sleep each night. Now his sleep is restless: he describes needing 45-60 minutes to fall asleep and frequently awakening during the night. On average, he sleeps a total of 5-6 hours each night. He often gets up at 4:30 AM as he is unable to return to sleep. The patient has a history of hypertension treated with amlodipine. He does not drink caffeinated beverages or smoke cigarettes. He used to drink 2 beers with friends during his weekly golf and card games but has canceled these activities of late as he is too tired and no longer enjoys them. The patient is retired and has lived alone since his wife died a year ago. He admits to mild forgetfulness and says that his appetite and concentration \"aren't what they used to be.\" Height is 180 cm (5 ft 11 in) and weight is 93 kg (205 lb). Physical examination is noncontributory apart from a 5.4-kg (12-lb) weight loss since his last visit 6 months ago. Which of the following is the most likely explanation for this patient's symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Age-related sleep changes",
+      "B": "Bereavement",
+      "C": "Insomnia disorder",
+      "D": "Major depressive disorder",
+      "E": "Mild neurocognitive disorder",
+      "F": "Restless leg syndrome"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Normal age-related sleep changes include decreased total sleep time, increased nighttime awakenings, and phase advance, not anhedonia or weight loss.",
+      "B": "Although acute grief involves overlapping symptoms, the wife died 1 year ago, whereas depressive symptoms developed over the past few months and meet criteria for MDD.",
+      "C": "Insomnia disorder is diagnosed only when coexisting psychiatric disorders do not adequately explain the symptoms.",
+      "E": "Mild forgetfulness and poor concentration are common reversible cognitive symptoms of depression in the elderly (pseudodementia).",
+      "F": "Restless legs syndrome involves an irresistible urge to move the legs in response to uncomfortable sensations, not general insomnia and depression."
+    },
+    "generalExplanation": "Most older adults with depression present with somatic complaints (fatigue, sleep disturbances, appetite/weight changes) rather than overt sadness. This patient meets DSM-5 criteria for major depressive disorder (MDD) with >=5 symptoms for >2 weeks: insomnia with terminal early-morning awakenings, anhedonia (quitting golf and card games), decreased energy, significant unintentional weight loss, psychomotor slowing, and cognitive difficulties (impaired concentration and forgetfulness). First-line treatments include SSRIs/SNRIs and cognitive-behavioral therapy.",
+    "explanationImages": [],
+    "educationalObjective": "Sleep disturbances (such as early-morning awakening and middle insomnia) are prominent somatic features of depression. New-onset insomnia associated with anhedonia, weight loss, or fatigue in an elderly patient should raise high suspicion for major depressive disorder."
+  },
+  {
+    "id": "q-uw-19304",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 78-year-old woman is brought to the emergency department due to sudden-onset, right-sided hemiplegia and right-sided facial droop. Medical history is significant for chronic kidney disease and hypertension. The patient has a history of medication nonadherence and does not remember the names of her prescribed medications. Temperature is 37 C (98.6 F), blood pressure is 218/128 mm Hg, pulse is 84/min, and respirations are 15/min. On examination, the patient is mildly lethargic but able to converse. Cranial nerve examination shows upper-motor-neuron, right-sided facial weakness. Muscle strength is 0/5 in the right upper and lower extremities. CT scan of the head, immediately performed, reveals a large hyperdense intracerebral hemorrhage in the left basal ganglia/internal capsule without herniation. Laboratory results show hemoglobin 10.4 g/dL, platelets 240,000/mm3, BUN 32 mg/dL, creatinine 2.1 mg/dL, and INR 1.1. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Administration of intravenous nicardipine",
+      "B": "Observation without treatment",
+      "C": "Surgical evacuation of hematoma",
+      "D": "Transfusion of fresh frozen plasma",
+      "E": "Transfusion of packed red blood cells"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Uncontrolled hypertension precipitates hematoma expansion and worsening edema; active medical intervention is required.",
+      "C": "Surgical evacuation is reserved for cerebellar hemorrhages >3 cm, lobar hemorrhages with impending herniation, or refractory elevated ICP, not initial management of deep basal ganglia ICH without herniation.",
+      "D": "FFP is used to reverse warfarin-induced coagulopathy or in massive transfusion protocols; this patient has a normal INR of 1.1.",
+      "E": "Transfusion of packed RBCs is indicated for symptomatic severe anemia (Hb <7 g/dL) or active hemorrhagic shock; the closed cranial vault cannot accommodate blood loss sufficient to cause systemic hypovolemia."
+    },
+    "generalExplanation": "Acute hypertensive intracerebral hemorrhage (ICH) commonly occurs in penetrating lenticulostriate branches supplying the basal ganglia (putamen) and internal capsule. In the acute management of ICH, the primary therapeutic targets are preventing hematoma expansion, reversing any coagulopathy, and managing intracranial pressure (ICP).\n\nSevere acute hypertension (systolic BP >150-220 mm Hg) must be treated rapidly with titratable intravenous agents (nicardipine or labetalol) targeting a systolic blood pressure between 140 and 160 mm Hg.",
+    "explanationImages": [],
+    "educationalObjective": "Acute hypertensive intracerebral hemorrhage requires immediate blood pressure reduction with a titratable intravenous antihypertensive (eg, nicardipine, labetalol) to a target systolic blood pressure of 140-160 mm Hg to limit hematoma expansion."
+  },
+  {
+    "id": "q-uw-16088",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 62-year-old woman comes to the office due to upper extremity weakness and numbness. Three days ago, the patient was involved in a motor vehicle collision in which a truck rear-ended her vehicle. The patient did not hit her head or lose consciousness but experienced a tingling and burning sensation in all extremities, which she attributed to the stress of the accident. Since then, she has had numbness in her upper extremities and clumsiness of her hands. She reports difficulty picking up objects but has had no leg weakness or bowel or bladder disturbance. The patient is upset that the other driver refused to accept fault but reports no other ongoing stressors. She has a history of hypertension and osteoarthritis. Vital signs are within normal limits. Neck and back examination show no deformity or tenderness. There is weakness of hand grip bilaterally, and the triceps reflex is decreased on both sides. Decreased pinprick sensation is present on the fingers. The remainder of the neurologic examination is normal. Cervical spine x-ray reveals no vertebral dislocation or fracture, but diffuse spondylotic changes are present. Which of the following is the most likely cause of this patient's symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute stress disorder",
+      "B": "Brachial plexus injury",
+      "C": "Malingering",
+      "D": "Postconcussion syndrome",
+      "E": "Spinal cord injury"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Acute stress disorder presents with intrusive memories, hyperarousal, and avoidance, not objective bilateral hyporeflexia and dermatomal numbness.",
+      "B": "Traumatic brachial plexus injuries are almost always unilateral and caused by violent lateral neck flexion or traction, not neck hyperextension.",
+      "C": "Objective neurological deficits (decreased triceps reflex, grip weakness, pinprick loss) rule out malingering.",
+      "D": "Postconcussion syndrome causes headache, dizziness, and cognitive complaints without focal spinal cord deficits."
+    },
+    "generalExplanation": "This patient has central cord syndrome, the most common incomplete spinal cord injury. It typically occurs in older individuals with pre-existing cervical spondylosis who suffer a hyperextension injury (such as a whiplash collision). Hyperextension compresses the central spinal cord between anterior spondylotic osteophytes and the posterior hypertrophied ligamentum flavum.\n\nBecause the central-most fibers of the corticospinal and spinothalamic tracts and anterior horn alpha motor neurons represent the cervical upper extremities, patients develop motor weakness, sensory loss, and reflex deficits that are disproportionately greater in the upper extremities than in the lower extremities. Sacral and lower extremity functions are classically spared.",
+    "explanationImages": [],
+    "educationalObjective": "Central cord syndrome typically occurs after a neck hyperextension injury in older adults with pre-existing cervical spondylosis. It causes motor and sensory deficits that are disproportionately more severe in the upper extremities than in the lower extremities."
+  },
+  {
+    "id": "q-uw-4393",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 54-year-old woman presents to your office complaining of difficulty walking. She describes severe weakness and occasional pain in her thigh muscles. She has stumbled and fallen several times over the last week. Her past medical history is significant for hypertension treated with hydrochlorothiazide and metoprolol. She consumes two to three cans of beer on weekends. Her younger brother died of a neurological disease when he was 20 years old. Her mother suffers from hypertension and diabetes mellitus. Her heart rate is 90/min and blood pressure is 170/100 mmHg. Chest examination is within normal limits. A bruit is heard over the left carotid artery. Neurologic examination reveals hyporeflexia and decreased strength in all muscle groups. Her ESR is 12 mm/hr. ECG shows flat and broad T waves with occasional premature ventricular contractions. Which of the following is the most likely cause of this patient's current complaints?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Ischemic stroke",
+      "B": "Epidural hematoma",
+      "C": "Subdural hematoma",
+      "D": "Lumbar spinal stenosis",
+      "E": "Multiple sclerosis",
+      "F": "Amyotrophic lateral sclerosis",
+      "G": "Thyroid myopathy",
+      "H": "Inflammatory myopathy",
+      "I": "Neuromuscular junction disease",
+      "J": "Electrolyte disturbance"
+    },
+    "answer": "J",
+    "explanations": {
+      "A": "Stroke produces asymmetric focal deficits rather than generalized weakness and typical hypokalemic ECG findings.",
+      "D": "Lumbar spinal stenosis causes neurogenic claudication exacerbated by lumbar extension and relieved by forward flexion.",
+      "E": "Multiple sclerosis causes episodic CNS deficits disseminated in space and time with upper motor neuron signs.",
+      "F": "ALS presents with progressive upper and lower motor neuron signs without hypokalemic ECG changes.",
+      "H": "Inflammatory myopathies (polymyositis) feature marked elevations in CK and ESR and do not cause hypokalemic ECG abnormalities."
+    },
+    "generalExplanation": "This patient's generalized muscle weakness, hyporeflexia, muscle cramps, and characteristic ECG findings (broad flat T waves, premature ventricular contractions, and U waves) in the setting of thiazide diuretic (hydrochlorothiazide) therapy are diagnostic of severe hypokalemia.\n\nSevere hypokalemia (<2.5 mEq/L) impairs neuromuscular excitability by hyperpolarizing the resting membrane potential, leading to generalized weakness, hyporeflexia, muscle cramps, rhabdomyolysis, and potentially fatal cardiac arrhythmias. Symptoms rapidly resolve with potassium repletion.",
+    "explanationImages": [],
+    "educationalObjective": "Severe hypokalemia (often induced by potassium-wasting diuretics) presents with generalized muscle weakness, hyporeflexia, muscle cramps, and characteristic ECG changes (flat/broad T waves, U waves, premature ventricular contractions)."
+  },
+  {
+    "id": "q-uw-19547",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 45-year-old woman comes to the office due to tremor in her hands. She has had an on-and-off tremor for several years, especially when she becomes stressed; however, over the past 6 weeks, the tremor has persisted and become more severe. The patient has no other symptoms. Medical history is significant for generalized anxiety disorder, for which she has been taking sertraline for 2 months. The patient does not drink alcohol. There is no family history of tremor or neurologic conditions. Temperature is 36.8 C (98.2 F), blood pressure is 130/84 mm Hg, pulse is 82/min, and respirations are 16/min. Physical examination shows a high-frequency tremor of both hands that is prominent with finger-to-nose testing. The tremor is not relieved with distraction. The remainder of the examination is normal. Complete blood count, serum chemistry profile, and serum TSH are normal. What is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebellar tremor",
+      "B": "Dystonic tremor",
+      "C": "Enhanced physiologic tremor",
+      "D": "Functional (psychogenic) tremor",
+      "E": "Parkinson disease"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Cerebellar tremors are low-frequency (<5 Hz), high-amplitude intention tremors associated with ataxia, dysmetria, and dysdiadochokinesis.",
+      "B": "Dystonic tremors occur in body parts affected by sustained involuntary muscle contractions/posturing (eg, torticollis) and are often improved by sensory tricks.",
+      "D": "Functional (psychogenic) tremors have variable frequency, abrupt onset, and markedly diminish or extinguish with distraction.",
+      "E": "Parkinsonian tremor is a 4-6 Hz resting tremor that decreases with voluntary movement and is accompanied by bradykinesia and rigidity."
+    },
+    "generalExplanation": "Physiologic tremor is a low-amplitude, high-frequency (10-12 Hz) action tremor present in all normal individuals, typically invisible. Enhanced physiologic tremor occurs when sympathetic adrenergic activity increases (stress, anxiety, caffeine, hyperthyroidism) or as an adverse effect of medications.\n\nSelective serotonin reuptake inhibitors (SSRIs like sertraline) are a well-documented cause of enhanced physiologic tremor (affecting up to 20% of users), likely mediated by serotonergic stimulation of central motor networks. The tremor is symmetric, action-dependent, temporally linked to drug initiation/dose escalation, and improves upon dose reduction or discontinuation.",
+    "explanationImages": [],
+    "educationalObjective": "Enhanced physiologic tremor presents as a fine, fast, symmetric action tremor of the hands that is worsened by stress or medications (eg, SSRIs, beta agonists). Treatment involves dose reduction or discontinuation of the offending agent."
+  },
+  {
+    "id": "q-uw-3218",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 16-year-old boy is brought to the emergency department after loss of consciousness. The patient was riding his bicycle when he lost his balance and fell, hitting his head on the ground. The fall was witnessed by several friends who report that the boy lost consciousness for approximately 1 minute. There were no seizures following the event. The boy vomited twice in the ambulance and has a mild headache. He has no other medical conditions and takes no medications. Blood pressure is 121/67 mm Hg and pulse is 78/min. The patient is awake and alert. Examination shows a small bruise and an abrasion over the right temporal region. Neurological examination shows intact cranial nerves. Strength is 5/5 bilaterally. Sensations are intact and reflexes are equal. Gait examination shows no abnormalities. Romberg test is negative. Which of the following is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Discharge home with instructions",
+      "B": "Electroencephalography",
+      "C": "Head CT scan without contrast",
+      "D": "Skull radiographs",
+      "E": "Urgent neurosurgical evaluation"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Discharge is safe only in low-risk head trauma lacking PECARN high-risk indicators; loss of consciousness and multiple vomiting episodes mandate neuroimaging.",
+      "B": "EEG evaluates suspected posttraumatic nonconvulsive seizures, which is not indicated here.",
+      "D": "Plain skull radiographs cannot detect intracranial hemorrhage or brain parenchymal injury.",
+      "E": "Neurosurgical consultation is indicated after neuroimaging identifies a surgically actionable lesion (eg, epidural hematoma) or in acute herniation."
+    },
+    "generalExplanation": "According to validated pediatric head trauma decision rules (PECARN), children >=2 years who experience minor head trauma require a noncontrast head CT scan if high-risk features for clinically important traumatic brain injury (ciTBI) are present. High-risk features include:\n• GCS <15\n• Loss of consciousness (especially >=1 minute)\n• Repeated vomiting\n• Severe headache\n• Signs of basilar skull fracture (Battle sign, raccoon eyes, hemotympanum, CSF otorrhea/rhinorrhea)\n• High-risk mechanism (fall >5 feet, bicycle without helmet vs motor vehicle collision)\n\nBecause this patient experienced witnessed LOC and repeated vomiting following head impact, noncontrast head CT is indicated to rule out epidural or subdural hematoma.",
+    "explanationImages": [],
+    "educationalObjective": "In pediatric head trauma, the presence of high-risk features (loss of consciousness, multiple episodes of vomiting, severe mechanism, signs of basilar skull fracture) warrants evaluation with noncontrast head CT to rule out intracranial hemorrhage."
+  },
+  {
+    "id": "q-uw-2472",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 1-day-old boy is evaluated in the neonatal intensive care unit. The patient was born at 34 weeks gestation to a 25-year-old primigravida after she underwent an induction for preeclampsia with severe features. The delivery was complicated by placental abruption, and a forceps-assisted vaginal delivery was performed due to an abnormal fetal heart rate tracing. Apgar scores were 5 and 8 at 1 and 5 minutes, respectively. Examination shows a comfortable, sleeping infant under a radiant warmer with a nasal cannula in place. There is a firm, well-demarcated swelling on the right parietal scalp with no discoloration or apparent tenderness. The remainder of the head and neck examination is unremarkable. The abdomen is soft with no organomegaly. Which of the following is the most likely cause of this patient's physical examination findings?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Caput succedaneum",
+      "B": "Cephalohematoma",
+      "C": "Hydrocephalus",
+      "D": "Plagiocephaly",
+      "E": "Subgaleal hemorrhage"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Caput succedaneum is subcutaneous edema located above the periosteum; it is present immediately at birth, soft and boggy, and crosses suture lines.",
+      "C": "Hydrocephalus causes generalized macrocephaly and a bulging anterior fontanelle, not localized parietal swelling.",
+      "D": "Plagiocephaly is positional skull flattening without a distinct hematoma or swelling.",
+      "E": "Subgaleal hemorrhage occurs between the periosteum and galea aponeurotica from emissary vein rupture; it presents as diffuse, fluctuant, expanding scalp swelling that crosses suture lines and can lead to massive blood loss and shock."
+    },
+    "generalExplanation": "This newborn has a cephalohematoma, a subperiosteal hemorrhage resulting from the rupture of subperiosteal blood vessels during delivery (frequently associated with vacuum or forceps assistance). Because blood is trapped between the periosteum and the outer table of the calvarial bone, the swelling is strictly limited by suture lines and confined to a single cranial bone (most commonly parietal).\n\nCephalohematomas typically appear several hours after birth, are firm and nonfluctuant, and resorb spontaneously within weeks to months without intervention. The primary complication is indirect hyperbilirubinemia from RBC breakdown, which may require phototherapy.",
+    "explanationImages": [],
+    "educationalObjective": "A cephalohematoma is a subperiosteal hemorrhage caused by birth trauma. It presents hours after birth as a firm, nonfluctuant scalp swelling that does not cross suture lines. Management is observational."
+  },
+  {
+    "id": "q-uw-3907",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 5-day-old girl is brought to the office by her parents after nursery discharge. She was born at 37 weeks gestation via cesarean delivery due to a nonreassuring fetal status secondary to fetal growth restriction. The patient was discharged from the hospital on day of life 4. She is exclusively breastfed, and the mother says the patient often spits up breast milk, sometimes while asleep. She occasionally rests on the mother's chest in the prone position while both are awake. The patient uses a pacifier for sleep. The parents are concerned about her varied breathing pattern because she often takes rapid, shallow breaths followed by 5-10 second pauses. The patient lives at home with her mother and father, who occasionally smoke cigarettes. Vital signs and physical examination are appropriate for age. The mother says that a neighbor's 2-month-old infant recently passed away in her sleep and is wondering if there is anything she should do differently. Which of the following interventions has the greatest impact on this patient's safety?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Avoidance of pacifier use while asleep",
+      "B": "Avoidance of passive smoke exposure",
+      "C": "Avoidance of prone position while awake and during sleep",
+      "D": "Home monitoring device to detect apneic episodes",
+      "E": "Placement in a side-sleep position after breastfeeding"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Pacifier use during sleep is actually protective against sudden infant death syndrome (SIDS) and should be encouraged.",
+      "C": "Prone positioning ('tummy time') while awake and actively supervised is recommended to promote motor development and prevent positional plagiocephaly.",
+      "D": "Home cardiorespiratory monitors have not been shown to decrease the incidence of SIDS and are not recommended for prevention.",
+      "E": "Side-sleeping is unsafe because infants can easily roll into the prone position; infants should always sleep supine on a firm, flat surface."
+    },
+    "generalExplanation": "Sudden infant death syndrome (SIDS) is the leading cause of postneonatal infant mortality. Key modifiable risk factors for SIDS include:\n1. Sleep environment: Prone or side sleeping, soft mattresses, loose bedding, bed-sharing\n2. Environmental tobacco smoke exposure: Maternal smoking during pregnancy and passive postnatal secondhand smoke exposure significantly increase SIDS risk by blunting infant arousal mechanisms\n\nElimination of secondhand smoke exposure in the home environment is a critical modifiable intervention. In addition, the American Academy of Pediatrics recommends the 'Back to Sleep' supine sleep position in a bare crib.",
+    "explanationImages": [],
+    "educationalObjective": "Avoidance of environmental tobacco smoke exposure (both prenatal and postnatal) and strict supine sleeping in a bare crib are essential modifiable interventions to reduce the risk of sudden infant death syndrome (SIDS)."
+  },
+  {
+    "id": "q-uw-22066",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 62-year-old woman who works as a high school administrative assistant is brought to the emergency department by her coworker. She states that 2 hours ago she suddenly felt dizzy while sitting at her desk. A short time later, the patient tried to stand to go to the bathroom and felt like she was falling to the left. Her symptoms have been constant and disabling since they started. The dizziness is exacerbated by any movement of the head, and she has a mild posterior headache. Medical history is significant for hypertension. Temperature is 37.2 C (99 F), blood pressure is 160/85 mm Hg, pulse is 78/min, and respirations are 16/min. The patient is awake and alert. Heart and lungs sounds are normal. Strength is 5/5 in the upper and lower extremities bilaterally. Finger-to-nose and heel-to-shin testing are abnormal on the left. Gait is ataxic. Noncontrast CT scan of the head is normal. ECG shows normal sinus rhythm. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Administer intravenous alteplase",
+      "B": "Administer oral meclizine and refer to physical therapy",
+      "C": "Obtain carotid ultrasonography",
+      "D": "Obtain tilt table testing",
+      "E": "Teach canalith repositioning maneuvers"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Meclizine treats peripheral vestibulopathy; this patient has central vertigo with cerebellar signs (dysmetria, severe ataxia, occipital headache).",
+      "C": "Carotid duplex evaluates the anterior circulation; this is a posterior fossa / vertebrobasilar stroke, and acute reperfusion takes priority.",
+      "D": "Tilt-table testing diagnoses orthostatic/vasovagal presyncope, not acute cerebellar stroke.",
+      "E": "Epley maneuvers treat BPPV, which causes transient vertigo lasting <1 minute without limb ataxia, dysmetria, or persistent headache."
+    },
+    "generalExplanation": "This patient presents with acute, persistent central vertigo, occipital headache, and ipsilateral cerebellar signs (left-sided dysmetria on finger-to-nose/heel-to-shin and gait ataxia falling to the left), highly concerning for acute ischemic cerebellar stroke (posterior circulation infarction).\n\nNoncontrast CT is typically normal in the hyperacute phase of posterior fossa ischemic stroke because bone artifact obscures the brainstem and cerebellum. Because she presented within 4.5 hours of symptom onset with disabling deficits and no contraindications or hemorrhage on CT, immediate intravenous alteplase (tPA) thrombolytic therapy is indicated.",
+    "explanationImages": [],
+    "educationalObjective": "Acute persistent vertigo accompanied by cerebellar signs (dysmetria, ataxia, falling toward the lesion) and headache represents an acute cerebellar stroke. Eligible patients presenting within 4.5 hours of onset should receive intravenous alteplase."
+  },
+  {
+    "id": "q-uw-2290",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 32-year-old man is brought to the emergency department due to difficulty walking and frequent falls. One week ago he had numbness in his toes and fingertips that progressed to lower-extremity weakness. He had an upper respiratory tract infection 4 weeks ago that resolved spontaneously. The patient has no bowel or bladder complaints. His past medical history is unremarkable. His temperature is 36.9 C (98.5 F), blood pressure is 130/70 mm Hg supine and 100/62 mm Hg standing, pulse is 102/min, and respirations are 18/min. Physical examination shows muscle weakness in both lower extremities and absent knee and ankle reflexes bilaterally. The sensory examination is unremarkable. Lumbar puncture is performed and cerebrospinal fluid analysis results are as follows:\n\nLeukocytes: 3/µL\nGlucose: 70 mg/dL\nProtein: 120 mg/dL\nGram stain: No organisms\n\nWhat is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cyclosporine",
+      "B": "Intravenous acyclovir",
+      "C": "Intravenous immunoglobulin",
+      "D": "Intravenous methylprednisolone",
+      "E": "Pyridostigmine",
+      "F": "Riluzole"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Cyclosporine is an immunosuppressive agent used for transplant rejection or refractory myasthenia gravis, not GBS.",
+      "B": "Acyclovir treats herpes simplex encephalitis (fever, temporal lobe seizures, CSF lymphocytic pleocytosis).",
+      "D": "Systemic glucocorticoids (methylprednisolone) have been shown in clinical trials to offer no benefit and can delay recovery in GBS.",
+      "E": "Pyridostigmine is an acetylcholinesterase inhibitor used for myasthenia gravis, which presents with fatigable weakness without areflexia or albuminocytologic dissociation.",
+      "F": "Riluzole is a glutamate inhibitor used to prolong survival in amyotrophic lateral sclerosis (ALS)."
+    },
+    "generalExplanation": "This patient has Guillain-Barré syndrome (acute inflammatory demyelinating polyradiculoneuropathy [AIDP]), triggered by molecular mimicry following a respiratory or gastrointestinal infection. Hallmark features are rapidly progressive, symmetric ascending flaccid weakness, hyporeflexia/areflexia, mild sensory paresthesias, autonomic instability (orthostasis, tachycardia), and CSF albuminocytologic dissociation (elevated protein with normal white cell count).\n\nFirst-line disease-modifying treatment is intravenous immunoglobulin (IVIG) or plasmapheresis (plasma exchange). Frequent monitoring of respiratory function (vital capacity and negative inspiratory force) is critical to detect impending neuromuscular respiratory failure.",
+    "explanationImages": [],
+    "educationalObjective": "Guillain-Barré syndrome is an immune-mediated polyradiculoneuropathy presenting with symmetric ascending flaccid paralysis and areflexia following an antecedent infection. CSF shows albuminocytologic dissociation. First-line treatments are intravenous immunoglobulin (IVIG) or plasmapheresis."
+  }
+]

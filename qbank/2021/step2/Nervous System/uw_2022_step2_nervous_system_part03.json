@@ -1,0 +1,278 @@
+[
+  {
+    "id": "q-uw-3193",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 3-day-old boy is brought to the emergency department for evaluation of vomiting and abnormal movements. The patient's arms and legs began rhythmically jerking about 20 minutes ago. The movements were symmetric and lasted for a minute. He has also had persistent vomiting today, especially after feeding, and had an episode of loose, nonbloody stool. The patient was born at term after an uncomplicated pregnancy and is exclusively breastfed. Temperature is 37.1 C (98.8 F). Examination shows a lethargic newborn with diffuse hypotonia as well as jaundice. The liver edge is palpable. Laboratory results are as follows:\n\nSerum chemistry\nGlucose: 30 mg/dL\nTotal bilirubin: 9.3 mg/dL\nDirect bilirubin: 4 mg/dL\nAmmonia: 40 µg/dL (normal: 40-80)\n\nUrinalysis\nGlucose: negative\nReducing substances: 3+\n\nWhich of the following is the most likely diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Biliary atresia",
+      "B": "Breastfeeding failure jaundice",
+      "C": "Galactosemia",
+      "D": "Glycogen storage disease",
+      "E": "Urea cycle defect"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Biliary atresia, characterized by progressive fibrosis and obliteration of the extrahepatic bile ducts, typically presents at age 2-8 weeks with failure to thrive, hepatomegaly, and conjugated hyperbilirubinemia. Vomiting, hypotonia, and nonglucose urine reducing substances would not be seen.",
+      "B": "Breastfeeding failure jaundice, a common and generally benign condition in the first week of life, presents with weight loss and unconjugated hyperbilirubinemia. Vomiting and direct hyperbilirubinemia would not be expected.",
+      "D": "Glycogen storage diseases can present with hepatomegaly and signs of hypoglycemia (eg, seizures). However, hypoglycemic episodes do not typically occur until age 3-6 months because they are caused by periods of fasting, which begin when the infant sleeps longer through the night.",
+      "E": "Urea cycle defects can present with lethargy and vomiting in newborns after the introduction of protein via breast milk or formula. However, an elevated ammonia level, a finding not seen in this patient, is characteristic."
+    },
+    "generalExplanation": "Galactosemia is a metabolic disorder most commonly caused by galactose-1-phosphate uridylyltransferase (GALT) deficiency. In affected newborns, galactose (found in breast milk and standard cow's milk-based formula) cannot be reduced to glucose. This dysfunction leads to elevated serum galactose-1-phosphate, galactose accumulation in tissues (eg, liver, kidneys), and hypoglycemia.\n\nTherefore, galactosemia typically presents in the first few days of life after the ingestion of galactose or its precursor lactose. Affected newborns develop jaundice and conjugated hyperbilirubinemia due to liver disease; some also have unconjugated hyperbilirubinemia due to hemolysis. Seizure caused by severe hypoglycemia may be the presenting symptom, as in this patient. Vomiting and failure to gain weight are also common, and examination often reveals hepatomegaly (due to galactose accumulation), lethargy, and hypotonia.\n\nGalactosemia can be identified on routine newborn screening; however, these results are usually not available in the first week of life. Supportive laboratory findings on presentation include nonglucose urine reducing substances suggestive of galactosuria. Absent GALT activity in red blood cells confirms the diagnosis. Treatment is dietary elimination of galactose via the use of soy-based formula.",
+    "explanationImages": [],
+    "educationalObjective": "Galactosemia is a metabolic disorder in which deficient galactose-1-phosphate uridylyltransferase prevents the reduction of galactose to glucose. The disorder typically presents with jaundice, vomiting, hepatomegaly, and possibly seizures (due to hypoglycemia) in the first few days of life. The diagnosis is supported by the presence of nonglucose reducing substances in urine, which suggests galactosuria."
+  },
+  {
+    "id": "q-uw-3784",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 20-year-old hockey player is brought to the emergency department 30 minutes after falling headfirst into the hockey rink boards. He did not lose consciousness during the impact but was unable to move his arms and legs afterward. The patient was placed in a rigid cervical collar and transported to the hospital on a backboard; 2 large-bore intravenous catheters were inserted en route. On arrival, blood pressure is 128/78 mm Hg, pulse is 102/min, and respirations are 14/min. The patient is alert and appears anxious. Cardiopulmonary examination is normal. Neurologic examination shows intact cranial nerves. Pinprick and temperature sensation are absent below the level of the clavicles; vibratory sense is intact. The patient is still unable to move his extremities. CT scan of the cervical spine reveals a burst fracture of C5 with impingement of posteriorly displaced fragments on the spinal cord. Neurosurgery is consulted. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Administration of oral prednisone",
+      "B": "Bladder catheterization",
+      "C": "Femoral line placement",
+      "D": "Nasogastric tube insertion",
+      "E": "Orotracheal intubation"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Intravenous steroid (ie, methylprednisolone) therapy may be considered in select patients with acute spinal cord injury. However, oral steroids are not used. In addition, this patient should be NPO until neurosurgical consultation determines whether immediate surgery is indicated.",
+      "C": "Common indications for central venous access (eg, femoral line) include inadequate peripheral venous access, need for hemodynamic monitoring, and infusion of peripherally incompatible solutions. This patient has 2 large-bore peripheral IV catheters and is hemodynamically stable.",
+      "D": "Indications for nasogastric tube insertion include gastrointestinal decompression and administration of medications or nutrition. This patient has none of these indications.",
+      "E": "Because he is alert with normal respirations, he does not need further airway protection or mechanical ventilation."
+    },
+    "generalExplanation": "This patient who fell headfirst into the hockey rink boards now has findings (eg, altered sensation, quadriplegia) consistent with cervical spinal cord trauma. Evaluation begins with a primary survey (airway, breathing, circulation, disability). He is alert with normal respirations and hemodynamically stable with two large-bore IVs.\n\nNeurologic examination shows absent pinprick and temperature sensation (spinothalamic tract) and bilateral paralysis (lateral corticospinal tract), while vibratory and position sensations (dorsal columns) are preserved. These findings are characteristic of anterior cord syndrome, caused by C5 burst fracture impingement or anterior spinal artery injury. Anterior cord syndrome disrupts autonomic descending pathways controlling bladder function, leading to acute urinary retention. Immediate bladder catheterization is required to avoid painful bladder distension, detrusor damage, or secondary autonomic dysreflexia.",
+    "explanationImages": [],
+    "educationalObjective": "In patients with traumatic spinal cord injury, disruption of the autonomic tracts involved in bladder control can lead to urinary retention. Therefore, catheterization should be performed to prevent bladder distension and possible injury."
+  },
+  {
+    "id": "q-uw-4913",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 67-year-old man comes to the office due to tremor. Over the past 3 years, he has noticed that he becomes tremulous when trying to hold a newspaper and when drinking his morning cup of coffee. The tremor is not noticeably worse during any particular time of day. He has no other medical conditions and takes no medications. Vital signs are normal. Physical examination, including evaluation of gait, is normal. The patient exhibits an action tremor of the hands that worsens at the end of goal-directed movements on finger-to-nose testing. Similar findings are seen in the other hand, although it is somewhat milder. Which of the following is the most likely diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Dystonic tremor",
+      "B": "Essential tremor",
+      "C": "Neuropathic tremor",
+      "D": "Parkinson disease",
+      "E": "Spinocerebellar ataxia"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "A dystonic tremor of the arm can worsen with the arms outstretched and vanish with rest. However, it is usually unilateral, is less rhythmic, and is often task specific (eg, writing, typing).",
+      "C": "Neuropathic tremor occurs with large-fiber neuropathies (eg, chronic inflammatory demyelinating polyneuropathy). Although it is also an action tremor that predominantly affects the distal extremities, patients with neuropathic tremors often show other signs or symptoms of peripheral neuropathy (eg, proprioceptive or sensory loss, weakness).",
+      "D": "Patients with Parkinson disease classically have a resting tremor that improves with intentional movement. Although severe essential tremor can have a component of a rest tremor, the worsening at the end of the movement, normal gait, and absence of rigidity and bradykinesia make this patient's tremor more consistent with ET.",
+      "E": "Spinocerebellar ataxia can lead to an intention tremor that worsens in amplitude at the end of the intended action. However, other cerebellar neurologic signs, including dysdiadochokinesis, dysmetria, and scanning speech, are also typically present."
+    },
+    "generalExplanation": "This patient has a tremor of the distal upper extremities that becomes more pronounced with extension of his arm and worsens at the end of the intended action (finger-to-nose test). In the absence of other neurologic signs or symptoms, this is most consistent with essential tremor (ET).\n\nAlthough features of ET are highly variable, it most often affects the wrists and hands, especially when the arms are extended. It worsens with movement (ie, action tremor) and improves at rest. Although ET is typically bilateral, it is often asymmetric. It can also affect the head and voice but generally spares the trunk and legs. ET is slowly progressive and often hereditary (autosomal dominant).",
+    "explanationImages": [],
+    "educationalObjective": "Essential tremor most often presents as a tremor of the hands that is suppressed at rest, exacerbated by outstretched arms, and more pronounced at the end of goal-directed movements. It is not associated with other neurologic symptoms."
+  },
+  {
+    "id": "q-uw-4914",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 67-year-old man with a 3-year history of bilateral hand tremor (action tremor worsening when holding a cup or newspaper, aggravated at the end of goal-directed movements) is diagnosed with essential tremor. He has no other medical conditions. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Alprazolam",
+      "B": "Carbidopa-levodopa",
+      "C": "Cessation of coffee intake",
+      "D": "Propranolol",
+      "E": "Trihexyphenidyl"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Because essential tremor is often worsened by anxiety, benzodiazepines such as alprazolam may partially reduce tremor. However, ET is not an anxiety disorder, and benzodiazepine use should be restricted because of dependence potential.",
+      "B": "Carbidopa-levodopa is first-line for Parkinson disease because it increases dopaminergic activity; it is not effective for ET.",
+      "C": "Any agent that increases adrenergic activity (eg, caffeine) can exacerbate physiologic tremor. However, caffeine intake does not correlate with the severity of essential tremor.",
+      "E": "Trihexyphenidyl is an antimuscarinic agent used for tremor-dominant Parkinson disease in younger patients, not for ET."
+    },
+    "generalExplanation": "Although essential tremor (ET) does not shorten life, it is slowly progressive and may cause significant social embarrassment or functional impairment in activities of daily living.\n\nPropranolol, a nonselective beta blocker, is first-line medical therapy and improves tremor by blocking peripheral beta-2 adrenergic receptors on skeletal muscle spindles. Primidone, an anticonvulsant, is also effective via central actions. In patients with severe or refractory symptoms, propranolol and primidone can be combined.",
+    "explanationImages": [],
+    "educationalObjective": "Essential tremor can impair activities of daily living. First-line treatment includes propranolol, which exerts its effects due to peripheral beta-adrenergic receptor blockade, and primidone, a centrally acting anticonvulsant."
+  },
+  {
+    "id": "q-uw-3528",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 75-year-old man comes to the office due to intermittent right eye vision loss. The patient reports 3 episodes over the past 2 months in which he suddenly experienced \"a curtain falling over the right eye\" for several minutes before it spontaneously resolved. He has no eye pain or discomfort, focal weakness, numbness, or headache. His medical history is significant for hypertension, hyperlipidemia, and osteoarthritis. He smoked cigarettes for 25 years before quitting at age 50. Blood pressure is 140/85 mm Hg and pulse is 74/min. Visual acuity, pupillary reflex, and funduscopic examinations are unremarkable. Further neurologic examination shows normal reflexes, motor strength, and sensation. Which of the following is most likely to yield the diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "CT scan of the head",
+      "B": "Duplex ultrasound of the neck",
+      "C": "Echocardiography",
+      "D": "Erythrocyte sedimentation rate",
+      "E": "Lumbar puncture and CSF analysis",
+      "F": "MRI of the brain",
+      "G": "Ocular tonometry"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Neuroimaging with CT scan is considered for suspected structural brain disease (eg, stroke, mass), but absence of headache, seizures, or focal deficits makes this low yield for amaurosis fugax.",
+      "C": "Echocardiography evaluates cardioembolic sources (eg, left atrial thrombus in atrial fibrillation), which is a less common etiology of amaurosis fugax compared to ipsilateral carotid atheroembolism.",
+      "D": "ESR should be considered in patients age >50 to evaluate for giant cell arteritis. However, this patient lacks headache, scalp tenderness, jaw claudication, or polymyalgia rheumatica.",
+      "E": "Lumbar puncture and CSF analysis are used for suspected multiple sclerosis / optic neuritis, which typically affects women <50 with eye pain on movement and afferent pupillary defect.",
+      "F": "Brain MRI evaluates CNS parenchymal lesions, which is not the primary diagnostic step for transient retinal ischemia.",
+      "G": "Ocular tonometry measures intraocular pressure in acute angle-closure glaucoma, which presents with severe eye pain, corneal edema, and a fixed mid-dilated pupil."
+    },
+    "generalExplanation": "This patient has amaurosis fugax, characterized by painless, rapid, and transient (<10 minutes) monocular vision loss described as \"a curtain descending over the visual field.\" The most common cause is retinal ischemia due to microemboli originating from atherosclerotic plaques within the ipsilateral internal carotid artery. Patients with cardiovascular risk factors (hypertension, hyperlipidemia, smoking) should be evaluated promptly with duplex ultrasound of the neck to quantify carotid stenosis and guide medical (antiplatelet, statin) or surgical (CEA) management.",
+    "explanationImages": [],
+    "educationalObjective": "Amaurosis fugax is characterized by painless, rapid, and transient monocular vision loss. The description of a curtain descending over the visual field is highly suggestive of this diagnosis. The most common etiology is retinal ischemia due to atherosclerotic emboli originating from the ipsilateral carotid artery; therefore, patients with vascular risk factors should receive a duplex ultrasound of the neck."
+  },
+  {
+    "id": "q-uw-4620",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 76-year-old woman is brought to the office by her daughter due to progressively worsening memory and language difficulties. The patient first started having memory problems and word-finding difficulties 5 years ago. She then began having difficulty balancing her checkbook and buying groceries. The patient became lost while driving to church last year and no longer drives. She is now dependent on her daughter for cooking and cleaning. Over the past 6 months, the patient's personality has changed from seeming apathetic to becoming more paranoid and agitated; she frequently claims to have seen her niece stealing from her purse. The patient recently developed urinary incontinence. She has a history of hyperlipidemia and osteoarthritis of the left hip and both knees. Blood pressure is 130/80 mm Hg and pulse is 90/min. Deep tendon reflexes are 2+ throughout, and she has preserved motor strength. The patient recalls none of 3 objects on memory testing and cannot draw a clock. Laboratory studies show normal electrolytes, lipid panel, TSH, vitamin B12, and complete blood count. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Alzheimer disease",
+      "B": "Dementia with Lewy bodies",
+      "C": "Frontotemporal dementia",
+      "D": "Normal pressure hydrocephalus",
+      "E": "Vascular dementia"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Dementia with Lewy bodies requires the presence of dementia plus >=2 of: visual hallucinations, parkinsonism, fluctuating cognition, and REM sleep behavior disorder. Cognitive impairment occurs concurrently with or precedes motor features.",
+      "C": "Frontotemporal dementia presents with early and prominent behavioral/personality changes (disinhibition, apathy, hyperorality) around age 50-60, with memory deficits occurring much later.",
+      "D": "Normal pressure hydrocephalus presents with triad of gait disturbance (early and prominent, magnetic/shuffling), cognitive decline, and urinary incontinence. This patient had 5 years of insidious anterograde memory decline before incontinence appeared.",
+      "E": "Vascular dementia classically shows stepwise cognitive decline with prominent early executive dysfunction rather than prominent anterograde amnesia, alongside cardiovascular/stroke risk factors."
+    },
+    "generalExplanation": "This patient has progressive cognitive decline affecting multiple domains (memory, language, visuospatial, executive function) leading to loss of independent activities of daily living. Her early and prominent anterograde amnesia, insidious progression over 5 years, subsequent visuospatial disorientation (getting lost), dyspraxia (inability to draw a clock), and late behavioral/psychiatric symptoms (paranoia, agitation, incontinence) are classic for Alzheimer disease (AD).\n\nAD is the most common etiology of dementia in individuals over 65 years. The pathological hallmarks are extracellular amyloid-beta plaques and intracellular neurofibrillary tangles composed of hyperphosphorylated tau.",
+    "explanationImages": [],
+    "educationalObjective": "Alzheimer disease is the most common cause of dementia. It typically presents after age 65 with early, prominent anterograde memory loss and visuospatial deficits, followed by progressive cognitive decline, behavioral changes, dyspraxia, and urinary incontinence in advanced stages."
+  },
+  {
+    "id": "q-uw-3461",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 42-year-old woman comes to the office due to left lower jaw pain for the past 10 days. The patient describes brief attacks of severe, stabbing pain that shoots from near her left ear down along her jawline. The pain often occurs while chewing food and lasts several seconds, and she has had no episodes while asleep. The patient has no prior medical history other than postpartum depression after the birth of her second child 6 years ago. She has had no trauma or recent surgery. Vital signs are within normal limits. The patient has no facial rash or tenderness, but during the examination, she develops another episode of pain when the left cheek is lightly touched. Ear, nose, and oral cavity examination is normal. Which of the following is the most appropriate pharmacotherapy for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acyclovir",
+      "B": "Naproxen",
+      "C": "Oxcarbazepine",
+      "D": "Prednisone",
+      "E": "Sumatriptan"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Acyclovir treats reactivation of herpes viruses (eg, herpes zoster ophthalmicus). However, brief paroxysms lasting seconds triggered by light touch without vesicular rash after 10 days are characteristic of trigeminal neuralgia, which does not respond to antiviral therapy.",
+      "B": "Naproxen is used for TMJ disorders, which cause dull, continuous ache and joint tenderness/crepitus. Neuropathic lancinating pain does not respond to NSAIDs.",
+      "D": "Prednisone is indicated for giant cell arteritis, which presents with continuous temporal headache, jaw claudication with prolonged chewing, and elevated ESR in patients age >50.",
+      "E": "Sumatriptan is indicated for acute migraine or cluster headache attacks (which last 15-180 minutes and feature autonomic signs such as lacrimation and rhinorrhea)."
+    },
+    "generalExplanation": "This patient has trigeminal neuralgia (TN), characterized by paroxysmal attacks of severe, stabbing, electric shock-like facial pain in the distribution of the second (V2 maxillary) or third (V3 mandibular) branches of the trigeminal nerve. Attacks last from seconds to 2 minutes and are triggered by light sensory stimuli (chewing, brushing teeth, light breeze, touching the face).\n\nThe pathophysiology is most commonly compression of the trigeminal nerve root entry zone by an aberrant vascular loop (eg, superior cerebellar artery). First-line medical therapy is carbamazepine or oxcarbazepine, which block voltage-gated sodium channels and stabilize hyperexcitable neuronal membranes. Surgical microvascular decompression is reserved for medically refractory cases.",
+    "explanationImages": [],
+    "educationalObjective": "Trigeminal neuralgia is characterized by short, episodic, severe pain usually along the V2 (maxillary) and V3 (mandibular) branches of the trigeminal nerve (CN V), often triggered by minor stimuli. Oxcarbazepine or carbamazepine is first-line therapy."
+  },
+  {
+    "id": "q-uw-2441",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Hard",
+    "stem": "A 5-year-old boy is brought to the office by his parents due to behavioral difficulties. The patient just started kindergarten and has had difficulty staying focused on tasks and switching between activities. The teachers say that he is disruptive and often flaps and waves his hands. He was previously in a small preschool classroom with one-on-one teaching and was able to complete most activities with help. The patient's developmental history is notable for speaking his first word at age 19 months and walking at age 20 months. His mother also had learning difficulties, but she was able to graduate from high school with tutoring. Height and weight are at the 50th percentile, and head circumference is at the 90th percentile. Examination shows a prominent forehead and chin. Mild hypotonia and joint hypermobility are present in bilateral lower extremities. Which of the following is the most likely prognosis for this patient's condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Early death from respiratory muscle weakness",
+      "B": "Increased morbidity and mortality from aortic root disease",
+      "C": "Increased risk for dementia and early death",
+      "D": "Normal life expectancy",
+      "E": "Shorter life expectancy from progressive brain deceleration"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Early death from respiratory muscle failure occurs in Duchenne muscular dystrophy, which presents with proximal muscle weakness, Gowers sign, and calf pseudohypertrophy.",
+      "B": "Aortic root dissection/dilation occurs in Marfan syndrome, which presents with tall stature, arachnodactyly, and ectopia lentis without characteristic intellectual disability or autistic stereotypies.",
+      "C": "Early-onset Alzheimer disease and shortened lifespan are characteristic of Down syndrome (trisomy 21).",
+      "E": "Progressive brain deceleration with microcephaly, developmental regression, and loss of purposeful hand skills is characteristic of Rett syndrome (MECP2 mutation, seen almost exclusively in females)."
+    },
+    "generalExplanation": "This child's developmental delay (gross motor and speech delay), behavioral issues (ADHD-like inattention, autistic hand-flapping stereotypies), macrocephaly (90th percentile), prominent forehead and chin, and joint hypermobility, along with a maternal history of mild learning disability, are diagnostic of fragile X syndrome (FXS).\n\nFXS is the most common inherited cause of intellectual disability. It is caused by an expansion of CGG trinucleotide repeats (>200) in the 5' untranslated region of the FMR1 gene on the X chromosome, leading to hypermethylation and transcriptional silencing of the fragile X mental retardation protein (FMRP). Despite neurodevelopmental and cognitive challenges, individuals with fragile X syndrome generally have a normal life expectancy.",
+    "explanationImages": [],
+    "educationalObjective": "Physical features of fragile X syndrome can include a long face, prominent chin and forehead, protruding ears, joint hypermobility, and macrocephaly. Associated developmental delays and attention deficit hyperactivity disorder are common, but life expectancy is normal."
+  },
+  {
+    "id": "q-uw-17490",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "An 18-year-old woman comes to the office due to recurrent headaches. In the past, the patient has had occasional headaches, especially during term exams or other stressful situations. However, over the past 3 months, she has had 4 episodes of severe headache. They are always left sided, throbbing, associated with nausea, and spontaneously resolve after 12-24 hours. The patient also reports feelings of numbness and tingling in her extremities prior to the headaches. She has no chronic medical conditions and underwent an appendectomy several years ago. The patient is sexually active with her boyfriend and began taking combined oral contraceptives 6 months ago. Vital signs are within normal limits. Physical examination, including neurological examination, shows no abnormalities. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Begin selective serotonin reuptake inhibitor",
+      "B": "Discontinue oral contraceptives",
+      "C": "Measure cerebrospinal fluid pressure",
+      "D": "Order MRI of the brain",
+      "E": "Prescribe daily propranolol therapy",
+      "F": "Reassure and advise nonsteroidal anti-inflammatory drugs as needed"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "SSRIs may have utility in comorbid depression or anxiety, but they do not treat or prevent migraine attacks and do not mitigate stroke risk.",
+      "C": "Measuring CSF opening pressure via lumbar puncture evaluates idiopathic intracranial hypertension, which presents with papilledema, sixth nerve palsy, and positional headache.",
+      "D": "Brain MRI is reserved for red flags ('SNOOP'): systemic symptoms, focal neurologic deficits, sudden onset, older age, or papilledema. Her headaches are stereotypical migraines with aura.",
+      "E": "Propranolol is a common migraine prophylactic agent, but immediate cessation of estrogen-containing contraception is paramount to prevent stroke before initiating preventive pharmacotherapy.",
+      "F": "NSAIDs are appropriate abortive agents, but leaving the patient on combined oral contraceptives carries an unacceptable risk of ischemic stroke."
+    },
+    "generalExplanation": "This patient has migraine with aura, characterized by recurrent, unilateral, throbbing headaches with nausea preceded by transient focal neurologic sensory symptoms (paresthesias). Migraine with aura confers a significantly higher baseline risk of ischemic stroke.\n\nCombined estrogen-progestin oral contraceptives increase hepatic synthesis of clotting factors and further increase the risk of thromboembolic events (ischemic stroke and venous thromboembolism). Therefore, estrogen-containing contraception is strictly contraindicated in women with migraine with aura regardless of age. The most critical immediate next step is discontinuation of the combined oral contraceptive, transitioning to non-estrogen options (progestin-only pills, levonorgestrel IUD, or copper IUD).",
+    "explanationImages": [],
+    "educationalObjective": "Migraine is an episodic neurological disorder that results in severe, unilateral, throbbing headaches often associated with photophobia, phonophobia, and nausea/vomiting; they may be accompanied by aura (focal, reversible neurologic symptoms that precede or accompany the headache). Estrogen-containing contraceptives are contraindicated in patients with migraine with aura due to the increased risk of ischemic stroke."
+  },
+  {
+    "id": "q-uw-16204",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 68-year-old woman comes to the office due to persistent right-sided chest pain. The patient has had burning pain on the right chest wall and back for the past several months. She has had no associated cough, dyspnea, or trauma but had a transient rash in the same region prior to the onset of symptoms. Medical history is notable for breast cancer treated with surgery and chemotherapy, as well as hypertension and type 2 diabetes mellitus. Temperature is 37.1 C (98.8 F), blood pressure is 130/80 mm Hg, and pulse is 82/min. Chest examination shows no skin rash, but there is a band-like area of hyperesthesia on the right side. Lung auscultation reveals prolonged expiration with no wheezes. Heart sounds are normal. Back examination shows no deformity or focal tenderness. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Gabapentin therapy",
+      "B": "Glucocorticoid therapy",
+      "C": "MRI of the thoracic spine",
+      "D": "Plain chest radiograph",
+      "E": "Valacyclovir therapy"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Systemic corticosteroids (eg, prednisone) may provide short-term pain relief during acute herpes zoster but do not reduce the incidence or treat postherpetic neuralgia.",
+      "C": "Spinal MRI evaluates compressive thoracic radiculopathy or metastatic spinal disease; however, the clinical picture with a antecedent unilateral rash and allodynia is diagnostic for PHN, making imaging unnecessary.",
+      "D": "Chest radiography evaluates cardiopulmonary disease or pleural metastasis; it does not address dermatomal neuropathic pain following shingles.",
+      "E": "Antiviral agents (valacyclovir, acyclovir) are indicated during the acute phase (<72 hours of rash onset) to accelerate lesion healing, but they have no efficacy in established postherpetic neuralgia as active viral replication has ceased."
+    },
+    "generalExplanation": "This patient has postherpetic neuralgia (PHN), defined as dermatomal pain persisting >4 months after the onset of an acute herpes zoster (shingles) rash. PHN is caused by damage and chronic hyperexcitability of sensory neurons and primary afferent fibers following varicella zoster virus reactivation.\n\nClinical features include constant or paroxysmal burning, sharp, or shooting pain accompanied by allodynia (pain elicited by light touch) and hyperesthesia in the affected dermatome. First-line pharmacotherapies for PHN are:\n1. Calcium channel alpha-2-delta ligands (gabapentin, pregabalin)\n2. Tricyclic antidepressants (amitriptyline, nortriptyline)\nTopical lidocaine patches or capsaicin cream can also provide adjunctive benefit.",
+    "explanationImages": [],
+    "educationalObjective": "Postherpetic neuralgia is characterized by burning pain and hyperesthesia lasting >4 months following acute zoster. The risk is greatest in those with advanced age, severe initial pain, or severe rash. First-line treatment includes anticonvulsants (eg, gabapentin) and tricyclic antidepressants (eg, amitriptyline)."
+  }
+]

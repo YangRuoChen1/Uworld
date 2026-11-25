@@ -1,0 +1,284 @@
+[
+  {
+    "id": "q-uw-3327",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 23-year-old man comes to the physician complaining of worsening headache over the past week. He is \"under a lot of stress at school\" and having trouble sleeping because the headache is constant. Two weeks ago, he had an insect bite on his right cheek and now both of his eyes are swollen. He also has lost his appetite and vomited twice today. His temperature is 38.3° C (101° F), blood pressure is 130/90 mm Hg, pulse is 104/min, and respirations are 20/min. Examination shows erythema and swelling of the right cheek and bilateral eyelid edema, right greater than left. Bilateral extraocular movements are restricted. The bilateral forehead and mid-face are extremely tender to light palpation. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute angle-closure glaucoma",
+      "B": "Brain abscess",
+      "C": "Cluster headache",
+      "D": "Cavernous sinus thrombosis",
+      "E": "Migraine with visual aura",
+      "F": "Periorbital cellulitis"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Acute angle-closure glaucoma typically occurs in elderly patients and presents with eye pain, visual loss, and headache. Cranial nerve deficits and bilateral distribution make this unlikely.",
+      "B": "Brain abscess should be considered in any patient with fever, headache, and focal neurologic deficits. However, elevated ICP from brain abscess does not cause bilateral periorbital edema.",
+      "C": "Cluster headache is characterized by brief, repetitive unilateral orbital headaches with ipsilateral autonomic symptoms; periorbital edema and multiple bilateral cranial neuropathies do not occur.",
+      "E": "Migraine is characterized by severe episodic headaches with nausea/photophobia; constant headache with ophthalmoplegia and fever makes migraine unlikely.",
+      "F": "Periorbital (preseptal) cellulitis is a mild infection limited to tissues anterior to the orbital septum without ophthalmoplegia, proptosis, or intracranial signs. When bilateral facial tenderness, bilateral eyelid edema, and ophthalmoplegia develop after midface skin infection, infection has spread via valveless ophthalmic veins to the cavernous sinus."
+    },
+    "generalExplanation": "This patient has cavernous sinus thrombosis (CST), a life-threatening septic thrombophlebitis. The facial and ophthalmic venous systems lack valves; therefore, uncontrolled infections of the 'danger triangle' of the face (cheeks, nose, upper lip, paranasal sinuses, or orbit) can spread retrograde into the cavernous sinus.\n\nInflammation and thrombosis inside the cavernous sinus impair orbital venous drainage, producing headache, low-grade fever, and progressive periorbital edema that rapidly becomes bilateral due to intercavernous venous interconnections. Cranial nerves III, IV, V1, V2, and VI traverse the cavernous sinus; involvement causes ophthalmoplegia (restricted extraocular movements, ptosis) and hyperesthesia or pain across the forehead and cheek. Diagnosis is confirmed by MRI with MR venography. Management requires broad-spectrum intravenous antibiotics.",
+    "explanationImages": [],
+    "educationalObjective": "Infectious cavernous sinus thrombosis is a life-threatening complication of facial or paranasal sinus infections spreading via the valveless ophthalmic venous system. Key features include severe headache, bilateral periorbital edema, and multiple cranial nerve palsies (CN III, IV, V1/V2, VI)."
+  },
+  {
+    "id": "q-uw-2469",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 3-month-old full-term boy is brought to the emergency department for refusal to feed. The infant has been exclusively breastfed since birth but has not been latching onto the nipple. He has been urinating normally and usually stools 3 or 4 times a day, but his last bowel movement was several days ago. He was previously able to hold his head up on his own but his head now seems floppy. The patient's family recently moved to California and has been enjoying stroller walks in their newly built neighborhood. Other than daily vitamin D supplementation, the infant has never ingested food, even honey. Vital signs are normal. Examination shows bilateral ptosis, sluggish pupillary reaction to light, copious drool, weak suck and gag reflexes, and head lag. The extremities are flaccid and in extension. What is the most likely mechanism of this patient's illness?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Ascending demyelinating polyneuropathy",
+      "B": "Autoantibodies against acetylcholine receptors",
+      "C": "Bacterial infection of the meninges",
+      "D": "Degeneration of the anterior horn cells in the spinal cord",
+      "E": "Ingestion of Clostridium difficile spores",
+      "F": "Ingestion of Clostridium botulinum spores",
+      "G": "Ingestion of preformed Clostridium botulinum toxin"
+    },
+    "answer": "F",
+    "explanations": {
+      "A": "Guillain-Barré syndrome (ascending demyelinating polyneuropathy) causes flaccid paralysis that ascends from lower extremities upward; botulism proceeds in a descending cephalocaudal pattern.",
+      "B": "Autoantibodies against acetylcholine receptors cause myasthenia gravis, which presents with fluctuating weakness without autonomic symptoms like constipation and drooling.",
+      "C": "Meningitis presents with fever, tachycardia, and irritability rather than afebrile, descending flaccid paralysis with pupillary involvement.",
+      "D": "Spinal muscular atrophy (Werdnig-Hoffmann disease) causes anterior horn cell degeneration with hypotonia and tongue fasciculations, but pupils and autonomic function are spared.",
+      "E": "Clostridium difficile causes antibiotic-associated colitis and diarrhea, not descending paralysis.",
+      "G": "Ingestion of preformed botulinum toxin causes adult foodborne botulism (often from improperly canned food) and presents with acute GI prodrome (nausea, vomiting, diarrhea) prior to paralysis. In infants, colonization by ingested environmental spores (soil/dust) in the colon leads to in vivo toxin production."
+    },
+    "generalExplanation": "This infant has infant botulism, caused by the ingestion and intestinal colonization of Clostridium botulinum spores from environmental dust or soil (especially in endemic construction areas in California, Utah, and Pennsylvania) or raw honey. The spores germinate in the infant gut, releasing botulinum neurotoxin that irreversibly cleaves SNARE proteins and prevents acetylcholine release at presynaptic neuromuscular junctions.\n\nConstipation is typically the earliest manifestation, followed by bilateral bulbar palsies (ptosis, sluggish pupils, weak suck/gag, drooling) and symmetric descending flaccid paralysis ('floppy baby'). Treatment involves supportive care and immediate administration of intravenous human-derived botulism immune globulin (BabyBIG).",
+    "explanationImages": [],
+    "educationalObjective": "Infant botulism results from the ingestion of Clostridium botulinum spores (from environmental dust or honey) that germinate and produce neurotoxin in the gastrointestinal tract, causing constipation, bulbar palsies, and descending flaccid paralysis."
+  },
+  {
+    "id": "q-uw-4378",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 17-year-old girl is brought to the emergency department by her mother after an episode of loss of consciousness 20 minutes ago. The patient was taking a shower when her mother heard her fall. By the time the mother opened the bathroom door, she was lying on the floor and unresponsive. The patient woke up within a few minutes and was taken to the emergency department by ambulance. During transport, she was drowsy and confused. The mother notes that the patient recently broke up with her boyfriend, has been under significant stress at school, and has been sleeping poorly. In the emergency department, blood pressure is 120/70 mm Hg, pulse is 90/min, and respirations are 13/min. The patient is now alert and answers questions appropriately. Examination of the head shows no obvious injury, step-off, or hematoma. The pupils are symmetric and reactive to light. Fingerstick glucose level is 100 mg/dL. Which of the following is most likely to be seen in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Elevated serum acetaminophen level",
+      "B": "Orthostatic hypotension",
+      "C": "Pulsus paradoxus",
+      "D": "Systolic murmur that increases with standing",
+      "E": "Tongue laceration"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Acetaminophen toxicity presents with gastrointestinal symptoms and progressive hepatic injury; it does not cause sudden loss of consciousness with postictal confusion.",
+      "B": "Orthostatic hypotension produces presyncope upon standing; return to baseline is immediate without prolonged postictal confusion.",
+      "C": "Pulsus paradoxus is found in cardiac tamponade and severe asthma, accompanied by hemodynamic instability or severe respiratory distress.",
+      "D": "Hypertrophic cardiomyopathy can cause exertional syncope, but consciousness recovers immediately upon recumbency without postictal drowsiness or confusion."
+    },
+    "generalExplanation": "This patient experienced sudden loss of consciousness followed by a distinct postictal state (drowsiness and confusion during transport), which strongly distinguishes a generalized epileptic seizure from syncope. Sleep deprivation and emotional stress are well-recognized triggers that lower the seizure threshold.\n\nDuring generalized tonic-clonic convulsions, forceful clenching of the jaw frequently results in lateral tongue biting or lacerations. Urinary incontinence and muscle soreness are also common collateral signs.",
+    "explanationImages": [],
+    "educationalObjective": "Seizures are characterized by sudden loss of consciousness, loss of postural tone, and a prolonged postictal state of confusion or lethargy. Lateral tongue lacerations are a specific physical finding associated with epileptic convulsions."
+  },
+  {
+    "id": "q-uw-4872",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A previously healthy 15-month-old girl is brought to the emergency department by her parents due to an episode of unresponsiveness. The patient was playing with her toys and, as the father removed them to prepare for bedtime, she began crying incessantly. There was a long pause in crying, during which the patient made no noise and stopped breathing until she turned blue, became limp, and was unresponsive for a few seconds. After this episode, she was alert and acted like her usual self. The patient takes no medications, and her vaccinations are up to date. Family history is unremarkable. She is at the 40th percentile for weight, height, and head circumference. Vital signs and physical examination are unremarkable. This patient's most likely diagnosis is associated with which of the following?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Arrhythmias",
+      "B": "Epilepsy",
+      "C": "Normal development",
+      "D": "Orthostatic hypotension",
+      "E": "Structural heart disease"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Cardiac arrhythmias (eg, long QT syndrome) cause unprovoked syncopal events or syncope triggered by auditory startle; workup with ECG is reserved for atypical or prolonged spells.",
+      "B": "Epilepsy causes unprovoked seizures that are followed by a postictal state rather than instantaneous recovery to baseline.",
+      "D": "Orthostatic hypotension causes syncope upon rapid standing and is uncommon in healthy toddlers.",
+      "E": "Structural heart defects (eg, Tetralogy of Fallot) cause hyperpnea ('tet spells') and characteristic murmurs, whereas breath-holding spells feature voluntary/involuntary apnea after crying."
+    },
+    "generalExplanation": "This presentation describes a classic cyanotic breath-holding spell (BHS), a benign paroxysmal phenomenon common in children between 6 months and 2 years of age. Spells are triggered by frustration, anger, or pain and follow a stereotypical sequence: crying -> silent expiration/apnea -> cyanosis -> loss of consciousness with brief limpness -> immediate return to baseline.\n\nBHS represents a benign reflex autonomic response. In the absence of iron deficiency anemia (which can exacerbate spells and should be screened with CBC/ferritin), management consists of parental reassurance. Spells typically resolve spontaneously by age 5 with completely normal child development and no long-term neurological sequelae.",
+    "explanationImages": [],
+    "educationalObjective": "Cyanotic breath-holding spells are benign, emotionally provoked events in children age 6 months to 2 years that resolve spontaneously by age 5 and are associated with normal long-term development."
+  },
+  {
+    "id": "q-uw-19325",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 34-year-old previously healthy man comes to the office due to severe back pain. Two days ago, the patient was working on the lawn and experienced sudden-onset low back pain while moving a bag of soil. The pain worsens with movement and radiates to his left leg. He also reports weakness of the left leg. He has had some improvement in the pain after taking NSAIDs and resting. Physical examination shows spasm of lower paraspinal muscles. There is weakness of left ankle dorsiflexion and toe extension. Ankle and knee reflexes are normal. Sensory examination shows loss of pinprick sensation over the dorsum of the left foot. Rectal tone is normal, and the remainder of the examination shows no abnormalities. Which of the following is the most likely cause of this patient's current condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute spinal cord compression",
+      "B": "Common peroneal nerve entrapment",
+      "C": "L2 vertebral disc herniation",
+      "D": "L5 nerve root compression",
+      "E": "Lower sacral nerve roots compression"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Acute cord compression causes bilateral motor/sensory deficits below the lesion level with hyperreflexia and extensor plantar responses.",
+      "B": "Common peroneal (fibular) neuropathy causes foot drop and numbness of the dorsum of the foot, but it does not cause low back pain radiating from the lumbar spine.",
+      "C": "L2 compression affects the anterior thigh and hip flexors/adductors, sparing foot dorsiflexion and the dorsal foot dermatome.",
+      "E": "S2-S4 compression causes saddle anesthesia of the perineum and bowel/bladder sphincter dysfunction."
+    },
+    "generalExplanation": "This patient has acute lumbosacral radiculopathy (sciatica) secondary to an L5 nerve root compression, typically caused by a posterolateral herniation of the L4-L5 intervertebral disc. The L5 nerve root supplies sensation to the lateral calf and the dorsum of the foot, and innervates muscles responsible for ankle dorsiflexion (tibialis anterior), foot eversion (peroneus longus/brevis), and great toe extension (extensor hallucis longus). Notably, no deep tendon reflex is routinely tested for L5 (L4 corresponds to the patellar reflex, S1 to the Achilles reflex).",
+    "explanationImages": [],
+    "educationalObjective": "L5 radiculopathy is characterized by back pain radiating down the lateral leg to the dorsum of the foot, sensory loss over the dorsal foot, and weakness of ankle dorsiflexion and great toe extension with preserved deep tendon reflexes."
+  },
+  {
+    "id": "q-uw-4391",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 34-year-old man comes to the office after several days of difficulty walking. He also has had some \"funny\" sensations in his feet. He has no recent skin rash, diarrhea, or joint pain. He has had lower back pain for the last week due to a lifting injury while he was moving. He visited friends in Connecticut 1 month ago and while there developed an upper respiratory infection that lasted 4 days. The patient smokes 1 pack of cigarettes a day and admits to occasional IV drug use. He has not been sexually active for 3 months. Temperature is 36.7 C (98 F), blood pressure is 120/80 mm Hg, pulse is 90/min, and respirations are 16/min. Chest examination is unremarkable. The abdomen is soft and nontender. The liver span is 8 cm and the spleen is not palpable. Cranial nerves II-XII are intact. Muscle strength is reduced in the lower extremities but well preserved in the upper extremities. Lower-extremity sensation is decreased. Mild hyperreflexia is noted bilaterally in the lower extremities. Stroking the soles of the feet elicits extension of the great toe. Which of the following is most likely to diagnose this patient's condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Electromyography",
+      "B": "CT scan of the brain",
+      "C": "MRI of the spine",
+      "D": "Serologic tests for Borrelia burgdorferi",
+      "E": "Lumbar puncture",
+      "F": "Edrophonium test"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Electromyography differentiates lower motor neuron disorders and neuropathies from myopathies, but it cannot localize structural spinal cord compression.",
+      "B": "Head CT assesses intracranial pathology; bilateral lower extremity weakness with upper motor neuron signs and sensory level localizes to the spinal cord.",
+      "D": "Lyme disease can cause radiculopathy or polyneuropathy, but cord compression (especially in an injection drug user at risk for epidural abscess) requires immediate spinal MRI.",
+      "E": "Lumbar puncture is contraindicated when a spinal epidural abscess is suspected because inserting the needle through infected epidural space can inoculate the subarachnoid space.",
+      "F": "The edrophonium test was historically used for myasthenia gravis, which causes fatigable fluctuating weakness without hyperreflexia or sensory deficits."
+    },
+    "generalExplanation": "This patient exhibits signs of acute spinal cord compression: progressive bilateral lower extremity weakness, sensory loss, hyperreflexia, and extensor plantar responses (Babinski sign) in the setting of localized back pain. The history of intravenous drug use markedly increases the risk of hematogenous seeding and spinal epidural abscess, which can develop insidiously even in the absence of fever.\n\nSpinal cord compression is an emergency requiring prompt emergent MRI of the spine to identify the compression source (epidural abscess, herniated disc, hematoma, or malignancy) and avoid permanent paralysis.",
+    "explanationImages": [],
+    "educationalObjective": "Spinal cord compression presents with signs of upper motor neuron dysfunction (hyperreflexia, extensor plantar response) and bilateral motor/sensory deficits distal to the lesion. Emergent MRI of the spine is the gold standard diagnostic evaluation."
+  },
+  {
+    "id": "q-uw-4203",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 67-year-old woman comes to the office for follow-up. Four weeks ago, she experienced sudden-onset right side numbness, and evaluation revealed an ischemic stroke. The patient feels like some of her sensation is returning but experiences transient burning pain in the right upper and lower limbs that can be induced even by a light touch. Her medical history is significant for hypertension and type 2 diabetes mellitus. She smoked a half-pack of cigarettes daily for 30 years but stopped after her stroke. Blood pressure is 125/70 mm Hg, and pulse is 74/min and regular. Neurologic examination shows right side hemianesthesia and mild athetosis of the right hand. There is hyperesthesia on the right side of the body demonstrated by exaggerated pain on light touch. Motor strength is normal in all 4 extremities. Which of the following is the most probable location of the stroke experienced 4 weeks ago by this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Internal capsule",
+      "B": "Medulla",
+      "C": "Midbrain",
+      "D": "Post-central gyrus",
+      "E": "Putamen",
+      "F": "Thalamus"
+    },
+    "answer": "F",
+    "explanations": {
+      "A": "Posterior limb of the internal capsule infarction causes contralateral pure motor hemiparesis or combined sensorimotor deficit; chronic burning allodynia is not seen.",
+      "B": "Lateral medullary infarction (Wallenberg syndrome) causes ipsilateral facial sensory loss and contralateral body sensory loss, ataxia, Horner syndrome, and dysphagia.",
+      "C": "Midbrain stroke causes ipsilateral CN III palsy and contralateral hemiparesis (Weber syndrome) or tremor/ataxia (Benedikt syndrome).",
+      "D": "Somatosensory cortex infarction in the post-central gyrus causes cortical sensory deficits (astereognosis, agraphesthesia) accompanied by hemiparesis and aphasia/neglect.",
+      "E": "Putaminal hemorrhage/infarct typically compresses the internal capsule, causing prominent motor hemiparesis and conjugate gaze deviation."
+    },
+    "generalExplanation": "This patient's initial presentation with sudden-onset contralateral loss of all sensory modalities without motor weakness is classic for a pure sensory lacunar stroke affecting the ventral posterolateral (VPL) and ventral posteromedial (VPM) nuclei of the posterolateral thalamus (supplied by thalamogeniculate branches of the posterior cerebral artery).\n\nWeeks to months later, approximately 10% of patients with thalamic infarcts develop central post-stroke pain syndrome (Dejerine-Roussy syndrome), characterized by persistent or paroxysmal severe burning pain, hyperalgesia, and marked allodynia in the affected hemi-body.",
+    "explanationImages": [],
+    "educationalObjective": "Lacunar infarction of the posterolateral thalamus causes contralateral pure sensory hemianesthesia. It can subsequently evolve into thalamic pain syndrome (Dejerine-Roussy syndrome), characterized by severe burning neuropathic pain and allodynia."
+  },
+  {
+    "id": "q-uw-2442",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 4-year-old girl is brought to the office due to behavioral concerns. Over the last 2 months, her parents and preschool teacher have noticed that she frequently does not respond to their questions, and they often need to repeat themselves several times to get a response. Three months ago, the patient was hospitalized due to high fever, headache, nuchal rigidity, and recurrent seizures. Cerebrospinal fluid culture grew Streptococcus pneumoniae, and she was given parenteral antibiotics. The seizures were initially difficult to control but resolved after 72 hours of antibiotic therapy. A repeat cerebrospinal fluid culture was sterile, and the patient completed the course of antibiotics. She has had no fever or headache since then and has not followed up until today's visit. Vital signs and growth parameters are normal for age. In the office, the child is alert and can hop on 1 foot. She can copy a cross and square on paper. Which of the following is the most likely cause of this patient's current symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Bacterial invasion of the brain parenchyma",
+      "B": "Global cerebral hypoxic-ischemic damage",
+      "C": "Inflammatory damage to the cochlea",
+      "D": "Recurrent 3 Hz spike-and-wave epileptiform discharges",
+      "E": "Thrombotic occlusion of dural venous sinus",
+      "F": "Vasospasm-induced cerebral infarction"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Brain abscess represents bacterial invasion of the parenchyma and presents acutely with focal deficits, fever, and headache; S. pneumoniae rarely causes brain abscess.",
+      "B": "Hypoxic-ischemic encephalopathy causes pervasive intellectual disability and motor deficits (cerebral palsy); this child exhibits completely normal motor and cognitive milestones.",
+      "D": "Absence seizures feature 3 Hz spike-wave discharges and brief staring spells lasting seconds, but they do not cause consistent lack of auditory responsiveness without staring.",
+      "E": "Dural sinus thrombosis causes headache, vomiting, and signs of elevated intracranial pressure.",
+      "F": "Cerebral vasospasm is a complication of subarachnoid hemorrhage, not bacterial meningitis."
+    },
+    "generalExplanation": "Sensorineural hearing loss is the most common long-term neurologic complication of bacterial meningitis in children, particularly following Streptococcus pneumoniae infection. Meningeal inflammation spreads along the perilymphatic channels into the cochlea and labyrinth (suppurative labyrinthitis), damaging delicate cochlear hair cells and spiral ganglion neurons, followed by progressive cochlear ossification.\n\nIn young children, acquired hearing loss frequently masquerades as behavioral inattention or 'ignoring' parents and teachers. Prompt formal audiologic testing is recommended for all pediatric patients recovering from bacterial meningitis before discharge or during early follow-up.",
+    "explanationImages": [],
+    "educationalObjective": "Sensorineural hearing loss due to inflammatory damage of the cochlea is the most frequent long-term complication of bacterial meningitis (most commonly Streptococcus pneumoniae). All children recovering from meningitis require audiologic evaluation."
+  },
+  {
+    "id": "q-uw-11997",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 55-year-old woman is brought to the emergency department due to worsening headaches and right-sided weakness. The patient developed these headaches a month ago and since then has had continuous throbbing pain over the left side of her head that is associated with nausea. More recently, she has noticed increasing difficulty using her right arm and leg. The patient has had no trauma, neck stiffness, fever, double or blurry vision, or photophobia. She recently emigrated from Mexico with her family. She is a retired seamstress and admits to chronic tobacco use for many years. Her temperature is 36.7 C (98 F), blood pressure is 150/90 mm Hg, pulse is 84/min, and respirations are 14/min. Neurologic examination is significant for right-sided pronator drift. A non-contrast head CT scan reveals a partially calcified round extra-axial mass compressing the left frontal lobe. The mass appears dural-based and homogeneously enhances on post-gadolinium MRI. Which of the following is the most appropriate next course of action in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Chemotherapy",
+      "B": "Combination antitubercular therapy",
+      "C": "CT scan of the chest, abdomen, and pelvis",
+      "D": "Surgical resection",
+      "E": "Whole brain radiation"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Chemotherapy is ineffective for benign meningiomas and is reserved for high-grade intra-axial malignancies.",
+      "B": "Antitubercular therapy treats CNS tuberculomas, which appear as ring-enhancing lesions with central caseation in patients with systemic tuberculosis symptoms.",
+      "C": "Systemic staging CT is performed for suspected brain metastases, which are typically multiple, intra-axial, and localized at the gray-white junction.",
+      "E": "Whole-brain radiation is used for multiple brain metastases, not solitary extra-axial benign lesions."
+    },
+    "generalExplanation": "This patient's imaging findings—a well-circumscribed, extra-axial, dural-based, homogeneously enhancing mass with calcifications causing compression of the adjacent cerebral cortex—are classic for a meningioma. Meningiomas arise from arachnoid cap cells and represent the most common primary non-malignant brain tumor in adults, frequently occurring in middle-aged women.\n\nWhen meningiomas become symptomatic (causing focal neurological signs like pronator drift, progressive headaches, or seizures due to mass effect and vasogenic edema), complete surgical resection is the treatment of choice and is curative in the vast majority of cases.",
+    "explanationImages": [],
+    "educationalObjective": "Meningiomas are benign, extra-axial, dural-based primary brain tumors that homogeneously enhance on MRI and can have calcifications. Symptomatic tumors with mass effect and focal deficits are managed with complete surgical resection."
+  },
+  {
+    "id": "q-uw-21186",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 65-year-old woman is brought to the office by her daughter due to forgetfulness and bizarre behavior. She recently began living with her daughter, who has noticed that the patient frequently misplaces items, forgets the purpose of an errand, and asks the same questions repeatedly. The patient had a left anterior cerebral artery embolic stroke 4 months ago. Her right leg weakness has slightly improved with physical rehabilitation at a nursing facility, but she still has to use a walker for ambulation. Her daughter states that prior to the stroke, the patient was living on her own and was \"very social, outgoing, and full of life.\" Now, she is completely withdrawn and has no interest in day-to-day activities. She has also become suspicious of her daughter and is hoarding things. Other medical history includes hypertension and atrial fibrillation. On physical examination, the patient has a flat affect, normal speech, and right lower extremity weakness. Mental status examination shows short-term memory loss. Mini-Mental State Examination score is 22/30 and Clock-Drawing reveals executive cognitive dysfunction. Which of the following is the most likely cause of this patient's memory impairment?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Adjustment disorder",
+      "B": "Alzheimer disease",
+      "C": "Frontotemporal dementia",
+      "D": "Poststroke depression",
+      "E": "Vascular dementia"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Adjustment disorder can cause emotional distress following a stroke, but it does not account for objective cognitive impairment, executive dysfunction, or MMSE score of 22/30.",
+      "B": "Alzheimer disease causes insidious, gradual memory loss over years, whereas strategic vascular dementia features an abrupt cognitive drop temporally tied to an infarction.",
+      "C": "Frontotemporal dementia features early behavioral changes and executive dysfunction without sudden onset after stroke or focal stroke deficits.",
+      "D": "Poststroke depression features depressed mood and psychomotor slowing, but abrupt strategic cognitive loss with prominent executive dysfunction in the setting of an ACA infarct is diagnostic of vascular dementia."
+    },
+    "generalExplanation": "Vascular dementia (VaD) can develop after multi-infarct ischemic events (stepwise decline) or following a single strategic infarction in an anatomically critical cognitive region (such as the anterior cerebral artery supplying the medial frontal lobe, anterior cingulate gyrus, and caudate). Damage to frontal-subcortical circuits results in abrupt executive dysfunction, prominent apathy, personality shifts, and impaired working memory.\n\nThe clear temporal onset following an embolic stroke, residual focal right leg weakness, and prominent executive dysfunction on clock-drawing confirm the diagnosis of strategic vascular dementia.",
+    "explanationImages": [],
+    "educationalObjective": "Vascular dementia can arise abruptly from a single strategic infarct in key cognitive territories (eg, medial frontal lobe from an anterior cerebral artery stroke), presenting with prominent executive dysfunction, apathy, and focal motor signs."
+  }
+]

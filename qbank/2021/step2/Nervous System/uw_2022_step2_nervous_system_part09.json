@@ -1,0 +1,277 @@
+[
+  {
+    "id": "q-uw-3715",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 63-year-old man is brought to the office by his daughter due to recurrent falls. According to his daughter, the patient has lost his balance and fallen several times over the past 6 months. He has not sustained serious injuries. She has also noticed some \"shaking\" of his right hand that is most apparent at rest. The patient has lived alone since his wife died 5 years ago and still shops, cooks, and cleans independently. Blood pressure is 141/68 mm Hg and pulse is 72/min. Neurologic examination shows mild rigidity of the limb muscles that is most prominent on the right side with a slow, shuffling gait. The patient is prescribed medication for his symptoms but returns to the office 4 weeks later reporting \"disturbing visions of strangers creeping around corners of his apartment.\" On examination, he is alert and scores 27/30 on the Montreal Cognitive Assessment (normal: >=26). Which of the following is the most likely explanation for this patient's new symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "COMT inhibitor pharmacotherapy",
+      "B": "Dementia with Lewy bodies",
+      "C": "Dopamine agonist pharmacotherapy",
+      "D": "Frontotemporal dementia",
+      "E": "MAO-B inhibitor pharmacotherapy"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "COMT inhibitors (eg, entacapone) prolong levodopa action and carry a lower risk of hallucinations compared to dopamine agonists.",
+      "B": "Dementia with Lewy bodies requires cognitive impairment severe enough to compromise independent living alongside fluctuating cognition and parkinsonism. This patient functions independently and scored normally on cognitive screening (MoCA 27/30).",
+      "D": "Frontotemporal dementia presents with early changes in personality, disinhibition, and apathy without medication-provoked visual hallucinations.",
+      "E": "Selective MAO-B inhibitors (eg, selegiline, rasagiline) rarely cause prominent visual hallucinations compared to dopamine agonists."
+    },
+    "generalExplanation": "Dopamine agonists (eg, pramipexole, ropinirole) are commonly used as initial monotherapy in patients with Parkinson disease (PD) aged <65 years to delay levodopa-related motor complications. However, dopaminergic overstimulation of mesolimbic pathways makes dopamine agonists the anti-parkinsonian drug class with the highest risk of inducing psychotic symptoms (visual hallucinations, paranoid delusions) and impulse control disorders (gambling, hypersexuality).\n\nManagement begins with reducing or discontinuing the dopamine agonist. When psychotic symptoms persist or disabling motor decline prevents dose reduction, low-dose atypical antipsychotics with minimal D2 antagonism (such as quetiapine or pimavanserin, a 5-HT2A inverse agonist) are indicated.",
+    "explanationImages": [],
+    "educationalObjective": "Dopamine agonists (eg, pramipexole, ropinirole) used in Parkinson disease have a high propensity to cause drug-induced visual hallucinations. Management involves dose reduction, switching to levodopa, or treatment with low-potency atypical antipsychotics (eg, quetiapine, pimavanserin)."
+  },
+  {
+    "id": "q-uw-3664",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 12-year-old boy is brought to the emergency department by his parents as \"he cannot walk anymore.\" The patient has had a pins-and-needles sensation and weakness in both feet for the past few days. This morning, he could not stand or move his legs and has bilateral thigh pain. Two weeks ago, the patient had a febrile diarrheal illness that resolved on its own. He has had no headaches, nausea, vomiting, or recurrent diarrhea. He and his family are vegetarians, and they recently visited a petting zoo. The patient has no significant past medical history, and vaccinations are up to date. On arrival, temperature is 36.7 C (98.1 F), blood pressure is 150/90 mm Hg, pulse is 92/min, and respirations are 16/min; pulse oximetry is 99% on room air. Physical examination shows symmetric flaccid paralysis of the lower extremities and absent ankle and patellar deep tendon reflexes. Sensation is intact to light touch in both legs. The upper extremities are weak and hyporeflexic. There is no photophobia or nuchal rigidity. Which of the following structures is primarily impaired in this patient's condition?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Anterior horn cells",
+      "B": "Dorsal and lateral spinal columns",
+      "C": "Muscle fibers",
+      "D": "Neuromuscular junction",
+      "E": "Peripheral nerve fibers"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Anterior horn cell degeneration occurs in spinal muscular atrophy, poliomyelitis, and ALS, presenting with pure motor lower motor neuron deficits without preceding diarrheal molecular mimicry.",
+      "B": "Dorsal and lateral column degeneration occurs in subacute combined degeneration from B12 deficiency, presenting with ataxia, proprioceptive loss, and hyperreflexia.",
+      "C": "Myopathies affect muscle fibers, causing symmetric proximal weakness and muscle tenderness with preserved reflexes and normal sensory function.",
+      "D": "Neuromuscular junction disorders (myasthenia gravis, botulism) cause fatigable weakness or descending flaccid paralysis without preceding ascending areflexic neuropathy."
+    },
+    "generalExplanation": "This patient presents with Guillain-Barré syndrome (GBS, acute inflammatory demyelinating polyradiculoneuropathy), an autoimmune disorder targeting peripheral nerve fibers and spinal roots. It frequently follows an antecedent gastrointestinal infection (most commonly Campylobacter jejuni from animal contact or undercooked food) or respiratory infection through molecular mimicry between pathogen surface lipooligosaccharides and human peripheral nerve gangliosides.\n\nThe resulting immune response damages Schwann cell myelin sheaths and motor axons, leading to symmetric, ascending flaccid paresis, neuropathic extremity pain, areflexia, and potential autonomic instability. First-line treatments are intravenous immunoglobulin (IVIG) or plasmapheresis.",
+    "explanationImages": [],
+    "educationalObjective": "Guillain-Barré syndrome is an immune-mediated polyneuropathy caused by molecular mimicry targeting peripheral nerve myelin sheaths following gastrointestinal (eg, Campylobacter) or respiratory infection, presenting with symmetric ascending flaccid paralysis and areflexia."
+  },
+  {
+    "id": "q-uw-18663",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 16-month-old girl is brought to clinic by her father for behavior concerns. For the last 6 weeks, the patient has been less interactive with family members and increasingly irritable. Her last checkup was at 12 months, when she met all developmental milestones and was growing appropriately. Since then, the patient has not attained new milestones in speech, gross motor, or fine motor development, which her father attributes to recent social stressors because the parents are undergoing a divorce. Temperature is 37.3 C (99.1 F), blood pressure is 140/90 mm Hg, and pulse is 70/min. The patient has poor eye contact. The anterior fontanelle is closed. Cardiopulmonary examination is unremarkable. The skin is pink and well perfused. Growth charts show head circumference crossing from the 50th percentile to above the 97th percentile, while length and weight track along the 50th percentile. Which of the following is the most likely cause of this patient's presentation?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Adjustment disorder",
+      "B": "Congenital cytomegalovirus infection",
+      "C": "Hydrocephalus",
+      "D": "Hypothyroidism",
+      "E": "Rett syndrome"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Adjustment disorder causes behavioral reactions to stress but cannot cause progressive macrocephaly, hypertension, and developmental stagnation.",
+      "B": "Congenital CMV causes microcephaly, periventricular calcifications, and sensorineural hearing loss apparent in infancy, not accelerated head growth.",
+      "D": "Congenital hypothyroidism causes poor linear growth, constipation, and macroglossia, rather than selective cranial enlargement and hypertension.",
+      "E": "Rett syndrome causes head growth deceleration (acquired microcephaly) after normal development, loss of purposeful hand movements, and hand-wringing stereotypies."
+    },
+    "generalExplanation": "This toddler presents with pathological head enlargement (crossing two major percentile lines upward to >97th percentile), irritability, developmental stagnation, and hypertension with relative bradycardia (Cushing reflex), which are hallmarks of increased intracranial pressure secondary to hydrocephalus.\n\nIn children whose cranial sutures and fontanelles have closed, expanding ventricular volume causes increased intracranial pressure, leading to headache, vomiting, papilledema, and hypertension. Brain MRI is the initial diagnostic modality of choice to identify ventricular dilation and localize the level of obstruction (eg, aqueductal stenosis, posterior fossa tumor). Management requires neurosurgical intervention (ventriculoperitoneal shunt or endoscopic third ventriculostomy).",
+    "explanationImages": [],
+    "educationalObjective": "Hydrocephalus in young children presents with an abnormally rapidly increasing head circumference crossing growth percentiles, irritability, developmental delay, and signs of elevated intracranial pressure (hypertension, bradycardia, vomiting). Diagnostic evaluation requires urgent neuroimaging (MRI or ultrasound)."
+  },
+  {
+    "id": "q-uw-14370",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 19-year-old man is brought to the emergency department due to a seizure. The patient's roommate was awakened by a noise 30 minutes ago and found him \"convulsing\" on the bed. Emergency medical services were called, and the patient had another brief seizure episode in the ambulance. He has no history of seizure or other medical conditions. The roommate says the patient went to bed late last night after a fraternity party. Temperature is 37.2 C (99 F), blood pressure is 148/90 mm Hg, and pulse is 94/min. On physical examination, the patient is somnolent, groans to painful physical stimuli, and does not follow instructions. There is a small tongue laceration. While being examined, the patient has another generalized tonic-clonic seizure, which terminates after administration of intravenous lorazepam. Which of the following is the most appropriate next step in the management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Administer intravenous phenobarbital",
+      "B": "Monitor with continuous electroencephalography",
+      "C": "Perform lumbar puncture",
+      "D": "Obtain MRI of the brain",
+      "E": "Start fosphenytoin infusion"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Phenobarbital is a third-line agent for refractory status epilepticus and carries a high risk of profound sedation and respiratory depression.",
+      "B": "Continuous EEG is indicated if the patient fails to regain consciousness after seizure cessation to rule out nonconvulsive status, but immediate pharmacological recurrence prevention takes priority.",
+      "C": "Lumbar puncture evaluates CNS infection (meningitis) but should be performed only after stabilization and brain imaging; it is not the next immediate step in ongoing status epilepticus.",
+      "D": "Neuroimaging (CT or MRI) is required to evaluate structural etiologies once the seizure is fully suppressed and the patient is stabilized on maintenance antiepileptic therapy."
+    },
+    "generalExplanation": "Generalized convulsive status epilepticus (GCSE) is defined as continuous seizure activity lasting >=5 minutes or >=2 distinct seizures between which there is incomplete recovery of consciousness. It is a neurological emergency requiring rapid sequential pharmacotherapy to prevent excitotoxic neuronal injury.\n\nFirst-line therapy is an intravenous benzodiazepine (lorazepam or diazepam; IM midazolam if IV access is unavailable) to terminate active seizure activity. Immediately following benzodiazepine administration, a non-benzodiazepine antiepileptic medication must be administered to prevent seizure recurrence and maintain long-term seizure control. Guideline-recommended first-line agents include fosphenytoin (or phenytoin), levetiracetam, or valproate.",
+    "explanationImages": [],
+    "educationalObjective": "In status epilepticus, intravenous benzodiazepines are given for emergent seizure termination, immediately followed by an intravenous non-benzodiazepine antiepileptic agent (fosphenytoin, levetiracetam, or valproate) to prevent seizure recurrence."
+  },
+  {
+    "id": "q-uw-19419",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 45-year-old man comes to the emergency department due to 3 weeks of headache and malaise and a week of double vision, vomiting, and fever. Medical history is significant for alcohol use disorder. Temperature is 38.3 C (100.9 F), blood pressure is 140/90 mm Hg, pulse is 88/min, and respirations are 14/min. Mild lethargy is present. Examination shows neck stiffness and lateral deviation of the right eye with impaired adduction. Noncontrast CT scan of the head is normal. Laboratory results show cerebrospinal fluid opening pressure 160 mm H2O, glucose 25 mg/dL, protein 180 mg/dL, red blood cells 0/mm3, leukocytes 400/mm3 with 70% lymphocytes and 30% neutrophils. Serum HIV testing is negative. What is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Herpes encephalitis",
+      "B": "Meningococcal meningitis",
+      "C": "Neurocysticercosis",
+      "D": "Subarachnoid hemorrhage",
+      "E": "Tuberculosis"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Herpes simplex encephalitis presents hyperacutely (<1 week) with temporal lobe seizures, personality changes, and CSF showing prominent red blood cells and normal glucose.",
+      "B": "Meningococcal meningitis presents acutely within hours to days with high fever, petechial rash, and CSF characterized by marked neutrophilic pleocytosis (>1,000 WBCs) and very high protein.",
+      "C": "Neurocysticercosis presents with new-onset seizures and intraparenchymal cysts/calcifications on neuroimaging, without acute/subacute febrile basilar meningitis.",
+      "D": "Subarachnoid hemorrhage presents with sudden thunderclap headache, and CSF examination demonstrates abundant red blood cells that do not clear in serial tubes, and xanthochromia."
+    },
+    "generalExplanation": "Tuberculous (TB) meningitis, caused by Mycobacterium tuberculosis, typically presents subacutely over 2 to 4 weeks with indolent headache, low-grade fever, malaise, and progressive cranial neuropathies (eg, CN III or VI palsy causing oculomotor deficits and diplopia). The predilection for cranial nerve palsies stems from dense gelatinous exudates accumulating around the basal cisterns and brainstem.\n\nClassic CSF findings include:\n• Moderate lymphocytic pleocytosis (typically 100-500 WBCs/mm3)\n• Significantly elevated protein (100-500 mg/dL)\n• Markedly low glucose (<45 mg/dL or CSF/serum ratio <0.3)\n• Elevated adenosine deaminase (ADA)\nImmediate treatment with four-drug antitubercular therapy (RIPE) plus adjuvant glucocorticoids (dexamethasone) is required to reduce mortality and prevent ischemic basilar strokes.",
+    "explanationImages": [],
+    "educationalObjective": "Tuberculous meningitis presents subacutely with headache, fever, meningismus, and cranial nerve palsies (due to basilar exudates). CSF analysis demonstrates lymphocytic pleocytosis, markedly elevated protein, and low glucose."
+  },
+  {
+    "id": "q-uw-4841",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 2-year-old boy is brought to the emergency department by ambulance due to convulsions. This morning, the patient was sitting on the sofa at home when he suddenly developed rhythmic movements of both arms and legs that lasted about 3 minutes. He was not responsive during the event. Emergency personnel report that the child was sleepy and seemed confused when they arrived. The patient has had rhinorrhea for the past 2 days and fever since this morning. He has had no cough, vomiting, or diarrhea. The patient has no chronic medical conditions, and immunizations are current. His uncle has epilepsy. Temperature is 39.2 C (102.6 F). Physical examination shows an alert and playful toddler. Bilateral conjunctivae are clear, and clear rhinorrhea is present. The neck is supple with full range of motion. Mucous membranes are moist, and capillary refill is <2 seconds. The remainder of the examination is normal. After treating the fever with acetaminophen, which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Brain imaging",
+      "B": "Electroencephalography",
+      "C": "Hospitalization for observation",
+      "D": "Levetiracetam",
+      "E": "Lumbar puncture",
+      "F": "Reassurance and discharge home",
+      "G": "Serum electrolyte panel"
+    },
+    "answer": "F",
+    "explanations": {
+      "A": "Neuroimaging is indicated for complex febrile seizures with focal features, signs of increased ICP, or abnormal neurological examination.",
+      "B": "EEG evaluates unprovoked or afebrile seizures and epilepsy syndromes, not simple febrile seizures.",
+      "C": "Hospitalization is reserved for prolonged postictal confusion, suspected CNS infection, or complex/recurrent seizures within 24 hours.",
+      "D": "Daily antiseizure medications are not indicated for simple febrile seizures because potential medication toxicity outweighs benefits in benign self-limiting events.",
+      "E": "Lumbar puncture is indicated if meningeal signs are present, if the patient has received prior antibiotics that might mask meningitis, or if the child is unimmunized against Hib/S. pneumoniae."
+    },
+    "generalExplanation": "This child had a simple febrile seizure, defined as a generalized convulsion lasting <15 minutes that occurs in the presence of fever (>=38 C / 100.4 F) in a child aged 6 months to 5 years, without focal features and without recurrence within 24 hours. The patient has returned completely to baseline (alert, playful, neurologically intact) with a supple neck.\n\nSimple febrile seizures are benign, carry an excellent prognosis, and do not cause brain injury or cognitive deficits. No diagnostic workup (blood tests, lumbar puncture, EEG, or neuroimaging) is required for fully vaccinated, clinically well children. Management consists of parental reassurance, education regarding recurrence risk (~30%), and symptomatic antipyretic therapy, followed by discharge home.",
+    "explanationImages": [],
+    "educationalObjective": "Simple febrile seizures are generalized, brief (<15 minutes), single convulsions occurring in children age 6 months to 5 years in the setting of fever. In a fully vaccinated child who has returned to neurological baseline, management consists of reassurance and discharge home."
+  },
+  {
+    "id": "q-uw-16079",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 56-year-old man with a prolonged history of hypertension and medication nonadherence comes to the emergency department with abrupt-onset, severe, tearing back pain. Blood pressure is 240/130 mm Hg, and CT angiography reveals descending aortic dissection originating at the left subclavian artery takeoff and extending to the iliac arteries. Intravenous infusion of labetalol and nitroprusside are initiated, and the patient is admitted for further management. In the intensive care unit, the patient states that the pain has improved, but he is unable to move the lower extremities. Blood pressure is now 110/60 mm Hg, and pulse is 56/min. Physical examination shows normal heart and lung sounds and a distended urinary bladder. Neurological examination shows normal cranial nerves and upper extremity examination. There is weakness of bilateral lower extremities with decreased deep tendon reflexes. The patient is unable to sense crude touch and pain in the lower extremities, but vibration sensation is intact. Which of the following is the most likely cause of this patient's current neurological findings?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Carotid artery occlusion",
+      "B": "Compressive lumbar myelopathy",
+      "C": "Global cerebral hypoperfusion",
+      "D": "Thoracic spinal cord ischemia",
+      "E": "Vertebral artery dissection"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Carotid artery occlusion causes anterior circulation cerebral infarction, presenting with unilateral hemiparesis and cortical signs without bilateral paraplegia or spinal sensory level.",
+      "B": "Lumbar stenosis produces neurogenic claudication with pain on walking/standing, not acute bilateral paraplegia with flaccid bladder paralysis following aortic dissection.",
+      "C": "Global cerebral hypoperfusion causes diffuse encephalopathy, syncope, or watershed cortical infarctions, not isolated lower-extremity anterior spinal syndrome.",
+      "E": "Vertebral artery dissection affects posterior circulation brainstem and cerebellar structures (Wallenberg syndrome), not isolated lower thoracic spinal cord infarction."
+    },
+    "generalExplanation": "Anterior spinal cord ischemia/infarction (anterior cord syndrome) is a recognized complication of descending (Stanford type B) thoracic aortic dissection. The anterior two-thirds of the spinal cord is supplied by the single anterior spinal artery, which relies heavily on collateral perfusion from segmental radicular branches of the thoracic and abdominal aorta (most notably the great anterior radicular artery of Adamkiewicz, arising between T9 and T12).\n\nAortic dissection can shear or compromise the origins of these segmental intercostal/lumbar vessels. The resulting anterior spinal ischemia destroys the anterior horn motor cells, lateral corticospinal tracts, and spinothalamic tracts, presenting with acute bilateral flaccid paraplegia (spinal shock), loss of pain and temperature sensation below the lesion, and acute autonomic urinary retention. The dorsal columns are spared because they are perfused by the paired posterior spinal arteries, preserving vibratory and proprioceptive sensation.",
+    "explanationImages": [],
+    "educationalObjective": "Descending thoracic aortic dissection can compromise segmental intercostal and lumbar arteries (including the artery of Adamkiewicz), causing anterior spinal cord ischemia. Hallmarks are bilateral flaccid paraplegia, loss of pain/temperature sensation, and urinary retention, with preservation of vibration and proprioception."
+  },
+  {
+    "id": "q-uw-21401",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 14-year-old boy is brought to the office due to lower back and buttock pain for 3 months. The pain is diffuse across the lower back and buttocks, worsens with activity, and resolves with rest. It occasionally radiates down the legs. There is no history of trauma. Vital signs are normal. Examination shows a subcutaneous lipoma over the lower back, mild scoliosis, and weak ankle dorsiflexion. Deep tendon reflexes are 1+ in the lower extremities and 2+ in the upper extremities. The lower extremities are thin and weak. What is the most likely diagnosis in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Ankylosing spondylitis",
+      "B": "Becker muscular dystrophy",
+      "C": "Guillain-Barré syndrome",
+      "D": "Herniated disc",
+      "E": "Tethered spinal cord"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Ankylosing spondylitis is an inflammatory arthritis causing morning back stiffness that improves with exercise and worsens with rest, without subcutaneous lipomas or hyporeflexia.",
+      "B": "Becker muscular dystrophy causes progressive symmetric proximal muscle weakness, calf pseudohypertrophy, and elevated CK, without lower back lipomas or scoliosis.",
+      "C": "Guillain-Barré syndrome presents as acute, rapidly ascending motor paralysis over days, not 3 months of activity-related chronic back pain.",
+      "D": "Lumbar disc herniation causes radiculopathy exacerbated by spinal flexion, but does not present with cutaneous lumbosacral markers like subcutaneous lipomas or progressive stretch myelopathy."
+    },
+    "generalExplanation": "Tethered cord syndrome is a form of closed spinal dysraphism (spina bifida occulta) where the conus medullaris is anchored abnormally low in the spinal canal by a thickened filum terminale, fibrous band, or subcutaneous lipoma. As the child undergoes growth spurts in adolescence, the anchored cord cannot ascend normally and undergoes chronic mechanical traction and ischemic stretching.\n\nClinical manifestations include:\n• Cutaneous lumbosacral abnormalities: Lipoma, hair tuft, dermal sinus/dimple, or hemangioma\n• Neurologic deficits: Lower motor neuron signs (distal leg weakness, muscle wasting, hyporeflexia, foot drop)\n• Musculoskeletal deformities: Progressive scoliosis and pes cavus\n• Urologic symptoms: Neurogenic bladder dysfunction and incontinence\nMRI of the lumbosacral spine is diagnostic, revealing a low-lying conus medullaris below the L1-L2 interspace. Treatment is surgical detethering.",
+    "explanationImages": [],
+    "educationalObjective": "Tethered cord syndrome (closed spinal dysraphism) is characterized by chronic back/leg pain exacerbated by activity, lower extremity weakness, hyporeflexia, scoliosis, and lumbosacral cutaneous markers (eg, lipoma, hair tuft). Confirmation is by MRI of the spine."
+  },
+  {
+    "id": "q-uw-20443",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 75-year-old man is brought to the office by his daughter due to increasing confusion over the past 3 weeks. His daughter noticed that he has had trouble writing, using a computer, and keeping track of his calendar. The patient's wife died 4 weeks ago and since then, he has not been sleeping well and taking doxylamine at bedtime has not helped much. Other medical conditions include chronic obstructive pulmonary disease and hypertension. The patient takes amlodipine and tiotropium. Temperature is 36.1 C (97 F), blood pressure is 140/90 mm Hg, pulse is 105/min, and respirations are 18/min. The patient is oriented to person but not to time or place. Extraocular movements are normal. Lungs are clear to auscultation bilaterally. Reflexes are 2+ and strength is normal. His gait is ataxic and his speech is dysarthric. Complete blood count, urinalysis, and serum chemistries are normal. CT scan of the head reveals mild cortical atrophy but is otherwise normal. Which of the following is the most appropriate next step in management?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Add donepezil therapy",
+      "B": "Add selective serotonin reuptake inhibitor therapy",
+      "C": "Discontinue doxylamine",
+      "D": "Electroencephalogram",
+      "E": "Pre- and post-lumbar puncture gait assessment",
+      "F": "Transfer to an assisted living facility"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Donepezil treats Alzheimer disease, which is characterized by insidious memory decline over years, not subacute cognitive and motor deterioration over 3 weeks.",
+      "B": "SSRIs treat depression, but this patient's subacute confusion, tachycardia, ataxia, and dysarthria are driven by cumulative drug toxicity rather than primary bereavement depression.",
+      "D": "EEG evaluates nonconvulsive seizures, which is unwarranted when clear medication-induced anticholinergic toxicity is present.",
+      "E": "High-volume LP evaluates normal pressure hydrocephalus, which presents insidiously over months to years with ventriculomegaly on CT, not sudden onset following an over-the-counter sleep aid.",
+      "F": "Institutional transfer is inappropriate before addressing reversible medication-induced delirium and toxicity."
+    },
+    "generalExplanation": "This elderly patient developed subacute confusion, tachycardia, dysarthria, and gait ataxia following the initiation of over-the-counter doxylamine (a first-generation sedating antihistamine with potent anticholinergic properties), combined with the inhaled anticholinergic bronchodilator tiotropium.\n\nElderly patients are uniquely susceptible to central and peripheral anticholinergic toxicity due to age-related reductions in central cholinergic transmission, altered drug metabolism, and increased blood-brain barrier permeability. Cumulative anticholinergic load can produce chronic toxicity presenting with memory failure, delirium, ataxia, and dysarthria, even without the florid autonomic signs seen in acute overdose. The immediate, definitive management step is discontinuation of doxylamine, which typically leads to complete cognitive and motor recovery.",
+    "explanationImages": [],
+    "educationalObjective": "First-generation antihistamines (eg, doxylamine, diphenhydramine) have potent anticholinergic properties. In elderly patients, cumulative anticholinergic burden can precipitate chronic anticholinergic toxicity presenting with acute or subacute confusion, memory impairment, ataxia, and dysarthria. Management is drug discontinuation."
+  },
+  {
+    "id": "q-uw-4657",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 62-year-old man is brought to the emergency department due to left-sided weakness, numbness, and difficulty speaking. He was walking his dog about an hour ago when he developed sudden-onset weakness of the left arm. The patient did not lose consciousness. He has hypertension and type 2 diabetes mellitus but no other medical or surgical history. Blood pressure is 170/96 mm Hg, and pulse is 76/min and regular. On examination, his speech is dysarthric and he has left facial droop. The patient's left upper extremity muscle strength is 2/5 and left lower extremity strength is 5/5. Left hemisensory loss is present. He has impaired attention and lack of awareness for stimuli on the left side of space. Finger-stick glucose level is 270 mg/dL, and noncontrast CT scan of the head reveals no abnormalities. Recent laboratory studies performed at his primary care provider's office show serum LDL of 152 mg/dL and hemoglobin A1c of 7.9%. Which of the following therapies is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Insulin infusion",
+      "B": "Intravenous alteplase",
+      "C": "Intravenous heparin",
+      "D": "Intravenous labetalol",
+      "E": "Oral aspirin"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Hyperglycemia should be corrected with subcutaneous insulin (target 140-180 mg/dL), but insulin administration must never delay emergency intravenous thrombolysis.",
+      "C": "Parenteral anticoagulation (heparin) is not indicated in acute ischemic stroke due to significant risk of hemorrhagic transformation without functional benefit.",
+      "D": "Antihypertensive therapy (labetalol) is required prior to thrombolysis only if blood pressure exceeds 185/110 mm Hg; his blood pressure is 170/96 mm Hg, so BP lowering is unnecessary.",
+      "E": "Aspirin is initiated 24 hours after thrombolytic therapy; giving aspirin immediately precludes or delays alteplase and increases bleeding risk."
+    },
+    "generalExplanation": "This patient presents with acute ischemic stroke in the distribution of the right (nondominant) middle cerebral artery (MCA), characterized by contralateral hemiparesis (face and arm > leg), contralateral hemisensory loss, and hemineglect. Noncontrast head CT excludes intracerebral hemorrhage.\n\nIntravenous thrombolysis with alteplase (tissue plasminogen activator, tPA) is the standard of care for acute ischemic stroke with disabling neurological deficits when administered within 4.5 hours of symptom onset. Because this patient presented within 1 hour of symptom onset and has blood pressure <185/110 mm Hg and no contraindications, intravenous alteplase should be administered immediately to salvage the ischemic penumbra and minimize long-term disability.",
+    "explanationImages": [],
+    "educationalObjective": "Intravenous alteplase is indicated for acute ischemic stroke with disabling deficits presenting within 4.5 hours of symptom onset, provided that noncontrast head CT excludes hemorrhage and blood pressure is maintained below 185/110 mm Hg."
+  }
+]

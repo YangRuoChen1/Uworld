@@ -1,0 +1,284 @@
+[
+  {
+    "id": "q-uw-16082",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 69-year-old woman is brought to the office by her husband due to forgetfulness. The patient is a retired law professor who taught classes until a year ago when she began to have difficulty remembering lesson plans. Since then, her memory has worsened, and she has gotten lost during her normal neighborhood walk on more than one occasion. Her husband has taken over responsibility for all cooking and cleaning; moreover, the patient is unable to drive or use public transportation on her own. Medical history is significant for hypertension and type 2 diabetes mellitus for which she takes lisinopril and metformin. The patient has no family history of memory problems. Temperature is 36.7 C (98.1 F), blood pressure is 134/74 mm Hg, pulse is 72/min, and respirations are 14/min. She scores a 22/30 on Montreal Cognitive Assessment (normal: >=26). There are no focal neurologic deficits. Which of the following is the most appropriate next step in evaluation of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebrospinal fluid testing",
+      "B": "Electroencephalogram",
+      "C": "Folate level",
+      "D": "Syphilis testing",
+      "E": "Vitamin B12 level",
+      "F": "Vitamin D level"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "CSF testing is indicated for suspected CNS infection, rapidly progressive dementia (eg, CJD 14-3-3 protein/RT-QuIC), or leptomeningeal metastasis.",
+      "B": "EEG evaluates nonconvulsive status epilepticus or periodic sharp waves in CJD, not routine insidious dementia.",
+      "C": "Folate deficiency is tested selectively in patients with alcoholism, severe malnutrition, or malabsorption, but is not part of standard initial screening.",
+      "D": "Syphilis testing (RPR/VDRL) is indicated selectively for high-risk sexual behavior or atypical neurological presentations.",
+      "F": "Vitamin D deficiency testing is selective for metabolic bone disease or chronic malabsorption, not routine dementia workup."
+    },
+    "generalExplanation": "This patient meets criteria for dementia (major neurocognitive disorder) based on insidious, progressive cognitive decline affecting memory and executive function, resulting in functional dependence for instrumental and basic activities of daily living.\n\nBefore confirming a primary neurodegenerative dementia (such as Alzheimer disease), all patients must undergo routine evaluation for potentially reversible metabolic and systemic causes. Standard initial laboratory screening includes:\n1. Serum vitamin B12\n2. Thyroid-stimulating hormone (TSH)\n3. Complete blood count (CBC)\n4. Complete metabolic panel (CMP)\n5. Neuroimaging (noncontrast head CT or brain MRI)\nSelective testing (folate, syphilis serology, HIV, Lyme, CSF, EEG) is reserved for patients with specific clinical risk factors or atypical features.",
+    "explanationImages": [],
+    "educationalObjective": "Routine initial laboratory evaluation for suspected dementia includes serum vitamin B12, TSH, CBC, complete metabolic panel, and brain neuroimaging (CT or MRI) to rule out potentially reversible secondary causes of cognitive decline."
+  },
+  {
+    "id": "q-uw-18417",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 56-year-old woman comes to the emergency department due to a severe headache that has not responded to over-the-counter analgesics. The generalized headache began 4 hours ago and rapidly worsened over several minutes. The patient has also experienced photophobia and an episode of vomiting and now reports vague discomfort in her neck and back. She has occasionally had headaches that were not as severe. She has a history of hypertension and takes lisinopril. The patient does not use tobacco, alcohol, or illicit drugs. She is an architect and reports high stress due to a large new project. Temperature is 37.3 C (99.1 F), blood pressure is 150/84 mm Hg, pulse is 94/min and regular, and respirations are 16/min. Pulse oximetry is 98% on room air. The pupils are equal and reactive. Extraocular movements and funduscopy are normal. There is mild neck stiffness, but muscle strength, deep tendon reflexes, and sensation are normal in the bilateral upper and lower extremities. Babinski sign is absent. The remainder of the examination shows no abnormalities. Noncontrast CT scan of the head is normal. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Lumbar puncture",
+      "B": "MRI of the brain",
+      "C": "Oxygen inhalation therapy",
+      "D": "Reassurance and nonsteroidal anti-inflammatory drugs",
+      "E": "Subcutaneous sumatriptan"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Brain MRI has comparable sensitivity to CT but takes significantly longer to acquire and can unacceptably delay life-saving intervention.",
+      "C": "High-flow oxygen treats acute cluster headache attacks (unilateral retro-orbital pain lasting 15-180 minutes with autonomic symptoms).",
+      "D": "Reassurance and NSAIDs treat tension headache, but thunderclap headache with meningismus requires definitive exclusion of subarachnoid hemorrhage.",
+      "E": "Sumatriptan aborts migraine attacks, which do not present with acute meningismus, and triptan-induced vasoconstriction is dangerous in active intracranial aneurysmal bleeding."
+    },
+    "generalExplanation": "This patient presents with a 'thunderclap' headache (abrupt onset reaching maximal intensity within minutes), vomiting, photophobia, and meningismus (neck stiffness and back discomfort), which is classic for spontaneous subarachnoid hemorrhage (SAH) secondary to a ruptured intracranial saccular (berry) aneurysm.\n\nWhile noncontrast head CT has a sensitivity exceeding 95% within the first 6 hours of bleeding, false negatives can occur due to small-volume hemorrhage, severe anemia, or artifact. Therefore, in any patient with high clinical suspicion of SAH and a negative head CT, lumbar puncture is mandatory. Diagnostic CSF findings include elevated opening pressure, persistent elevated RBC counts in serial tubes (ruling out traumatic tap), and xanthochromia (pink-yellow supernatant from bilirubin degradation, typically appearing >6 hours after bleed).",
+    "explanationImages": [],
+    "educationalObjective": "In patients presenting with a sudden-onset thunderclap headache concerning for subarachnoid hemorrhage, a normal noncontrast head CT must be followed immediately by a lumbar puncture to evaluate for elevated opening pressure, red blood cells, and xanthochromia."
+  },
+  {
+    "id": "q-uw-16473",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 30-year-old woman comes to the emergency department due to worsening, bilateral lower extremity weakness and numbness for the past 4 days. She has had no fever, headache, or back pain, but she had an incident of urinary incontinence today. The patient has no other medical conditions and takes no medications. She does not use tobacco, alcohol, or illicit drugs. Temperature is 37 C (98.6 F), blood pressure is 110/60 mm Hg, pulse is 72/min, and respirations are 16/min. On physical examination, the patient is alert and oriented with normal comprehension and speech. The pupils are equal and reactive, and there is no facial weakness. Upper extremity muscle strength is normal with normal reflexes, but both legs are diffusely weak. Bilateral lower extremity deep tendon reflexes are increased with extensor plantar response. Sensation to pinprick is decreased below the level of the umbilicus, and vibratory sensation is absent in the toes. Which of the following is the most likely cause of this patient's current symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Autoimmune demyelination of peripheral nerves",
+      "B": "Compression of cauda equina nerve roots",
+      "C": "Embolic occlusion of the anterior spinal artery",
+      "D": "Segmental inflammation of the spinal cord",
+      "E": "Vitamin B12 nutritional deficiency"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Guillain-Barré syndrome involves peripheral nerves, causing ascending flaccid paralysis with hyporeflexia/areflexia, without an anatomical sensory level or upper motor neuron signs.",
+      "B": "Cauda equina syndrome causes severe lower back/radicular pain, saddle anesthesia (S2-S5), and lower motor neuron signs (hyporeflexia, flaccid weakness). Sensory loss at the umbilicus (T10) localizes to the thoracic spinal cord.",
+      "C": "Anterior spinal artery infarction spares the dorsal columns; vibration and proprioception would remain intact.",
+      "E": "Subacute combined degeneration from B12 deficiency is an insidious, chronic condition occurring over months to years rather than over 4 days."
+    },
+    "generalExplanation": "This patient has acute transverse myelitis (TM), an immune-mediated demyelinating inflammatory disorder that affects a cross-section of >=1 contiguous spinal cord segments (most commonly in the thoracic cord). It often develops post-infectiously or in association with multiple sclerosis.\n\nThe classic clinical presentation of transverse myelitis consists of:\n1. Bilateral motor weakness progressing from flaccid (spinal shock) to spastic paraparesis with hyperreflexia and upgoing Babinski signs\n2. Sensory impairment affecting all modalities (spinothalamic pain/temperature and dorsal column vibration/proprioception) with a distinct, discrete sensory level (eg, T10 at the umbilicus)\n3. Autonomic dysfunction, including urinary retention or overflow incontinence\nSpinal MRI confirms the diagnosis by showing intramedullary T2 hyperintensity and enhancement without extrinsic structural compression. First-line therapy is high-dose intravenous corticosteroids, with plasmapheresis for refractory disease.",
+    "explanationImages": [],
+    "educationalObjective": "Transverse myelitis is characterized by acute or subacute immune-mediated segmental spinal cord inflammation, resulting in bilateral spastic paraparesis, autonomic bowel/bladder dysfunction, and loss of all sensory modalities below a discrete spinal sensory level."
+  },
+  {
+    "id": "q-uw-2361",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 4-year-old boy is brought to the office by his parents due to behavioral difficulties at preschool. The patient's teacher has concerns that his speech is difficult to understand and that he hits other children for no clear reason. His mother says, \"He is generally a happy kid but gets easily upset sometimes. It takes a long time to calm him down.\" The patient was born at term with no complications and has no significant medical history. Family history includes autism spectrum disorder in his older brother. Vital signs are within normal limits, and his height and weight track at the 60th percentile. On physical examination, the patient has deep-set eyes and large ears. He is highly active, banging a set of toy trains on the floor. The patient does not make eye contact or answer questions directly and mumbles 1- or 2-word phrases. Which of the following is most likely to establish an underlying diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Autism Diagnostic Observation Schedule",
+      "B": "FMR1 DNA analysis",
+      "C": "Karyotype analysis",
+      "D": "MRI of the head",
+      "E": "Serum concentration of phenylalanine"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "ADOS is a behavioral diagnostic instrument for autism spectrum disorder, but it cannot identify the underlying genetic cause of dysmorphic facies and multi-sibling developmental delay.",
+      "C": "Standard karyotyping identifies large chromosomal aneuploidies or rearrangements (eg, Down syndrome) but lacks resolution to detect trinucleotide repeat expansions.",
+      "D": "Brain MRI is not part of the initial routine workup for developmental delay without focal neurological deficits or intractable epilepsy.",
+      "E": "Phenylketonuria causes severe intellectual disability, microcephaly, fair pigmentation, and musty body odor, which presents in infancy."
+    },
+    "generalExplanation": "This patient's combination of significant speech delay (1- to 2-word phrases at age 4), behavioral difficulties (poor attention, irritability, hyperactivity), features of autism spectrum disorder (poor eye contact, social communication deficits), and characteristic dysmorphic facies (large ears, elongated face, deep-set eyes), along with an older brother affected by autism, is classic for fragile X syndrome (FXS).\n\nFXS is the leading inherited cause of intellectual disability and autism. It is caused by an unstable expansion of CGG trinucleotide repeats (>200) in the 5' untranslated region of the FMR1 gene on the X chromosome, leading to hypermethylation and transcriptional silencing of the fragile X mental retardation protein (FMRP). Diagnosis is definitively confirmed by FMR1 DNA analysis using PCR and Southern blot.",
+    "explanationImages": [],
+    "educationalObjective": "Fragile X syndrome is an X-linked dominant trinucleotide repeat (CGG) expansion disorder characterized by developmental delay, intellectual disability, autistic behaviors, ADHD, and dysmorphic features (long face, large ears, macroorchidism). Confirmation is made by FMR1 DNA analysis."
+  },
+  {
+    "id": "q-uw-19267",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 31-year-old man comes to the office for follow-up. Four weeks ago, the patient was diagnosed with sinusitis-associated frontal lobe abscess. Culture of the purulent material obtained by stereotactic needle aspiration grew multiple bacteria, including several species of Streptococcus and Bacteroides. He is receiving ceftriaxone and metronidazole therapy and his prior symptoms of headache and fever have resolved. The patient began experiencing numbness and a burning sensation in his toes several days ago that has progressed to involve the proximal feet. He also reports similar symptoms in his fingertips but has had no muscle weakness or back pain. He has no other chronic medical conditions and does not use tobacco, alcohol, or illicit drugs. Vital signs are within normal limits. Physical examination shows loss of pain, touch, and vibration sensations in the feet and bilateral fingers. Deep tendon reflexes and motor strength are normal. Blood cell counts and serum chemistry studies are within normal limits. Which of the following is the most appropriate next step in management of this patient's current symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Discontinue metronidazole",
+      "B": "Obtain serum protein electrophoresis",
+      "C": "Order MRI of the spine",
+      "D": "Perform lumbar puncture"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Serum protein electrophoresis evaluates monoclonal gammopathies (multiple myeloma, AL amyloidosis), which are unlikely in a previously healthy 31-year-old.",
+      "C": "Spinal cord compression produces a distinct sensory level and upper motor neuron signs rather than length-dependent distal symmetric glove-and-stocking deficits.",
+      "D": "Lumbar puncture evaluates acute inflammatory demyelinating polyneuropathy (Guillain-Barré), which presents with ascending motor paralysis and areflexia, not pure sensory distal axonal neuropathy."
+    },
+    "generalExplanation": "This patient has developed an acute, length-dependent, distal symmetric sensorimotor axonal polyneuropathy characterized by burning paresthesias and numbness in the toes and fingertips ('stocking-glove' distribution).\n\nProlonged therapy with metronidazole (typically >4 weeks, as required for intracranial abscesses) is a well-established cause of dose- and duration-dependent peripheral neurotoxicity. Metronidazole diffuses readily into neural tissue and inhibits neuronal protein synthesis, causing axonal injury. The most critical management step is prompt discontinuation of metronidazole, which typically leads to stabilization and gradual resolution of symptoms.",
+    "explanationImages": [],
+    "educationalObjective": "Metronidazole can cause a dose- and duration-dependent peripheral neuropathy presenting as distal, symmetric, burning paresthesias and numbness in a stocking-glove distribution. Management requires immediate discontinuation of the drug."
+  },
+  {
+    "id": "q-uw-19320",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 36-year-old previously healthy man comes to the office due to neck pain. Two days ago, the patient was lifting weights when he suddenly experienced neck and upper back pain. He has had constant dull pain and intermittent sharp pain with neck movements that radiates to his left hand. He also reports a tingling sensation in the left hand but has had no weakness or bladder or bowel dysfunction. Vital signs are within normal limits. Physical examination shows cervical paraspinal muscle spasm. There is mildly decreased sensation to pinprick in the left fourth and fifth digits. There are no other sensory deficits and no upper or lower extremity muscle weakness is present. Deep tendon reflexes are normal throughout. Which of the following is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cervical spine x-ray",
+      "B": "Epidural corticosteroid injection",
+      "C": "MRI of the cervical spine",
+      "D": "Provocative activity avoidance and NSAIDs",
+      "E": "Urgent neurosurgical evaluation"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Plain x-rays evaluate bony trauma or alignment, but they cannot assess soft-tissue intervertebral disc herniation and are unnecessary in uncomplicated acute radiculopathy.",
+      "B": "Epidural steroid injections are second-line interventions reserved for patients with severe refractory pain who fail conservative medical management.",
+      "C": "MRI of the cervical spine is reserved for patients with progressive motor weakness, signs of myelopathy (hyperreflexia, spasticity, incontinence), or red flags (fever, history of malignancy).",
+      "E": "Neurosurgical decompression is indicated for progressive motor deficits, intractable pain refractory to conservative therapy, or spinal cord compression."
+    },
+    "generalExplanation": "This patient presents with acute cervical radiculopathy (specifically C8 nerve root involvement, which supplies the medial hand/digits 4 and 5) precipitated by acute mechanical loading during weightlifting. Most acute radiculopathies are caused by posterolateral cervical intervertebral disc herniation.\n\nIn the absence of progressive neurological deficits (such as motor weakness), signs of compressive cervical myelopathy, or 'red flags' (history of malignancy, fever, IV drug use), acute cervical radiculopathy is benign and self-limiting in the majority of patients. Conservative initial therapy consists of NSAIDs, short-term activity modification (avoiding provocative neck extension/torsion), and maintaining gentle mobility.",
+    "explanationImages": [],
+    "educationalObjective": "Uncomplicated acute cervical radiculopathy with mild, nonprogressive sensory symptoms and preserved motor strength is managed conservatively with NSAIDs and avoidance of provocative activities. Advanced imaging (MRI) is reserved for progressive motor deficits or myelopathy."
+  },
+  {
+    "id": "q-uw-3712",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 62-year-old man comes to the emergency department for evaluation of weakness. Five hours ago, he experienced abrupt-onset weakness in his left arm and leg. The symptoms improved over the next 30 minutes and he had no associated blurry vision, slurred speech, or facial drooping. However, the patient states he is still not \"back to normal.\" He has never experienced similar symptoms. Medical history is significant for hypertension, hyperlipidemia, and osteoarthritis. The patient takes no medications. He has a 25-pack-year history but quit smoking 5 years ago. Blood pressure is 160/96 mm Hg and pulse is 69/min and regular. There are no carotid bruits. Neurologic examination shows mild, left-sided pronator drift. The remainder of the neurologic examination is normal. CT scan of the head without contrast shows no hemorrhage or evidence of acute ischemic infarction. CT angiography of the head and neck does not demonstrate a large vessel occlusion. ECG shows sinus rhythm. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Antiplatelet agent",
+      "B": "Oral anticoagulation",
+      "C": "Parenteral anticoagulation",
+      "D": "Parenteral antihypertensive agent",
+      "E": "Systemic thrombolytic therapy"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Oral anticoagulation is indicated for cardioembolic stroke secondary to atrial fibrillation; his ECG demonstrates normal sinus rhythm.",
+      "C": "Parenteral anticoagulation (heparin) is not indicated in acute ischemic stroke due to a high risk of hemorrhagic transformation without clear clinical benefit.",
+      "D": "In patients not receiving thrombolytic therapy, permissive hypertension (up to 220/120 mm Hg) is maintained to maximize perfusion through collateral vessels to the ischemic penumbra.",
+      "E": "Intravenous thrombolysis (alteplase) is approved only within 4.5 hours of symptom onset; this patient presents at 5 hours and is beyond the therapeutic window."
+    },
+    "generalExplanation": "This patient presents with an acute ischemic stroke (persistent pronator drift) confirmed by the absence of hemorrhage on noncontrast CT. Because the patient presented 5 hours after symptom onset, he is outside the 4.5-hour therapeutic window for intravenous thrombolysis (tPA). Furthermore, CT angiography rules out a large vessel occlusion (LVO), precluding mechanical thrombectomy.\n\nFor patients with acute ischemic stroke who are ineligible for reperfusion therapy, immediate administration of antiplatelet therapy (aspirin, or dual antiplatelet therapy with aspirin plus clopidogrel for minor stroke) is the standard of care to prevent early recurrent stroke. Blood pressure should be managed with permissive hypertension (up to 220/120 mm Hg).",
+    "explanationImages": [],
+    "educationalObjective": "Patients with acute ischemic stroke who are ineligible for thrombolytic therapy (presenting >4.5 hours from onset) and mechanical thrombectomy should immediately receive antiplatelet therapy (eg, aspirin) to reduce the risk of early stroke recurrence."
+  },
+  {
+    "id": "q-uw-3550",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 5-year-old boy is brought to the clinic for a routine examination. The patient is doing well at his preschool and is making friends. His parents report that he has been sleeping longer than usual, often into the afternoon on weekends. They think it is because he is staying up late watching television, and they note he is moving closer to the screen because he cannot see the images clearly. Now, when he wakes up in the morning, the patient has a headache throughout his head that does not resolve with over-the-counter acetaminophen. The patient's father has obstructive sleep apnea and wears a continuous positive airway pressure mask at night. Height is at the 5th percentile and weight is at the 25th percentile. Temperature is 36.7 C (98 F). Visual acuity is decreased bilaterally. The cranial nerves are intact. Cardiopulmonary examination is normal. Skin reveals numerous freckles in the axillae and 8 flat, small, uniformly hyperpigmented macules on the trunk. Which of the following is the best next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Audiometry",
+      "B": "Brain and orbital MRI",
+      "C": "Electroencephalogram",
+      "D": "Erythrocyte sedimentation rate",
+      "E": "Lumbar puncture",
+      "F": "Polysomnography",
+      "G": "Urine toxicology"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Audiometry screens for vestibular schwannomas in neurofibromatosis type 2 (NF2), which is not characterized by café-au-lait macules or axillary freckles.",
+      "C": "EEG evaluates suspected epileptic seizures, not space-occupying intracranial tumors.",
+      "D": "ESR is a nonspecific inflammatory marker and will not identify a structural intracranial neoplasm.",
+      "E": "Lumbar puncture carries a risk of life-threatening brain herniation in patients with an undiagnosed intracranial mass causing elevated intracranial pressure.",
+      "F": "Polysomnography diagnoses sleep apnea, but it does not account for bilateral visual loss and signs of intracranial tumor.",
+      "G": "Toxicology screens acute ingestion, not subacute progressive visual deterioration and morning headaches."
+    },
+    "generalExplanation": "This child has neurofibromatosis type 1 (NF1), demonstrated by >=6 café-au-lait macules and axillary freckling (Crowe sign). The development of morning headaches (worse when supine due to overnight rise in intracranial pressure) and progressive visual impairment in a child with NF1 is highly concerning for an optic pathway glioma (OPG), the most common intracranial tumor in NF1.\n\nOPGs are low-grade pilocytic astrocytomas that arise along the optic nerve, chiasm, or tract. They can compress the optic pathways to cause decreased visual acuity, visual field deficits, proptosis, and obstructive hydrocephalus. Brain and orbital MRI with contrast is the gold standard diagnostic modality.",
+    "explanationImages": [],
+    "educationalObjective": "Children with neurofibromatosis type 1 who develop signs of elevated intracranial pressure (morning headaches) and decreased visual acuity must be evaluated promptly with MRI of the brain and orbits for optic pathway glioma."
+  },
+  {
+    "id": "q-uw-4464",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 44-year-old woman comes to the office with muscle weakness over the past several months. She has difficulty combing her hair and, occasionally, difficulty holding up her head, particularly after prolonged sitting or standing. The patient has had no difficulty walking or getting up from a chair. She has also had 2 episodes of double vision while driving home from work. The patient takes rosuvastatin for hyperlipidemia and lisinopril for hypertension. Blood pressure is 142/84 mm Hg and pulse is 76/min. Neurologic examination shows mild right ptosis, symmetric proximal muscle weakness in the upper extremities, and weakness in the head extensors. Muscle bulk and tone are normal and there is no muscle tenderness. Which of the following is the most likely site of the pathology in this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Motor cortex",
+      "B": "Motor end plate",
+      "C": "Motor neuron axons",
+      "D": "Motor neuron cell body",
+      "E": "Muscle fascicles",
+      "F": "Subcortical nuclei",
+      "G": "White matter tracts"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Motor cortex (upper motor neuron) lesions cause spastic paresis, hyperreflexia, and Babinski sign.",
+      "C": "Peripheral motor axonal neuropathies cause distal weakness, muscle wasting, and areflexia.",
+      "D": "Anterior horn cell degeneration (ALS, SMA) causes combined upper and lower motor neuron signs with fasciculations.",
+      "E": "Myopathies affect muscle fascicles, producing symmetric proximal weakness and muscle enzyme (CK) elevation without fluctuating fatigability, ptosis, or diplopia.",
+      "F": "Basal ganglia disorders produce extrapyramidal movement disorders (chorea, resting tremor, dystonia, bradykinesia).",
+      "G": "Demyelination of CNS white matter tracts causes multiple sclerosis, which typically presents with episodic sensory/motor deficits disseminated in space and time rather than diurnal fatigable neuromuscular weakness."
+    },
+    "generalExplanation": "This patient presents with fluctuating, fatigable weakness involving extraocular muscles (diplopia, ptosis), bulbar/neck muscles (difficulty holding up the head), and proximal upper extremities (combing hair), with symptoms worsening with repetitive activity and toward the end of the day—a classic presentation of myasthenia gravis (MG).\n\nMG is an autoimmune disorder targeting acetylcholine receptors (AChR) on the postsynaptic motor end plate at the neuromuscular junction. Circulating autoantibodies lead to complement-mediated destruction and internalization of AChRs, reducing the safety factor of neuromuscular transmission and producing fatigable muscle weakness.",
+    "explanationImages": [],
+    "educationalObjective": "Myasthenia gravis is caused by autoantibodies directed against acetylcholine receptors at the postsynaptic motor end plate of the neuromuscular junction, leading to fluctuating, fatigable ocular, bulbar, neck, and proximal limb weakness."
+  },
+  {
+    "id": "q-uw-3643",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "A 38-year-old woman comes to the emergency department due to a 3-day history of left arm and leg numbness. She also reports urinary urgency and incontinence but has no fever or dysuria. The patient was diagnosed with multiple sclerosis 10 years ago after an episode of right eye vision loss. She was taking disease-modifying therapy but stopped after being symptom-free for several years. Temperature is 37 C (98.6 F), blood pressure is 130/80 mm Hg, and pulse is 88/min. Sensation to light touch and pin prick is diminished on the left side. Neuroimaging reveals new areas of demyelination compared to previous MRIs. Which of the following is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Baclofen",
+      "B": "Cyclophosphamide",
+      "C": "Gabapentin",
+      "D": "Glucocorticoids",
+      "E": "Interferon beta",
+      "F": "Intravenous immunoglobulins",
+      "G": "Plasmapheresis"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Baclofen is an oral GABA-B agonist used to manage chronic muscle spasticity in MS; it does not treat acute inflammatory flares.",
+      "B": "Cyclophosphamide is an alkylating agent with high toxicity that is not indicated for acute MS relapses.",
+      "C": "Gabapentin treats neuropathic pain (eg, trigeminal neuralgia or allodynia) in MS, but does not accelerate recovery from an acute demyelinating attack.",
+      "E": "Interferon beta and glatiramer acetate are disease-modifying therapies for long-term reduction in relapse frequency; they have no role in acute relapse management.",
+      "F": "Intravenous immunoglobulins lack demonstrated efficacy in acute MS flares.",
+      "G": "Plasma exchange (plasmapheresis) is reserved for severe acute relapses that fail to respond to initial high-dose corticosteroid therapy."
+    },
+    "generalExplanation": "This patient has an acute multiple sclerosis (MS) relapse/exacerbation, defined as new or worsening neurological deficits lasting >=24 hours in the absence of fever or infection, corroborated by new demyelinating plaques on MRI.\n\nFirst-line therapy for acute, disabling MS exacerbations is high-dose intravenous glucocorticoids (methylprednisolone 500-1,000 mg daily for 3-5 days), which reduces CNS inflammation, restores blood-brain barrier integrity, and accelerates neurological recovery. Plasmapheresis is reserved as second-line rescue therapy for patients refractory to corticosteroids.",
+    "explanationImages": [],
+    "educationalObjective": "Acute, disabling relapses of multiple sclerosis are treated with high-dose intravenous glucocorticoids (eg, methylprednisolone). Plasmapheresis is reserved for relapses refractory to corticosteroid therapy."
+  }
+]

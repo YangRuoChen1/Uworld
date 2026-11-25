@@ -1,0 +1,280 @@
+[
+  {
+    "id": "q-uw-17500",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Hard",
+    "stem": "A 45-year-old, previously healthy man comes to the office due to worsening extremity weakness and numbness. Three months ago, the patient began experiencing numbness and weakness in both feet that made it difficult to climb stairs or stand up from a seated position. Two weeks later, he noticed weakness of his grip strength bilaterally but had no difficulty lifting his arms. The muscle weakness has been slowly progressing, and the patient now has difficulty buttoning his clothes, turning doorknobs, and walking on a level surface. He does not use tobacco or illicit drugs and drinks alcohol occasionally. Vital signs are within normal limits. Physical examination shows weakness of the small muscles of the hands and the hip girdle muscles bilaterally. Deep tendon reflexes are diffusely diminished, and there is loss of vibration and position sensation in the toes bilaterally. Which of the following findings is most likely to be associated with this patient's current symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Autoantibodies against voltage-gated calcium channel",
+      "B": "Decreased peripheral nerve conduction velocity",
+      "C": "Demyelinating plaques in the brain and spinal cord",
+      "D": "Increased serum methylmalonic acid level",
+      "E": "Inflammatory infiltrates and necrosis of myofibers"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Lambert-Eaton myasthenic syndrome results from autoantibodies against voltage-gated calcium channels and often causes proximal muscle weakness with hyporeflexia. However, it usually does not affect distal muscles or cause sensation defects.",
+      "C": "Multiple sclerosis can cause a variety of neurologic deficits due to demyelinating plaques in the brain and spinal cord. However, because the plaques are located in the CNS, findings are rarely symmetric, and lower motor neuron signs (eg, hyporeflexia, atrophy) are typically absent.",
+      "D": "An increased serum methylmalonic acid level is diagnostic for vitamin B12 deficiency, which can cause subacute combined degeneration (SCD). Although dorsal column damage in SCD results in diminished vibration and position sensation, spastic paresis with hyperreflexia and ataxia are also typically present.",
+      "E": "Inflammatory myopathies (eg, polymyositis) result from inflammatory infiltrates causing necrosis of myofibers. In contrast to CIDP, proximal muscles in inflammatory myopathies are classically much more affected than distal muscles, and sensation deficits and hyporeflexia are unexpected."
+    },
+    "generalExplanation": "This patient has progressive muscle weakness affecting both proximal (eg, standing up) and distal (eg, buttoning shirts) muscles, accompanied by lower motor neuron signs (eg, hyporeflexia, muscle atrophy) and sensation deficits. These findings are consistent with chronic inflammatory demyelinating polyneuropathy (CIDP), an acquired, immune-mediated disorder characterized by the demyelination of peripheral nerves and nerve roots.\n\nIn contrast to many other polyneuropathies (eg, diabetic), CIDP is not length dependent. Therefore, it classically causes both proximal (eg, hip girdle) and distal (eg, hand) muscle weakness. Symptoms develop over >8 weeks, distinguishing it from acute inflammatory demyelinating polyneuropathy. Motor symptoms predominate, but distal sensory loss (eg, in the toes) can also occur; vibration and position sense are often preferentially affected due to greater involvement of large, thickly myelinated fibers. In addition, because CIDP involves peripheral nerves, lower motor neuron signs (eg, hyporeflexia, atrophy) may be seen.\n\nDiagnosis requires evidence of demyelination, either through nerve conduction studies showing decreased peripheral nerve conduction velocity or peripheral nerve biopsy showing histologic evidence of segmental demyelination. Treatment focuses on decreasing inflammation (eg, glucocorticoids, intravenous immunoglobulin).",
+    "explanationImages": [],
+    "educationalObjective": "Chronic inflammatory demyelinating polyneuropathy causes immune-mediated destruction of myelin in a non-length dependent manner; this results in progressive weakness of both proximal and distal muscles, sometimes with distal sensory loss."
+  },
+  {
+    "id": "q-uw-18517",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 45-year-old previously healthy man is brought to the emergency department due to acute-onset headache. It began 30 minutes ago when the patient was using the bathroom and is severe, generalized, and constant. He also has had nausea and has become progressively lethargic. The patient takes no medications. Temperature is 37.2 C (98.9 F), blood pressure is 150/90 mm Hg, pulse is 98/min, and respirations are 18/min. On physical examination, the patient appears somnolent with closed eyes. When he is instructed to open his eyes, there is obvious right-sided ptosis, and the right pupil is bigger than the left. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Carotid artery dissection",
+      "B": "Cavernous sinus thrombosis",
+      "C": "Cluster headache",
+      "D": "Lateral medullary syndrome",
+      "E": "Subarachnoid hemorrhage"
+    },
+    "answer": "E",
+    "explanations": {
+      "A": "Carotid artery dissection typically presents with unilateral headache and ipsilateral Horner syndrome. Generalized headache is not typical, and pupillary dilation is not expected (Horner syndrome causes pupillary constriction).",
+      "B": "Cavernous sinus thrombosis generally presents with fever, headache, and periorbital swelling. In addition, there is usually palsy of CNs III, IV, and VI (all 3 nerves) resulting in ophthalmoplegia.",
+      "C": "Cluster headache usually involves severe unilateral headache and ipsilateral signs of parasympathetic hyperactivity. Ptosis is common, but pupillary constriction (rather than dilation) is expected.",
+      "D": "Lateral medullary syndrome (ie, Wallenberg syndrome) results from a stroke affecting the vertebral artery or posterior inferior cerebellar artery. Patients have contralateral sensory deficits of the extremities and ipsilateral sensory deficits of the face, often with Horner syndrome."
+    },
+    "generalExplanation": "This patient's sudden onset of severe headache with an associated oculomotor nerve palsy is highly suggestive of subarachnoid hemorrhage (SAH) due to a ruptured saccular aneurysm. In addition to acute-onset, severe headache, patients with SAH commonly have vomiting, photophobia, neck stiffness, and lethargy. Neurologic deficits are present in approximately 60% of patients at the time of presentation.\n\nThe arterial tree at the base of the brain is in proximity to many cranial nerve (CN) origins; therefore, certain isolated CN palsies can be a sign of a compressing aneurysm in a specific location:\n• Oculomotor nerve (CN III) palsy can involve pupillary dilation due to loss of parasympathetic innervation, as well as ptosis and down and out eye positioning due to loss of somatic innervation. Full or partial oculomotor nerve palsy suggests an enlarging or ruptured aneurysm of the adjacent posterior communicating artery.\n• In a similar manner, compression of the optic nerve (CN II) by an aneurysm of the internal carotid or anterior communicating artery can cause unilateral vision loss or bitemporal hemianopsia.\n• Less commonly, a trochlear (CN IV) or abducens (CN VI) nerve palsy can result from an aneurysm affecting the superior cerebellar or anterior inferior cerebellar artery, respectively.\n\nManagement of a patient with sudden-onset, severe headache and a suggestive CN palsy should involve head CT scan with angiography to evaluate for active SAH or an enlarging aneurysm with impending rupture.",
+    "explanationImages": [],
+    "educationalObjective": "Isolated cranial nerve palsies can be suggestive of a ruptured or enlarging saccular aneurysm with active or impending subarachnoid hemorrhage. Isolated oculomotor nerve palsy can indicate an aneurysm of the posterior communicating artery."
+  },
+  {
+    "id": "q-uw-15653",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 42-year-old woman is evaluated in the postoperative care unit for sudden-onset tachycardia and dyspnea 15 minutes after surgery. The patient underwent a dilation and curettage for gestational trophoblastic diseases complicated by intraoperative bleeding that required 2 units of packed red blood cells. The bleeding was controlled, and the remainder of the procedure and subsequent extubation were uneventful. The patient has a 10-pack-year smoking history but no other medical conditions or prior surgeries. She takes no daily medications. Temperature is 37.8 C (100 F), blood pressure is 160/110 mm Hg, pulse is 134/min, and respirations are 38/min. The patient appears diaphoretic and has shallow, labored breathing. Cardiac examination shows sinus tachycardia with no rubs or murmurs. The lungs are clear to auscultation bilaterally. The abdomen has no marked distension, rebound, or guarding. Bilateral extremities have generalized rigidity. The Foley catheter is draining brown-appearing urine. Which of the following is the most likely diagnosis for this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Disseminated intravascular coagulation",
+      "B": "Malignant hyperthermia",
+      "C": "Neuroleptic malignant syndrome",
+      "D": "Pulmonary embolism",
+      "E": "Transfusion-related acute lung injury"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Disseminated intravascular coagulation can be due to ABO-incompatible blood transfusion but is most common with infection, malignancy, trauma, and obstetric complications. It generally presents with bleeding symptoms such as oozing from catheters, drains, or incisions. Muscle rigidity would be atypical.",
+      "C": "Neuroleptic malignant syndrome is often associated with rigidity, myoglobinuria, tachypnea, and tachycardia. However, it is caused by administration of a neuroleptic agent (eg, haloperidol, fluphenazine), not by surgery or surgical anesthesia. In addition, most cases progress over a few days, not minutes.",
+      "D": "Pulmonary embolism is a common complication of surgery and is frequently associated with sinus tachycardia and dyspnea. However, most cases occur >24 hours after surgery (not immediately) due to immobility. Furthermore, muscle rigidity and dark urine would be uncommon.",
+      "E": "Transfusion-related acute lung injury usually presents during or shortly after blood transfusion with acute dyspnea, hypoxia, and lung infiltrates. Muscle rigidity and a clear lung examination make this diagnosis less likely."
+    },
+    "generalExplanation": "This patient developed tachycardia, dyspnea, generalized muscle rigidity, and dark urine soon after general anesthesia, raising strong suspicion for malignant hyperthermia (MH). MH is an autosomal dominant or sporadic skeletal muscle receptor disorder marked by excessive calcium release following exposure to succinylcholine or a volatile anesthetic (eg, halothane).\n\nIn MH, sustained muscle contraction leads to:\n• hypercarbia (due to increased levels of cellular metabolism) that does not improve with increased minute ventilation (tachypnea)\n• sinus tachycardia\n• masseter/generalized muscle rigidity\n• myoglobinuria, as seen in this patient with dark urine (due to muscle breakdown)\n• hyperthermia (late manifestation due to the sustained contractions generating more energy than the body can dissipate; not usually present initially).\n\nMost cases arise shortly after induction or during maintenance of anesthesia, but symptoms can occur soon after anesthetic cessation. Urgent treatment with dantrolene (a skeletal muscle relaxant) and supportive care are required to prevent death.",
+    "explanationImages": [],
+    "educationalObjective": "Malignant hyperthermia is a genetic disorder associated with sudden-onset tachypnea, tachycardia, myoglobinuria, and masseter/generalized muscle rigidity following exposure to succinylcholine or a volatile anesthetic. Most cases arise during or shortly after induction, but symptoms are sometimes delayed until just after anesthesia cessation."
+  },
+  {
+    "id": "q-uw-4443",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 65-year-old woman comes to the physician complaining of periodic headaches in the temporal region, visual disturbances, and neck stiffness. Appropriate empiric medical therapy is initiated, and biopsy of a scalp artery confirms giant cell arteritis. The patient is very compliant with treatment. She comes to the physician 6 months later with slowly progressive muscle weakness. Her headaches have resolved, but she has difficulty climbing stairs and getting up from a chair. Her blood pressure is 120/70 mm Hg, pulse is 82/min, and respirations are 12/min. Physical examination shows 4/5 muscle power in her proximal lower extremities bilaterally. Her serum creatine kinase level and erythrocyte sedimentation rate are normal. Which of the following is the most likely cause of this patient's current complaints?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Drug-induced myopathy",
+      "B": "Inflammatory myositis",
+      "C": "Mononeuritis multiplex",
+      "D": "Multiple sclerosis",
+      "E": "Neuromuscular junction disease",
+      "F": "Polymyalgia rheumatica",
+      "G": "Symmetric polyneuropathy"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Inflammatory myositis can present with symmetric proximal muscle weakness. However, the muscles are generally tender on palpation and creatine kinase and ESR levels are usually elevated.",
+      "C": "Mononeuritis multiplex is usually seen in vasculitis and is caused by nerve damage in 2 or more nerves in separate parts of the body. Patients typically develop asymmetric peripheral nerve findings such as wrist or foot drop.",
+      "D": "Multiple sclerosis typically presents with 2 or more episodes of various neurologic symptoms with interval resolution rather than chronic/progressive symptoms.",
+      "E": "Neuromuscular junction diseases such as myasthenia gravis may cause proximal muscle weakness. However, they usually cause more upper- than lower-extremity disease and usually have associated ocular symptoms. Muscle weakness is typically fluctuating.",
+      "F": "Polymyalgia rheumatica can be seen in up to 50% of patients with temporal arteritis. Patients typically complain of aching and morning stiffness, with pain and decreased range of motion in the shoulders, neck, and hip girdle. Patients have objectively normal muscle strength, and the ESR is usually elevated >40 mm/hr.",
+      "G": "Symmetric polyneuropathies are characterized by paresthesias and predominantly distal, rather than proximal, muscle weakness."
+    },
+    "generalExplanation": "This patient has a history consistent with temporal arteritis (ie, giant cell arteritis), which is treated with high-dose oral glucocorticoids tapered slowly over a prolonged period. Many patients develop complications of therapy due to the long duration of treatment with supra-physiological doses of glucocorticoids. In addition to hyperglycemia and bone loss, treatment may be associated with glucocorticoid-induced myopathy (GIM). GIM is one of the most common types of drug-induced myopathy and typically occurs weeks to months after starting glucocorticoid therapy. Acute myopathy following very high-dose pulse glucocorticoid therapy can occur in critically ill patients but is not as common as chronic myopathy complicating long-term glucocorticoid use. The mechanism is thought to be due to increased muscle catabolism and decreased anabolism as a direct effect of glucocorticoids.\n\nThis risk of GIM rises with higher doses of glucocorticoids (generally >40 mg hydrocortisone daily or its equivalent). Patients typically develop painless proximal muscle weakness (lower extremity before upper extremity) that manifests as difficulty in daily activities such as getting up from a chair, climbing stairs, or brushing hair. There is no muscle inflammation or tenderness, and creatine kinase and erythrocyte sedimentation rate (ESR) are normal. Muscle power improves after discontinuation of glucocorticoids, but recovery can take weeks to months.",
+    "explanationImages": [],
+    "educationalObjective": "Glucocorticoid-induced myopathy is a complication of prolonged corticosteroid use. It is characterized by painless proximal muscle weakness (predominantly lower extremities) with normal serum creatine kinase and erythrocyte sedimentation rate levels."
+  },
+  {
+    "id": "q-uw-14457",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 36-year-old woman comes to the office due to headaches. Over the past 3 months the patient has had constant, bilateral headaches almost every day shortly after awakening. She has had intermittent episodes of migraines since adolescence, but her current headaches are more frequent though milder. The patient has been taking over-the-counter analgesics several times a day. She has had no focal weakness, numbness, or vision changes. The patient has no other medical conditions and does not use tobacco, alcohol, or illicit drugs. Vital signs are within normal limits. BMI is 24 kg/m2. Physical examination, including funduscopy and neurological examination, shows no abnormalities. Blood cell counts and serum chemistry studies are within normal limits. Which of the following is the most appropriate next step in management of this patient?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Advise to stop taking analgesics",
+      "B": "Measure cerebrospinal fluid opening pressure",
+      "C": "Obtain MRI of the brain",
+      "D": "Prescribe low-potency opioids",
+      "E": "Refer for psychiatric evaluation"
+    },
+    "answer": "A",
+    "explanations": {
+      "B": "Idiopathic intracranial hypertension, which is diagnosed by measuring opening pressure during lumbar puncture, most commonly occurs in overweight or obese women of child-bearing age. It is characterized by frequent headaches, papilledema, and visual field deficits.",
+      "C": "Patients with new headache and high-risk features, including age >50, fevers, \"thunderclap\" onset, immunosuppression, or history of malignancy, should undergo MRI of the brain. This patient lacks these features and does not warrant imaging.",
+      "D": "Opioids are not an appropriate therapy for the acute management of chronic headache and are associated with the development of MOH.",
+      "E": "Headache may be a prominent symptom in patients with anxiety or depression; however, it rarely occurs in isolation and is more commonly part of a constellation of symptoms including fatigue, insomnia, and depressed mood."
+    },
+    "generalExplanation": "This patient has evidence of medication overuse headache (MOH), which is characterized by near-daily headache in the setting of regular use of acute headache medications. MOH occurs in patients with a preexisting headache disorder (eg, migraine), and the diagnosis requires symptoms to be present for >=3 months. Patients' underlying headache disorder may worsen, such as transitioning from episodic migraine to chronic migraine (headache >=15 days/month), or patients may develop an entirely new headache pattern. Symptoms frequently mimic a migraine-type or tension-type headache. Common features include headache that is present upon awakening (as in this patient) as well as symptom relief for only short periods, with quick rebound necessitating further medication use.\n\nThe pathophysiologic mechanism is likely due to an interplay between genetic predisposition; central pain sensitization with alteration of neuronal excitability and receptor downregulation; and behavioral disorders (eg, substance dependence). Although overuse of any type of acute headache medication can lead to MOH, butalbital-containing products, acetaminophen, and opioids are the most commonly implicated drugs. Management involves cessation of the culprit drug with consideration of concomitant initiation of preventive therapy.",
+    "explanationImages": [],
+    "educationalObjective": "Medication overuse headache is characterized by chronic, near-daily headache in the setting of regular use of acute headache medications in patients with a preexisting headache disorder. Common features include headache that is present upon awakening and brief symptom relief followed by rebound pain. Management involves cessation of the culprit medication."
+  },
+  {
+    "id": "q-uw-16699",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 20-year-old woman comes to the office due to hearing loss. The patient is a student and has difficulty hearing her professors, even when sitting in the front row. She also has trouble with balancing poses during yoga. The patient has no medical conditions and takes only oral contraceptives. She drinks alcohol on weekends and does not smoke. Her mother also developed hearing loss in her 20s. Ear examination is normal. Gait is normal, but standing on 1 foot is difficult, especially with closed eyes. Audiogram shows bilateral sensorineural hearing loss. Which of the following is the most likely cause of this patient's symptoms?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Congenital long QT syndrome",
+      "B": "Mitochondrial disorder",
+      "C": "Multiple sclerosis",
+      "D": "Neurofibromatosis",
+      "E": "Otosclerosis"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Jervell and Lange-Nielsen syndrome, a congenital long QT syndrome, also causes inheritable sensorineural hearing loss due to mutations affecting endolymph production. In contrast to NF2, congenital long QT syndrome typically presents in childhood with profound bilateral deafness and episodes of arrhythmia-induced syncope during periods of stress.",
+      "B": "Mitochondrial disorders are maternally inherited and can present with diverse symptoms that may include hearing loss or imbalance. However, they typically involve multiple organ systems and myopathy is often present.",
+      "C": "Multiple sclerosis can present in young women and may have a hereditary component. In contrast to this patient with NF2, those with multiple sclerosis typically initially have optic neuritis, lateral rectus palsy, or multiple signs of cerebellar involvement (eg, ataxia, diplopia). Sensorineural hearing loss as an initial manifestation is uncommon.",
+      "E": "Otosclerosis causes fixation of the stapes, is often hereditary, and is most commonly seen in young women. However, it would present with a conductive, rather than a sensorineural, hearing loss."
+    },
+    "generalExplanation": "This young woman with bilateral sensorineural hearing loss associated with imbalance likely has bilateral vestibular schwannomas. This, in conjunction with her family history of hearing loss, is characteristic of neurofibromatosis type II (NF2).\n\nVestibular schwannoma primarily affects the cochlear and vestibular nerves. Cochlear nerve involvement results in sensorineural hearing loss (~95% of patients). Vestibular nerve involvement can cause imbalance, particularly when patients are deprived of visual input (eg, eyes closed when standing on 1 foot, yoga poses). Most patients do not experience vertigo because the tumor's slow growth allows for central compensation of gradual loss of input.\n\nSporadic vestibular schwannomas are typically unilateral and manifest around age 50. In contrast, the presence of bilateral, hereditary vestibular schwannomas in a young patient, as seen in this case, should raise suspicion for NF2. NF2 is caused by an autosomal dominant defect in merlin (a cell-membrane tumor-suppressor protein) and usually presents at age 20-30. Vestibular schwannomas are the most common tumor seen; however, patients also may have intracranial meningiomas, spinal tumors, or peripheral neuropathies. Cataracts and cutaneous tumors also can be seen.",
+    "explanationImages": [],
+    "educationalObjective": "Vestibular schwannomas present with hearing loss and imbalance. Bilateral, hereditary schwannomas are most often associated with neurofibromatosis type II."
+  },
+  {
+    "id": "q-uw-19740",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 21-year-old man comes to the emergency department due to unsteady gait and difficulty urinating for a day. Over the past 4 days, the patient has noticed numbness beginning in both feet and gradually progressing to the thighs, buttocks, and abdomen. He has no pain. Temperature is 37 C (98.6 F), blood pressure is 120/70 mm Hg, pulse is 88/min, and respirations are 18/min. On examination, sensation to light touch, temperature, and pinprick is reduced below the midthoracic region. Vibration and joint position sensation are absent in both feet. Muscle bulk and tone are normal, but strength in both lower extremities is 4/5. Deep tendon reflexes in the lower extremities are brisk with bilateral upgoing plantar reflexes. Upper extremity examination is normal. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Acute inflammatory demyelinating polyneuropathy",
+      "B": "Anterior spinal artery infarction",
+      "C": "Spinal epidural abscess",
+      "D": "Transverse myelitis",
+      "E": "Vitamin B12 deficiency"
+    },
+    "answer": "D",
+    "explanations": {
+      "A": "Acute inflammatory demyelinating polyneuropathy (ie, Guillain-Barré syndrome) can present with rapidly progressive, ascending weakness in a young patient. However, UMN signs (eg, hyperreflexia, upgoing Babinski) and a distinct sensory level would not be present.",
+      "B": "Infarction of the anterior spinal artery can result in motor weakness and loss of pain and temperature sensation below the level of the infarction. However, vibration and proprioception would be spared, unlike in this patient, because they are controlled by the posterior columns.",
+      "C": "A spinal epidural abscess can present with progressive myelopathy due to cord compression from an expanding infection in the spinal column. Associated neurologic deficits may have significant overlap with TM; however, patients classically have localized back pain and fever.",
+      "E": "Vitamin B12 deficiency can cause degeneration of the dorsal and lateral spinal tracts (ie, subacute combined degeneration), resulting in sensory ataxia with progressive spastic paraparesis and incontinence. However, it does not present acutely and would not cause a distinct sensory level."
+    },
+    "generalExplanation": "This young patient has rapidly progressive, bilateral lower extremity weakness accompanied by upper motor neuron (UMN) signs (eg, hyperreflexia, upgoing Babinski), sensory defects with a localizing (midthoracic) spinal sensory level, and autonomic (bladder) dysfunction. This presentation is most consistent with transverse myelitis (TM).\n\nTM is an immune-mediated disorder that often follows a recent infection (eg, gastroenteritis, upper respiratory infection) and leads to a rapidly progressive myelopathy characterized by the following:\n• Motor weakness that may be accompanied by UMN signs (due to involvement of the long tracts) or lower motor neuron signs (due to involvement of the gray matter of the spinal cord)\n• Sensory dysfunction affecting all somatosensory systems (eg, touch, pain/temperature, vibration/proprioception) with a distinct sensory level (ie, lowest spinal cord level with intact sensation)\n• Autonomic dysfunction that often includes bowel/bladder incontinence or retention\n\nTo confirm the diagnosis, cord compression should be excluded via imaging (MRI). MRI in TM shows T2 hyperintensity; evidence of inflammation (pleocytosis and elevated IgG) is seen on cerebrospinal fluid analysis.",
+    "explanationImages": [],
+    "educationalObjective": "Transverse myelitis is an immune-mediated disorder that causes a rapidly progressive myelopathy characterized by motor weakness (with upper and/or lower motor neuron signs), sensory disturbances (characterized by a distinct sensory level), and autonomic dysfunction (including bowel or bladder dysfunction)."
+  },
+  {
+    "id": "q-uw-3963",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Easy",
+    "stem": "An 18-year-old woman comes to the office with her mother for evaluation of recurrent episodes of \"passing out.\" The patient had the first episode a year ago, after she found out her friend had died unexpectedly. Since then, she has had 2 more episodes, both provoked by strong emotions; the most recent episode occurred yesterday, when she heard that she did not get accepted into the college of her choice. Her mother, who witnessed this episode, says the patient appeared pale and became unresponsive for approximately a minute but had no abnormal extremity movements or urinary incontinence. The patient has no chronic medical conditions other than adjustment disorder after her parents' divorce several years ago. Blood pressure is 126/78 mm Hg and pulse is 68/min with no orthostatic changes. Physical examination shows no carotid bruit, normal heart and lung sounds, and no focal neurologic deficits. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cardiac arrhythmia",
+      "B": "Conversion disorder",
+      "C": "Focal seizure",
+      "D": "Malingering",
+      "E": "Pseudoseizure",
+      "F": "Vasovagal syncope"
+    },
+    "answer": "F",
+    "explanations": {
+      "A": "Cardiac arrhythmia (eg, ventricular tachycardia) may sometimes cause syncope in young patients but is much more common in older patients with underlying heart disease. Syncope due to arrhythmia typically occurs without warning and lacks an associated trigger or prodrome.",
+      "B": "Conversion disorder most commonly affects young female patients, can be triggered by emotional stress, and can involve episodes of apparent loss of consciousness that resemble syncope. However, the episodes are typically of longer duration (eg, >5 min) and lack autonomic findings (eg, pallor).",
+      "C": "Focal seizures can present with a prodromal aura and cause loss of awareness. However, there is often abnormal stereotyped automatisms (eg, lip-smacking) and typically a postictal period, neither of which occurred in this patient.",
+      "D": "Patients who malinger intentionally feign illness (eg, syncope) for a secondary gain (eg, financial incentive, escaping work). In this patient, there is no obvious secondary gain at stake, and the presence of objective physical findings (eg, skin pallor) makes malingering less likely.",
+      "E": "Pseudoseizures (ie, psychogenic nonepileptic seizures) can present with loss of consciousness in response to an emotional trigger. However, seizure-like motor activity (eg, generalized limb shaking) is typically present, and episodes are often prolonged (eg, >10 min) with waxing and waning symptoms."
+    },
+    "generalExplanation": "This patient with multiple, brief (eg, <1-2 min) episodes of loss of consciousness provoked by strong emotions (eg, response to friend's death, college rejection) is most likely experiencing vasovagal syncope. A type of reflex syncope, vasovagal syncope may be triggered by strong emotions or painful stimuli. It is typically preceded by a prodrome (eg, pallor, light-headedness, nausea) and followed by rapid recovery of consciousness. Affected patients often have recurrent episodes.\n\nAs with other types of reflex syncope (eg, situational), the trigger in vasovagal syncope leads to a neurally mediated reflex response causing increased parasympathetic and decreased sympathetic signaling. This results in the following:\n• Vasodepressor response: Arterial and venous vasodilation result in decreased systemic blood pressure and decreased venous return to the heart.\n• Cardioinhibitory response: Decreased heart rate and contractility result in decreased cardiac output.\nTogether, these effects can result in global cerebral hypoperfusion and syncope.",
+    "explanationImages": [],
+    "educationalObjective": "Vasovagal syncope is a type of reflex syncope typically preceded by a trigger (eg, strong emotion) and a prodrome (eg, pallor, light-headedness). A neurally mediated reflex response (cardioinhibitory and vasodepressor) leads to brief (eg, <1-2 min) loss of consciousness, followed by rapid and complete recovery."
+  },
+  {
+    "id": "q-uw-4089",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 21-year-old man with a prior history of seizures is brought to the emergency department by ambulance during a tonic-clonic seizure. His mother, who accompanied him, found him on the floor seizing. She says that he has not been compliant with his medications. The patient received intravenous lorazepam, thiamine, and glucose en route but continued seizing. In the emergency department, he is unresponsive and cyanotic. His blood pressure is 96/54 mm Hg and his pulse is 152/min and regular. His pupils are mid-size and reactive to light. Clonic jerks of all extremities are observed. The patient is at highest risk for which of the following?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Cerebellar atrophy",
+      "B": "Cortical necrosis",
+      "C": "Obstructive hydrocephalus",
+      "D": "Parkinson's syndrome",
+      "E": "Pontine hemorrhage"
+    },
+    "answer": "B",
+    "explanations": {
+      "A": "Cerebellar atrophy is not considered a sequelae of prolonged seizures as the cortex is generally the site for seizure activity in the brain and is therefore more likely to be affected by excitatory cytotoxicity. Cerebellar atrophy can be caused by chronic use of certain antiepileptic drugs (eg, phenytoin) and alcohol abuse.",
+      "C": "Persistent seizure activity may cause increases in intracranial pressure but will not lead to obstructive hydrocephalus.",
+      "D": "Persistent seizure activity is more likely to lead to excitatory cytotoxicity affecting the cortex as opposed to the basal ganglia structures. Therefore, this patient is unlikely to develop Parkinson's syndrome.",
+      "E": "Persistent seizure activity may cause increased intracranial pressure and could lead to an intracranial hemorrhage. However, cortical laminar necrosis secondary to excitatory cytotoxicity is more likely."
+    },
+    "generalExplanation": "This patient presents with status epilepticus in the setting of seizure disorder and noncompliance with antiepileptic therapy. Approximately 30% of patients with epilepsy will have status epilepticus, especially those who are noncompliant with medical therapy. Status epilepticus has been defined historically as a single seizure lasting >30 minutes. However, recent studies suggest that a brain that has seized for >5 minutes is at increased risk of developing permanent injury due to excitatory cytotoxicity.\n\nCortical laminar necrosis is the hallmark of prolonged seizures and can lead to persistent neurologic deficits and recurrent seizures. Magnetic resonance imaging of the brain will generally show evidence of cortical hyperintensity on diffusion-weighted imaging suggesting infarction. The definition of status epilepticus has therefore been amended to be any single seizure lasting >5 minutes or a cluster of seizures with the patient not recovering a normal mental status in between. The exact duration of this patient's seizures is unknown. However, given that they began at home and continue in the emergency department, it can be assumed that he has been seizing for >5 minutes, consistent with status epilepticus.",
+    "explanationImages": [],
+    "educationalObjective": "Recent studies have suggested that a brain that has seized for >5 minutes (status epilepticus) is at increased risk of developing permanent injury due to excitatory cytotoxicity. Cortical laminar necrosis is the hallmark of prolonged seizures and can lead to persistent neurologic deficits and recurrent seizures."
+  },
+  {
+    "id": "q-uw-2667",
+    "year": "2022",
+    "step": "Step 2",
+    "track": "USMLE",
+    "system": "Nervous System",
+    "difficulty": "Medium",
+    "stem": "A 28-year-old woman comes to the office due to weakness. The patient, who is 8 weeks postpartum, reports intermittent weakness of the upper and lower extremities. She says, \"My arms feel weak after carrying the baby for a few minutes, and I can't lift him until I rest for some time. Yesterday evening, I couldn't even get off of the toilet, but today, I feel fine.\" The patient has also had episodes of blurry vision. Her pregnancy was complicated by gestational diabetes, but she has no chronic medical conditions. The patient's only medication is a daily multivitamin. She does not use tobacco, alcohol, or illicit drugs. Blood pressure is 120/68 mm Hg and pulse is 74/min. Physical examination shows normal pupils and extraocular movements. Jugular venous pressure is not elevated, and chest auscultation reveals no abnormalities. There is no extremity edema. Deep tendon reflexes and muscle strength of the bilateral upper and lower extremities are normal. Which of the following is the most likely diagnosis?",
+    "vignetteImage": null,
+    "options": {
+      "A": "Diabetic amyotrophy",
+      "B": "Multiple sclerosis",
+      "C": "Myasthenia gravis",
+      "D": "Myotonic dystrophy",
+      "E": "Polymyositis",
+      "F": "Postpartum thyroiditis"
+    },
+    "answer": "C",
+    "explanations": {
+      "A": "Diabetic amyotrophy typically causes focal pain, weakness, and muscle wasting in the proximal legs; it is associated with weight loss. Upper extremity involvement is rare and would not be associated with vision changes or fluctuating weakness.",
+      "B": "Multiple sclerosis is common in younger women and can cause neurologic symptoms (eg, weakness, blurred vision) in discrete, noncontiguous domains. However, symptoms typically relapse and remit slowly over days to weeks; fatigable weakness that fluctuates throughout the day is more consistent with MG.",
+      "D": "Myotonic dystrophy typically causes persistent, progressive weakness and wasting of the facial and distal musculature (eg, intrinsic hand). Myotonia (delayed muscle relaxation after contraction) is typical, and fluctuating proximal muscle weakness is unexpected.",
+      "E": "Myopathies (eg, polymyositis) typically present with persistent, symmetric proximal muscle weakness that may be associated with mild muscle pain and tenderness. However, fluctuating, fatigable weakness and ocular symptoms are not characteristic.",
+      "F": "Postpartum thyroiditis is typically associated with signs of hyperthyroidism (eg, heat intolerance, weight loss, tremor) or hypothyroidism, but fluctuating, fatigable weakness with ocular symptoms is not characteristic."
+    },
+    "generalExplanation": "This young, postpartum woman has fatigable proximal muscle weakness and intermittent blurred vision, findings suggestive of myasthenia gravis (MG). MG is a neuromuscular disorder characterized by autoantibodies directed at components of the postsynaptic neuromuscular junction, typically acetylcholine receptors. It is most common in women of childbearing age; in addition, pregnant and postpartum women are at increased risk for both disease onset and exacerbation. Men are less frequently affected and typically develop symptoms later in life (ie, sixth to eighth decade).\n\nMG is characterized by fluctuating, fatigable muscle weakness that worsens with repetitive motions (eg, holding a baby for a prolonged period) and improves with rest. Symptoms are frequently worse later in the day or after exercise. Proximal muscle involvement (eg, hip flexors, quadriceps, deltoids) can cause difficulty rising from sitting or lifting over the head. Bulbar (eg, dysarthria, fatigable chewing) and ocular dysfunction (eg, blurred vision, ptosis) are also common. Although examination eventually demonstrates fatigable weakness with repetitive activity, it is often normal on initial evaluation.",
+    "explanationImages": [],
+    "educationalObjective": "Myasthenia gravis is characterized by fluctuating, fatigable muscle weakness that worsens with repetitive motions and improves with rest. Common symptoms include weakness of the proximal (eg, difficulty rising from sitting), ocular (eg, diplopia, ptosis), and bulbar (eg, dysarthria, dysphagia) muscles. Pregnant and postpartum patients are at increased risk for developing the disease."
+  }
+]

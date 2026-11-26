@@ -1,8 +1,237 @@
 {
-  "generatedAt": "2026-11-23T17:15:46.900Z",
+  "generatedAt": "2026-11-26T09:35:18.987Z",
   "years": {
     "2021": {
       "Step 2": {
+        "Social Sciences (Ethics, Legal, Professionalism)": {
+          "files": [
+            "qbank/2021/step2/Social Sciences/uw_2022_s2_social_sciences_part01_p1-106.json",
+            "qbank/2021/step2/Social Sciences/uw_2022_s2_social_sciences_part02_p107-214.json",
+            "qbank/2021/step2/Social Sciences/uw_2022_s2_social_sciences_part03_p215-323.json",
+            "qbank/2021/step2/Social Sciences/uw_2022_s2_social_sciences_part04_p324-428.json"
+          ],
+          "count": 124
+        },
+        "Rheumatology, Orthopedics & Sports": {
+          "files": [
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part01_p1-164.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part02_p165-320.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part03_p321-480.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part04_p481-639.json"
+          ],
+          "count": 111
+        },
+        "Renal, Urinary Systems & Electrolytes": {
+          "files": [
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part01_p1-148.json",
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part02_p149-300.json",
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part03_p301-450.json",
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part04_p451-602.json",
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part05_p603-748.json",
+            "qbank/2021/step2/Renal, Urinary Systems & Electrolytes/uw_2022_s2_renal_part06_p749-899.json"
+          ],
+          "count": 200
+        },
+        "Pulmonary & Critical Care": {
+          "files": [
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part01_p1-147.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part02_p148-299.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part03_p300-450.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part04_p451-599.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part05_p600-747.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part06_p748-900.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part07_p901-1047 (1).json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part07_p901-1047.json",
+            "qbank/2021/step2/Pulmonary & Critical Care/uw_2022_s2_pulm_part08_p1048-1175.json"
+          ],
+          "count": 276
+        },
+        "Psychiatric, Behavioral & Substance Abuse": {
+          "files": [
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p1-141.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p1121-1175.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p142-280.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p281-421.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p422-560.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p561-700.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p701-839.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p840-979.json",
+            "qbank/2021/step2/Psychiatric, Behavioral & Substance Abuse/uw_2022_s2_psych_p980-1120.json"
+          ],
+          "count": 331
+        },
+        "Pregnancy, Childbirth & Puerperium": {
+          "files": [
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part01_p1-148.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part02_p149-301.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part03_p302-450.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part04_p451-600.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part05_p601-751.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part06_p752-903.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part07_p904-1048.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part08_p1049-1197.json",
+            "qbank/2021/step2/Pregnancy, Childbirth & Puerperium/uw_2022_s2_pregnancy_part09_p1198-1343.json"
+          ],
+          "count": 247
+        },
+        "Poisoning & Environmental Exposure": {
+          "files": [
+            "qbank/2021/step2/Poisoning & Environmental Exposure/uw_2022_s2_poisoning_p1-115.json",
+            "qbank/2021/step2/Poisoning & Environmental Exposure/uw_2022_s2_poisoning_p116-225.json"
+          ],
+          "count": 56
+        },
+        "Ophthalmology": {
+          "files": [
+            "qbank/2021/step2/Ophthalmology/uw_2022_s2_ophthalmology_part01_p1-128.json",
+            "qbank/2021/step2/Ophthalmology/uw_2022_s2_ophthalmology_part02_p129-262.json"
+          ],
+          "count": 53
+        },
+        "Nervous System": {
+          "files": [
+            "qbank/2021/step2/Nervous System/uw_2022_s2_nervous_p1650-1799.json",
+            "qbank/2021/step2/Nervous System/uw_2022_s2_nervous_p1800-1862.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part01.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part02.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part03.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part04.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part05.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part06.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part07.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part08.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part09.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part10.json",
+            "qbank/2021/step2/Nervous System/uw_2022_step2_nervous_system_part11.json"
+          ],
+          "count": 150
+        },
+        "Miscellaneous (Multisystem)": {
+          "files": [
+            "qbank/2021/step2/Miscellaneous (Multisystem)/uw_2022_s2_miscellaneous_multisystem_b1.json"
+          ],
+          "count": 16
+        },
+        "Male Reproductive System": {
+          "files": [
+            "qbank/2021/step2/Male Reproductive System/uw_2022_s2_male_repro_p1-103.json",
+            "qbank/2021/step2/Male Reproductive System/uw_2022_s2_male_repro_p104-212.json"
+          ],
+          "count": 47
+        },
+        "Infectious Diseases": {
+          "files": [
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part01_p1-122.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part02_p123-239.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part03_p240-358.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part04_p359-480.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part05_p481-599.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part06_p600-717.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part07_p718-840.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part08_p841-960.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part09_p961-1078.json",
+            "qbank/2021/step2/Infectious Diseases/uw_2022_s2_id_part10_p1079-1153.json"
+          ],
+          "count": 272
+        },
+        "Hematology & Oncology": {
+          "files": [
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part01_p1-135.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part02_p136-268.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part03_p269-403.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part04_p404-542.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part05_p543-677.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part06_p678-810.json",
+            "qbank/2021/step2/Hematology & Oncology/uw_2022_s2_heme_onc_part07_p811-939.json"
+          ],
+          "count": 191
+        },
+        "General Principles": {
+          "files": [
+            "qbank/2021/step2/General Principles/uw_2022_s2_general_principles_block1.json"
+          ],
+          "count": 25
+        },
+        "Gastrointestinal & Nutrition": {
+          "files": [
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part01_p1-119.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part02_p120-239.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part03_p240-360.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part04_p361-481.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part05_p482-598.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part06_p599-721.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part07_p722-844.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part08_p845-957.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part09_p958-1080.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part10_p1081-1200.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part11_p1201-1318.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part12_p1319-1439.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part13_p1440-1556.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part14_p1557-1684.json",
+            "qbank/2021/step2/Gastrointestinal & Nutrition/uw_2022_s2_gi_part15_p1685-1704.json"
+          ],
+          "count": 367
+        },
+        "Female Reproductive System & Breast": {
+          "files": [
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p1-144.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p1052-1170.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p145-298.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p299-449.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p450-599.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p600-751.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p752-900.json",
+            "qbank/2021/step2/Female Reproductive System & Breast/uw_2022_s2_frb_p901-1051.json"
+          ],
+          "count": 234
+        },
+        "Endocrine, Diabetes & Metabolism": {
+          "files": [
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part01_p1-94.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part02_p95-194.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part03_p195-287.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part04_p288-378.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part05_p379-472.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part06_p473-569.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part07_p570-664.json",
+            "qbank/2021/step2/Endocrine, Diabetes & Metabolism/uw_2022_s2_endo_part08_p665-755.json"
+          ],
+          "count": 166
+        },
+        "Ear, Nose & Throat (ENT)": {
+          "files": [
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p1-45.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p125-168.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p169-210.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p211-240.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p241-267.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p46-85.json",
+            "qbank/2021/step2/Ear, Nose & Throat (ENT)/uw_2021_s2_ent_p86-124.json"
+          ],
+          "count": 75
+        },
+        "Dermatology": {
+          "files": [
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p1-56.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p100-153.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p154-202.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p203-260.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p261-303.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p304-351.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p352-398.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p399-452.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p453-498.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p499-553.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p554-606.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p57-99.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p607-657.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p658-700.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p701-754.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p755-805.json",
+            "qbank/2021/step2/Dermatology/uw_2021_s2_derm_p806-843.json"
+          ],
+          "count": 117
+        },
         "Cardiovascular System": {
           "files": [
             "qbank/2021/step2/Cardiovascular System/part01.json",
@@ -11,6 +240,16 @@
             "qbank/2021/step2/Cardiovascular System/part04.json"
           ],
           "count": 306
+        },
+        "Biostatistics & Epidemiology": {
+          "files": [
+            "qbank/2021/step2/Biostatistics & Epidemiology/uw_2021_s2_biostats_part01_p1-104.json",
+            "qbank/2021/step2/Biostatistics & Epidemiology/uw_2021_s2_biostats_part02_p105-203.json",
+            "qbank/2021/step2/Biostatistics & Epidemiology/uw_2021_s2_biostats_part03_p204-300.json",
+            "qbank/2021/step2/Biostatistics & Epidemiology/uw_2021_s2_biostats_part04_p301-400.json",
+            "qbank/2021/step2/Biostatistics & Epidemiology/uw_2021_s2_biostats_part05_p401-500.json"
+          ],
+          "count": 146
         },
         "Allergy & Immunology": {
           "files": [

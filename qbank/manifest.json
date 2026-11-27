@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T09:35:18.987Z",
+  "generatedAt": "2026-11-27T08:57:35.819Z",
   "years": {
     "2021": {
       "Step 2": {
@@ -14,12 +14,17 @@
         },
         "Rheumatology, Orthopedics & Sports": {
           "files": [
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_ortho_sports_p802-960.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_ortho_sports_p961-1119.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_ortho_sports_part05_p640-801.json",
             "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part01_p1-164.json",
             "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part02_p165-320.json",
             "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part03_p321-480.json",
-            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part04_p481-639.json"
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part04_p481-639.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part08_p1120-1280.json",
+            "qbank/2021/step2/Rheumatology, Orthopedics & Sports/uw_2022_s2_rheum_part09_p1281-1433.json"
           ],
-          "count": 111
+          "count": 247
         },
         "Renal, Urinary Systems & Electrolytes": {
           "files": [
